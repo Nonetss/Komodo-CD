@@ -2,6 +2,14 @@
 
 Despliegue en producción de Komodo CD usando imágenes publicadas en GHCR.
 
+| Stacks | Deploy |
+|--------|--------|
+| ![Stacks](img/stacks.png) | ![Deploy](img/deploy.png) |
+
+| Historial | Credenciales |
+|-----------|--------------|
+| ![Historial](img/historial.png) | ![Credenciales](img/credenciales.png) |
+
 ## Requisitos
 
 - Docker + Docker Compose v2
