@@ -67,9 +67,6 @@ services:
       SEED_ADMIN_EMAIL: "${SEED_ADMIN_EMAIL:-admin@example.com}"
       SEED_ADMIN_NAME: "${SEED_ADMIN_NAME:-Admin}"
       SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD is required}"
-      SSO_CLIENT_ID: "${SSO_CLIENT_ID:-}"
-      SSO_CLIENT_SECRET: "${SSO_CLIENT_SECRET:-}"
-      SSO_ISSUER: "${SSO_ISSUER:-}"
     networks:
       - komodo_net
 
@@ -104,9 +101,6 @@ volumes:
 | `PORT` | — | Puerto expuesto en el host. Por defecto `80` |
 | `SEED_ADMIN_EMAIL` | — | Email del admin. Por defecto `admin@example.com` |
 | `SEED_ADMIN_NAME` | — | Nombre del admin. Por defecto `Admin` |
-| `SSO_CLIENT_ID` | — | Client ID de Keycloak para SSO |
-| `SSO_CLIENT_SECRET` | — | Client Secret de Keycloak |
-| `SSO_ISSUER` | — | Discovery URL del realm de Keycloak |
 
 ## Actualizar a la última versión
 
