@@ -1,58 +1,58 @@
 # Komodo CD — Docker
 
-Despliegue en producción de Komodo CD usando imágenes publicadas en GHCR.
+Production deployment for Komodo CD using images published on GHCR.
 
-| | Repositorio |
-|---|---|
-| **Backend** | [Nonetss/komodo-cd-backend](https://github.com/Nonetss/komodo-cd-backend) |
+|              | Repository                                                                  |
+| ------------ | --------------------------------------------------------------------------- |
+| **Backend**  | [Nonetss/komodo-cd-backend](https://github.com/Nonetss/komodo-cd-backend)   |
 | **Frontend** | [Nonetss/komodo-cd-frontend](https://github.com/Nonetss/komodo-cd-frontend) |
 
-| Stacks | Deploy |
-|--------|--------|
+| Stacks                    | Deploy                    |
+| ------------------------- | ------------------------- |
 | ![Stacks](img/stacks.png) | ![Deploy](img/deploy.png) |
 
-| Historial | Credenciales |
-|-----------|--------------|
-| ![Historial](img/historial.png) | ![Credenciales](img/credenciales.png) |
+| History                       | Credentials                          |
+| ----------------------------- | ------------------------------------ |
+| ![History](img/historial.png) | ![Credentials](img/credenciales.png) |
 
-## Requisitos
+## Requirements
 
 - Docker + Docker Compose v2
-- Acceso a internet para hacer pull de las imágenes
+- Internet access to pull images
 
-## Inicio rápido
+## Quick start
 
-### 1. Generar los secretos
+### 1. Generate secrets
 
 ```bash
-# Secreto de Better Auth (requerido)
+# Better Auth secret (required)
 openssl rand -base64 32
 
-# Contraseña del admin inicial (requerido)
+# Initial admin password (required)
 openssl rand -base64 16
 ```
 
-### 2. Configurar el entorno
+### 2. Configure environment
 
 ```bash
 cp .env.example .env
 ```
 
-Edita `.env` y rellena al menos estas tres variables:
+Edit `.env` and fill at least these three variables:
 
 ```env
-APP_URL=https://tu-dominio.com
-BETTER_AUTH_SECRET=<salida del primer openssl>
-SEED_ADMIN_PASSWORD=<salida del segundo openssl>
+APP_URL=https://your-domain.com
+BETTER_AUTH_SECRET=<output of first openssl command>
+SEED_ADMIN_PASSWORD=<output of second openssl command>
 ```
 
-### 3. Arrancar
+### 3. Start
 
 ```bash
 docker compose up -d
 ```
 
-La app quedará disponible en el puerto configurado en `PORT` (por defecto `80`).
+The app will be available on the port configured in `PORT` (default `80`).
 
 ---
 
@@ -96,23 +96,23 @@ volumes:
 
 ---
 
-## Variables de entorno
+## Environment variables
 
-| Variable | Requerida | Descripción |
-|----------|-----------|-------------|
-| `APP_URL` | ✅ | URL pública de la app, sin trailing slash |
-| `BETTER_AUTH_SECRET` | ✅ | Secreto para firmar sesiones. `openssl rand -base64 32` |
-| `SEED_ADMIN_PASSWORD` | ✅ | Contraseña del usuario admin que se crea al arrancar |
-| `PORT` | — | Puerto expuesto en el host. Por defecto `80` |
-| `SEED_ADMIN_EMAIL` | — | Email del admin. Por defecto `admin@example.com` |
-| `SEED_ADMIN_NAME` | — | Nombre del admin. Por defecto `Admin` |
+| Variable              | Required | Description                                             |
+| --------------------- | -------- | ------------------------------------------------------- |
+| `APP_URL`             | ✅       | Public app URL, without trailing slash                  |
+| `BETTER_AUTH_SECRET`  | ✅       | Secret used to sign sessions. `openssl rand -base64 32` |
+| `SEED_ADMIN_PASSWORD` | ✅       | Password for admin user created on startup              |
+| `PORT`                | —        | Host exposed port. Default `80`                         |
+| `SEED_ADMIN_EMAIL`    | —        | Admin email. Default `admin@example.com`                |
+| `SEED_ADMIN_NAME`     | —        | Admin name. Default `Admin`                             |
 
-## Integración con GitHub Actions
+## GitHub Actions integration
 
-Ejemplo completo: build y push de la imagen + deploy automático al stack en Komodo CD.
+Full example: image build and push + automatic deploy to a Komodo CD stack.
 
 ```yaml
-name: Docker Image CI
+name: Build, Publish and Deploy
 
 on:
   push:
@@ -154,9 +154,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            PUBLIC_APP_URL=${{ vars.APP_URL }}
-            BETTER_AUTH_URL=${{ vars.APP_URL }}
 
       - name: Pull + Redeploy stack
         run: |
@@ -166,48 +163,48 @@ jobs:
             -d '{"stack":"${{ vars.STACK_NAME }}","action":"pull-redeploy"}'
 ```
 
-**Secrets y variables necesarios en el repositorio:**
+**Required repository secrets and variables:**
 
-| Clave | Tipo | Descripción |
-|-------|------|-------------|
-| `KOMODO_CD_URL` | Secret | URL de tu instancia de Komodo CD (ej: `https://komodo-cd.example.com`) |
-| `KOMODO_API_KEY` | Secret | API Key generada desde el dashboard |
-| `APP_URL` | Variable | URL pública de la app, usada para hornear en el bundle del frontend |
-| `STACK_NAME` | Variable | Nombre del stack en Komodo |
+| Key              | Type     | Description                                                               |
+| ---------------- | -------- | ------------------------------------------------------------------------- |
+| `KOMODO_CD_URL`  | Secret   | URL of your Komodo CD instance (example: `https://komodo-cd.example.com`) |
+| `KOMODO_API_KEY` | Secret   | API key generated from the dashboard                                      |
+| `APP_URL`        | Variable | Public app URL used to bake both frontend build args                      |
+| `STACK_NAME`     | Variable | Stack name in Komodo                                                      |
 
 ---
 
-## Actualizar a la última versión
+## Update to latest version
 
 ```bash
 docker compose pull
 docker compose up -d
 ```
 
-## Comandos útiles
+## Useful commands
 
 ```bash
-# Ver logs en tiempo real
+# Show logs in real time
 docker compose logs -f
 
-# Ver logs solo del backend
+# Show backend logs only
 docker compose logs -f backend
 
-# Reiniciar un servicio
+# Restart one service
 docker compose restart backend
 
-# Parar todo
+# Stop everything
 docker compose down
 
-# Parar y eliminar el volumen de la BD (⚠️ borra todos los datos)
+# Stop and remove DB volume (⚠️ deletes all data)
 docker compose down -v
 ```
 
-## Datos persistentes
+## Persistent data
 
-La base de datos SQLite se guarda en el volumen Docker `db_data`, montado en `/data` dentro del contenedor backend. Los datos sobreviven reinicios y actualizaciones de imagen.
+SQLite DB is stored in Docker volume `db_data`, mounted at `/data` inside the backend container. Data survives restarts and image updates.
 
-Para hacer un backup manual:
+To make a manual backup:
 
 ```bash
 docker run --rm \
@@ -216,7 +213,7 @@ docker run --rm \
   alpine tar czf /backup/db-backup.tar.gz -C /data .
 ```
 
-Para restaurar:
+To restore:
 
 ```bash
 docker run --rm \
