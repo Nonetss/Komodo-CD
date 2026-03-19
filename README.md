@@ -107,6 +107,76 @@ volumes:
 | `SEED_ADMIN_EMAIL` | — | Email del admin. Por defecto `admin@example.com` |
 | `SEED_ADMIN_NAME` | — | Nombre del admin. Por defecto `Admin` |
 
+## Integración con GitHub Actions
+
+Ejemplo completo: build y push de la imagen + deploy automático al stack en Komodo CD.
+
+```yaml
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - main
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-,format=short
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            PUBLIC_APP_URL=${{ vars.APP_URL }}
+            BETTER_AUTH_URL=${{ vars.APP_URL }}
+
+      - name: Pull + Redeploy stack
+        run: |
+          curl -X POST ${{ secrets.KOMODO_CD_URL }}/api/v0/deploy \
+            -H "x-api-key: ${{ secrets.KOMODO_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"stack":"${{ vars.STACK_NAME }}","action":"pull-redeploy"}'
+```
+
+**Secrets y variables necesarios en el repositorio:**
+
+| Clave | Tipo | Descripción |
+|-------|------|-------------|
+| `KOMODO_CD_URL` | Secret | URL de tu instancia de Komodo CD (ej: `https://komodo-cd.example.com`) |
+| `KOMODO_API_KEY` | Secret | API Key generada desde el dashboard |
+| `APP_URL` | Variable | URL pública de la app, usada para hornear en el bundle del frontend |
+| `STACK_NAME` | Variable | Nombre del stack en Komodo |
+
+---
+
 ## Actualizar a la última versión
 
 ```bash
