@@ -51,6 +51,49 @@ La app quedará disponible en el puerto configurado en `PORT` (por defecto `80`)
 
 ---
 
+## compose.yml
+
+```yaml
+services:
+  backend:
+    image: ghcr.io/nonetss/komodo-cd-backend:latest
+    restart: unless-stopped
+    volumes:
+      - db_data:/data
+    environment:
+      DATABASE_URL: "file:/data/db.sqlite"
+      BETTER_AUTH_URL: "${APP_URL:?APP_URL is required}"
+      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET is required}"
+      SEED_ADMIN_EMAIL: "${SEED_ADMIN_EMAIL:-admin@example.com}"
+      SEED_ADMIN_NAME: "${SEED_ADMIN_NAME:-Admin}"
+      SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD is required}"
+      SSO_CLIENT_ID: "${SSO_CLIENT_ID:-}"
+      SSO_CLIENT_SECRET: "${SSO_CLIENT_SECRET:-}"
+      SSO_ISSUER: "${SSO_ISSUER:-}"
+    networks:
+      - komodo_net
+
+  frontend:
+    image: ghcr.io/nonetss/komodo-cd-frontend:latest
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: "http://backend:3000"
+    ports:
+      - "${PORT:-80}:80"
+    depends_on:
+      - backend
+    networks:
+      - komodo_net
+
+networks:
+  komodo_net:
+
+volumes:
+  db_data:
+```
+
+---
+
 ## Variables de entorno
 
 | Variable | Requerida | Descripción |
