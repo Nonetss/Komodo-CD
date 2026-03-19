@@ -2,6 +2,11 @@
 
 Despliegue en producción de Komodo CD usando imágenes publicadas en GHCR.
 
+| | Repositorio |
+|---|---|
+| **Backend** | [Nonetss/komodo-cd-backend](https://github.com/Nonetss/komodo-cd-backend) |
+| **Frontend** | [Nonetss/komodo-cd-frontend](https://github.com/Nonetss/komodo-cd-frontend) |
+
 | Stacks | Deploy |
 |--------|--------|
 | ![Stacks](img/stacks.png) | ![Deploy](img/deploy.png) |
