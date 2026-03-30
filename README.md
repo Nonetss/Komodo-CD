@@ -22,7 +22,25 @@ Production deployment for Komodo CD using images published on GHCR.
 
 ## Quick start
 
-### 1. Generate secrets
+### One-line install (interactive)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Nonetss/komodo-cd-docker/main/start.sh | bash
+```
+
+Or clone and run manually:
+
+```bash
+git clone https://github.com/Nonetss/komodo-cd-docker.git
+cd komodo-cd-docker
+./start.sh
+```
+
+---
+
+### Manual setup
+
+#### 1. Generate secrets
 
 ```bash
 # Better Auth secret (required)
@@ -32,7 +50,7 @@ openssl rand -base64 32
 openssl rand -base64 16
 ```
 
-### 2. Configure environment
+#### 2. Configure environment
 
 ```bash
 cp .env.example .env
@@ -46,7 +64,7 @@ BETTER_AUTH_SECRET=<output of first openssl command>
 SEED_ADMIN_PASSWORD=<output of second openssl command>
 ```
 
-### 3. Start
+#### 3. Start
 
 ```bash
 docker compose up -d
