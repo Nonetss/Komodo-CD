@@ -305,7 +305,7 @@ export const CredentialsPanel = () => {
         {credentials.length === 0 && !loading && !showForm && (
           <Card>
             <CardContent className="flex flex-col items-center justify-center gap-3 py-16">
-              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
+              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-md">
                 <Server className="text-muted-foreground h-6 w-6" />
               </div>
               <p className="text-muted-foreground text-sm">

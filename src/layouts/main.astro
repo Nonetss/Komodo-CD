@@ -1,6 +1,7 @@
 ---
 import '@/styles/global.css';
 const { title } = Astro.props;
+
 import { ClientRouter } from 'astro:transitions';
 
 const lang = Astro.cookies.get('lang')?.value ?? 'es';

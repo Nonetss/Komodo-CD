@@ -1,7 +1,7 @@
 ---
-import Main from './main.astro';
 import { ButtonLogOut } from '@/components/features/login/buttonLogOut';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import Main from '@/layouts/main.astro';
 
 const { title = 'Komodo CD' } = Astro.props;
 const { user } = Astro.locals;
@@ -72,6 +72,7 @@ const path = Astro.url.pathname;
                   path === item.href || path.startsWith(item.href + '/');
                 return (
                   <a
+                    key={item.href}
                     href={item.href}
                     class={`rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
                       isActive

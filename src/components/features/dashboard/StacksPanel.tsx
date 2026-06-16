@@ -113,7 +113,7 @@ function StateBadge({ state }: { state: StackState }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium ${s.badge}`}
     >
-      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
+      <span className={`h-1.5 w-1.5 rounded-md ${s.dot}`} />
       {t(`stacks.states.${s.stateKey}`)}
     </span>
   );
@@ -309,7 +309,7 @@ export const StacksPanel = () => {
                       onClick={() => setFilterState(isActive ? null : state)}
                       className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${isActive ? s.badge : 'border-border text-muted-foreground hover:text-foreground bg-secondary'}`}
                     >
-                      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
+                      <span className={`h-1.5 w-1.5 rounded-md ${s.dot}`} />
                       {t(`stacks.states.${s.stateKey}`)}{' '}
                       <span className="opacity-60">({count})</span>
                     </button>
