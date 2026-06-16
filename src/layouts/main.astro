@@ -14,6 +14,18 @@ const lang = Astro.cookies.get("lang")?.value ?? "es"
     <link rel="icon" type="image/svg+xml" href="/logo.svg">
     <title>{title} | Komodo CD</title>
     <ClientRouter />
+    <script is:inline>
+      function applyTheme() {
+        const stored = localStorage.getItem("theme")
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches
+        const theme = stored ?? (prefersDark ? "dark" : "dark")
+        document.documentElement.classList.toggle("dark", theme === "dark")
+      }
+      applyTheme()
+      document.addEventListener("astro:after-swap", applyTheme)
+    </script>
   </head>
   <body>
     <slot />

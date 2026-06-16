@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { authClient } from "@/lib/auth"
 
 const loginSchema = z.object({
@@ -45,7 +46,10 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="relative flex min-h-screen items-center justify-center px-4">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm space-y-6">
         {/* Brand */}
         <div className="flex flex-col items-center gap-3">

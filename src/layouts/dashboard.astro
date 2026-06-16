@@ -1,6 +1,7 @@
 ---
 import { ButtonLogOut } from "@/components/features/login/buttonLogOut"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import Main from "@/layouts/main.astro"
 
 const { title = "Komodo CD" } = Astro.props
@@ -96,6 +97,10 @@ const path = Astro.url.pathname
             </span>
             <LanguageSwitcher client:only="react" />
             <ButtonLogOut client:only="react" />
+            <ThemeToggle
+              client:only="react"
+              className="absolute right-0 mr-4"
+            />
           </div>
         </div>
       </div>
