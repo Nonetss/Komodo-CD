@@ -1,52 +1,40 @@
 import { defineMiddleware } from "astro:middleware"
-import { authClient } from "@/lib/auth"
+import { authServer } from "@/lib/auth-server"
 
-const sessionCache = new Map<
-  string,
-  { session: { user: any; session: any }; expires: number }
->()
-const CACHE_DURATION = 30 * 1000 // 30 s
+const publicPaths = ["/login", "/signup", "/api/auth", "/pending"]
+const adminPaths = ["/admin"]
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  if (
-    context.url.pathname.startsWith("/login") ||
-    context.url.pathname.startsWith("/api/auth")
-  ) {
+  const path = context.url.pathname
+
+  if (publicPaths.some((p) => path.startsWith(p))) {
     return next()
   }
 
-  const rawCookie = context.request.headers.get("Cookie")
-  const token = context.cookies.get("better-auth.session_token")
-  const cookieHeader =
-    rawCookie ?? (token ? `better-auth.session_token=${token.value}` : "")
+  const sessionResult = await authServer.getSession({
+    fetchOptions: {
+      headers: Object.fromEntries(context.request.headers.entries()),
+    },
+  })
 
-  if (!cookieHeader) {
+  if (sessionResult.error || sessionResult.data === null) {
     return context.redirect("/login")
   }
 
-  const cacheKey = token?.value ?? rawCookie ?? ""
-  const now = Date.now()
-  const cached = sessionCache.get(cacheKey)
+  const { user, session } = sessionResult.data
 
-  let sessionData: { user: any; session: any }
-
-  if (cached && cached.expires > now) {
-    sessionData = cached.session
-  } else {
-    const { data: session, error } = await authClient.getSession({
-      fetchOptions: { headers: { Cookie: cookieHeader } },
-    })
-
-    if (error || !session) {
-      return context.redirect("/login")
-    }
-
-    sessionData = session
-    sessionCache.set(cacheKey, { session, expires: now + CACHE_DURATION })
+  if (user.role === "pending") {
+    return context.redirect("/pending")
   }
 
-  context.locals.user = sessionData.user
-  context.locals.session = sessionData.session
+  if (adminPaths.some((p) => path.startsWith(p))) {
+    if (user.role !== "admin") {
+      return context.redirect("/")
+    }
+  }
+
+  context.locals.session = session as App.AdminSession
+  context.locals.user = user as App.User
 
   return next()
 })

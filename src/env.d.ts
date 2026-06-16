@@ -1,15 +1,16 @@
-/// <reference types="vite/client" />
-// / <reference path="../.astro/types.d.ts" />
+/// <reference path="../.astro/types.d.ts" />
 
 declare namespace App {
-  // Note: 'import {} from ""' syntax does not work in .d.ts files.
-  interface Locals {
-    user: import("better-auth").User | null
-    session: import("better-auth").Session | null
+  type AdminSession = import("better-auth").Session & {
+    impersonatedBy?: string | null
+    activeOrganizationId?: string | null
   }
-}
+  type User = import("better-auth").UserWithRole & {
+    groups: string[]
+  }
 
-interface ImportMetaEnv {
-  readonly BETTER_AUTH_URL?: string
-  readonly PUBLIC_APP_URL?: string
+  interface Locals {
+    user: User | null
+    session: AdminSession | null
+  }
 }
