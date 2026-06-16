@@ -7,7 +7,6 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prepare": "husky",
     "format": "biome check --write --linter-enabled=false .",
     "lint": "biome lint --write .",
     "check": "biome check ."
@@ -30,9 +29,7 @@
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "husky": "^9.1.7",
     "i18next": "^25.8.20",
-    "lint-staged": "^16.2.7",
     "lucide-react": "^0.544.0",
     "openid-client": "^6.8.1",
     "prettier": "^3.7.4",
