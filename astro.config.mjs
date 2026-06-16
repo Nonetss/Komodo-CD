@@ -11,7 +11,7 @@ export default defineConfig({
   }),
   env: {
     schema: {
-      INTERNAL_BACKEND_URL: envField.string({
+      BACKEND_URL: envField.string({
         context: "server",
         access: "secret",
         default: "http://localhost:3000",
