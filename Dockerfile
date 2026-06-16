@@ -4,14 +4,6 @@ COPY package.json bun.lock ./
 RUN bun install
 COPY . .
 
-# Variables hornadas en el bundle en tiempo de build.
-# PUBLIC_APP_URL: si no se pasa, el cliente usa window.location.origin como fallback.
-# BETTER_AUTH_URL: base para las llamadas de better-auth (/api/auth/*).
-ARG PUBLIC_APP_URL
-ARG BETTER_AUTH_URL
-ENV PUBLIC_APP_URL=$PUBLIC_APP_URL
-ENV BETTER_AUTH_URL=$BETTER_AUTH_URL
-
 RUN bun run build
 
 # ── Imagen final ─────────────────────────────────────────────────────────────
