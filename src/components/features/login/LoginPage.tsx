@@ -1,12 +1,10 @@
-import { useState } from 'react';
-import '@/lib/i18n';
-import { useTranslation } from 'react-i18next';
-import { authClient } from '@/lib/auth';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState } from "react"
+import "@/lib/i18n"
+import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import { z } from "zod"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Form,
   FormControl,
@@ -14,36 +12,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { authClient } from "@/lib/auth"
 
 const loginSchema = z.object({
   email: z.string(),
   password: z.string(),
-});
+})
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = z.infer<typeof loginSchema>
 
 export const LoginPage = () => {
-  const { t } = useTranslation();
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const { t } = useTranslation()
+  const [loginError, setLoginError] = useState<string | null>(null)
 
   const form = useForm<LoginFormValues>({
-    defaultValues: { email: '', password: '' },
-  });
+    defaultValues: { email: "", password: "" },
+  })
 
   const onSubmit = async (data: LoginFormValues) => {
-    setLoginError(null);
+    setLoginError(null)
     const { error } = await authClient.signIn.email({
       email: data.email,
       password: data.password,
-    });
+    })
     if (error) {
-      setLoginError(t('login.error'));
-      return;
+      setLoginError(t("login.error"))
+      return
     }
-    window.location.href = '/';
-  };
+    window.location.href = "/"
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
@@ -59,7 +58,7 @@ export const LoginPage = () => {
         <Card>
           <CardHeader>
             <CardTitle className="text-base font-medium">
-              {t('login.title')}
+              {t("login.title")}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -73,12 +72,12 @@ export const LoginPage = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('login.emailLabel')}</FormLabel>
+                      <FormLabel>{t("login.emailLabel")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           type="email"
-                          placeholder={t('login.emailPlaceholder')}
+                          placeholder={t("login.emailPlaceholder")}
                           autoComplete="email"
                           spellCheck={false}
                         />
@@ -92,7 +91,7 @@ export const LoginPage = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('login.passwordLabel')}</FormLabel>
+                      <FormLabel>{t("login.passwordLabel")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -110,7 +109,7 @@ export const LoginPage = () => {
                 )}
 
                 <Button type="submit" className="w-full">
-                  {t('login.submit')}
+                  {t("login.submit")}
                 </Button>
               </form>
             </Form>
@@ -118,5 +117,5 @@ export const LoginPage = () => {
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}

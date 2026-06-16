@@ -1,92 +1,90 @@
-import { useState, useEffect } from 'react';
-import '@/lib/i18n';
-import { useTranslation } from 'react-i18next';
-import { RefreshCw, CheckCircle2, XCircle } from 'lucide-react';
-import { historyApi, type HistoryItem } from '@/lib/api';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { useEffect, useState } from "react"
+import "@/lib/i18n"
+import { CheckCircle2, RefreshCw, XCircle } from "lucide-react"
+import { useTranslation } from "react-i18next"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { type HistoryItem, historyApi } from "@/lib/api"
 
 const ACTION_LABELS: Record<string, string> = {
-  pull: 'Pull',
-  redeploy: 'Redeploy',
-  'pull-redeploy': 'Pull + Redeploy',
-};
+  pull: "Pull",
+  redeploy: "Redeploy",
+  "pull-redeploy": "Pull + Redeploy",
+}
 
-type TimeGroup = 'last-hour' | 'today' | 'last-week' | 'older';
+type TimeGroup = "last-hour" | "today" | "last-week" | "older"
 
 function getTimeGroup(date: Date): TimeGroup {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffHours = diffMs / (1000 * 60 * 60);
-  const diffDays = diffMs / (1000 * 60 * 60 * 24);
+  const now = new Date()
+  const diffMs = now.getTime() - date.getTime()
+  const diffHours = diffMs / (1000 * 60 * 60)
+  const diffDays = diffMs / (1000 * 60 * 60 * 24)
 
-  if (diffHours < 1) return 'last-hour';
-  if (date.toDateString() === now.toDateString()) return 'today';
-  if (diffDays < 7) return 'last-week';
-  return 'older';
+  if (diffHours < 1) return "last-hour"
+  if (date.toDateString() === now.toDateString()) return "today"
+  if (diffDays < 7) return "last-week"
+  return "older"
 }
 
 function groupHistory(
-  items: HistoryItem[],
+  items: HistoryItem[]
 ): { group: TimeGroup; items: HistoryItem[] }[] {
   const groups: Record<TimeGroup, HistoryItem[]> = {
-    'last-hour': [],
+    "last-hour": [],
     today: [],
-    'last-week': [],
+    "last-week": [],
     older: [],
-  };
-
-  for (const item of items) {
-    groups[getTimeGroup(new Date(item.createdAt))].push(item);
   }
 
-  const order: TimeGroup[] = ['last-hour', 'today', 'last-week', 'older'];
+  for (const item of items) {
+    groups[getTimeGroup(new Date(item.createdAt))].push(item)
+  }
+
+  const order: TimeGroup[] = ["last-hour", "today", "last-week", "older"]
   return order
     .filter((g) => groups[g].length > 0)
-    .map((g) => ({ group: g, items: groups[g] }));
+    .map((g) => ({ group: g, items: groups[g] }))
 }
 
-function Skeleton({ className = '' }: { className?: string }) {
-  return (
-    <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
-  );
+function Skeleton({ className = "" }: { className?: string }) {
+  return <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
 }
 
 export const HistoryPanel = () => {
-  const { t, i18n } = useTranslation();
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { t, i18n } = useTranslation()
+  const [history, setHistory] = useState<HistoryItem[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchHistory = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const res = await historyApi.list();
-      setHistory(res.data.history);
+      const res = await historyApi.list()
+      setHistory(res.data.history)
     } catch {
-      setError(t('history.error'));
+      setError(t("history.error"))
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchHistory();
-  }, []);
+    fetchHistory()
+  }, [])
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-3">
-        <CardTitle>{t('history.title')}</CardTitle>
+        <CardTitle>{t("history.title")}</CardTitle>
         <Button
           variant="outline"
           size="icon"
           onClick={fetchHistory}
           disabled={loading}
-          aria-label={t('history.refresh')}
+          aria-label={t("history.refresh")}
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
         </Button>
       </CardHeader>
       <CardContent>
@@ -115,16 +113,16 @@ export const HistoryPanel = () => {
         )}
 
         {!error && !loading && history.length === 0 && (
-          <p className="text-muted-foreground text-sm">{t('history.empty')}</p>
+          <p className="text-muted-foreground text-sm">{t("history.empty")}</p>
         )}
 
         {groupHistory(history).map(({ group, items: groupItems }) => {
           const groupLabel: Record<TimeGroup, string> = {
-            'last-hour': t('history.group.lastHour'),
-            today: t('history.group.today'),
-            'last-week': t('history.group.lastWeek'),
-            older: t('history.group.older'),
-          };
+            "last-hour": t("history.group.lastHour"),
+            today: t("history.group.today"),
+            "last-week": t("history.group.lastWeek"),
+            older: t("history.group.older"),
+          }
 
           return (
             <div key={group} className="mb-4 last:mb-0">
@@ -137,8 +135,8 @@ export const HistoryPanel = () => {
                     key={item.id}
                     className={`flex items-start gap-4 py-3 text-sm ${
                       idx < groupItems.length - 1
-                        ? 'border-border border-b'
-                        : ''
+                        ? "border-border border-b"
+                        : ""
                     }`}
                   >
                     <div className="mt-0.5 shrink-0">
@@ -168,8 +166,8 @@ export const HistoryPanel = () => {
                         <span>·</span>
                         <span>
                           {new Intl.DateTimeFormat(i18n.language, {
-                            dateStyle: 'short',
-                            timeStyle: 'short',
+                            dateStyle: "short",
+                            timeStyle: "short",
                           }).format(new Date(item.createdAt))}
                         </span>
                       </div>
@@ -178,9 +176,9 @@ export const HistoryPanel = () => {
                 ))}
               </div>
             </div>
-          );
+          )
         })}
       </CardContent>
     </Card>
-  );
-};
+  )
+}

@@ -1,17 +1,17 @@
 ---
-import '@/styles/global.css';
-const { title } = Astro.props;
+import "@/styles/global.css"
+const { title } = Astro.props
 
-import { ClientRouter } from 'astro:transitions';
+import { ClientRouter } from "astro:transitions"
 
-const lang = Astro.cookies.get('lang')?.value ?? 'es';
+const lang = Astro.cookies.get("lang")?.value ?? "es"
 ---
 
 <html lang={lang}>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/svg+xml" href="/logo.svg">
     <title>{title} | Komodo CD</title>
     <ClientRouter />
   </head>

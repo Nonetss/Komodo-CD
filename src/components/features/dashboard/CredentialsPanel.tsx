@@ -1,28 +1,26 @@
-import { useState, useEffect, useMemo } from 'react';
-import '@/lib/i18n';
-import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { useEffect, useMemo, useState } from "react"
+import "@/lib/i18n"
+import { zodResolver } from "@hookform/resolvers/zod"
 import {
-  Trash2,
+  ExternalLink,
+  KeyRound,
   Plus,
   RefreshCw,
   Server,
   ShieldCheck,
-  ExternalLink,
-  KeyRound,
-} from 'lucide-react';
-import { credentialsApi, type Credential } from '@/lib/api';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+  Trash2,
+} from "lucide-react"
+import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import { z } from "zod"
+import { Button } from "@/components/ui/button"
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-} from '@/components/ui/card';
+} from "@/components/ui/card"
 import {
   Form,
   FormControl,
@@ -30,104 +28,104 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { type Credential, credentialsApi } from "@/lib/api"
 
 type SaveFormValues = {
-  name: string;
-  url: string;
-  key: string;
-  secret: string;
-};
+  name: string
+  url: string
+  key: string
+  secret: string
+}
 
-function Skeleton({ className = '' }: { className?: string }) {
-  return (
-    <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
-  );
+function Skeleton({ className = "" }: { className?: string }) {
+  return <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
 }
 
 export const CredentialsPanel = () => {
-  const { t, i18n } = useTranslation();
-  const [credentials, setCredentials] = useState<Credential[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
-  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const { t, i18n } = useTranslation()
+  const [credentials, setCredentials] = useState<Credential[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [showForm, setShowForm] = useState(false)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null)
 
   const saveSchema = useMemo(
     () =>
       z.object({
-        name: z.string().min(1, t('credentials.required')),
-        url: z.string().url(t('credentials.invalidUrl')),
-        key: z.string().min(1, t('credentials.required')),
-        secret: z.string().min(1, t('credentials.required')),
+        name: z.string().min(1, t("credentials.required")),
+        url: z.string().url(t("credentials.invalidUrl")),
+        key: z.string().min(1, t("credentials.required")),
+        secret: z.string().min(1, t("credentials.required")),
       }),
-    [i18n.language],
-  );
+    [i18n.language]
+  )
 
   const form = useForm<SaveFormValues>({
     resolver: zodResolver(saveSchema),
-    defaultValues: { name: '', url: '', key: '', secret: '' },
-  });
+    defaultValues: { name: "", url: "", key: "", secret: "" },
+  })
 
   const fetchCredentials = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const res = await credentialsApi.list();
-      setCredentials(res.data.credentials);
+      const res = await credentialsApi.list()
+      setCredentials(res.data.credentials)
     } catch {
-      setError(t('credentials.errorLoad'));
+      setError(t("credentials.errorLoad"))
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchCredentials();
-  }, []);
+    fetchCredentials()
+  }, [])
 
   useEffect(() => {
-    if (!confirmDeleteId) return;
-    const timer = setTimeout(() => setConfirmDeleteId(null), 3000);
-    return () => clearTimeout(timer);
-  }, [confirmDeleteId]);
+    if (!confirmDeleteId) return
+    const timer = setTimeout(() => setConfirmDeleteId(null), 3000)
+    return () => clearTimeout(timer)
+  }, [confirmDeleteId])
 
   const onSubmit = async (data: SaveFormValues) => {
-    setError(null);
-    setSuccessMsg(null);
+    setError(null)
+    setSuccessMsg(null)
     try {
-      const res = await credentialsApi.save(data);
-      setSuccessMsg(res.data.message);
-      form.reset();
-      setShowForm(false);
-      await fetchCredentials();
+      const res = await credentialsApi.save(data)
+      setSuccessMsg(res.data.message)
+      form.reset()
+      setShowForm(false)
+      await fetchCredentials()
     } catch {
-      setError(t('credentials.errorSave'));
+      setError(t("credentials.errorSave"))
     }
-  };
+  }
 
   const handleDelete = async (cred: Credential) => {
-    if (!cred.name) return;
+    if (!cred.name) return
     if (confirmDeleteId !== cred.id) {
-      setConfirmDeleteId(cred.id);
-      return;
+      setConfirmDeleteId(cred.id)
+      return
     }
-    setConfirmDeleteId(null);
-    setDeletingId(cred.id);
-    setError(null);
-    setSuccessMsg(null);
+    setConfirmDeleteId(null)
+    setDeletingId(cred.id)
+    setError(null)
+    setSuccessMsg(null)
     try {
-      await credentialsApi.delete(cred.name);
-      setSuccessMsg(t('credentials.deleted', { name: cred.name }));
-      await fetchCredentials();
+      await credentialsApi.delete(cred.name)
+      setSuccessMsg(t("credentials.deleted", { name: cred.name }))
+      await fetchCredentials()
     } catch {
-      setError(t('credentials.errorDelete'));
+      setError(t("credentials.errorDelete"))
     } finally {
-      setDeletingId(null);
+      setDeletingId(null)
     }
-  };
+  }
 
   return (
     <div className="flex flex-col gap-6 lg:grid lg:grid-cols-3">
@@ -135,9 +133,9 @@ export const CredentialsPanel = () => {
       <div className="space-y-4 lg:col-span-2">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <div>
-            <h2 className="text-xl font-semibold">{t('credentials.title')}</h2>
+            <h2 className="text-xl font-semibold">{t("credentials.title")}</h2>
             <p className="text-muted-foreground mt-0.5 text-sm">
-              {t('credentials.description')}
+              {t("credentials.description")}
             </p>
           </div>
           <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
@@ -148,20 +146,20 @@ export const CredentialsPanel = () => {
               className="w-full shrink-0 sm:w-auto"
             >
               <RefreshCw
-                className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`}
+                className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
               />
-              <span className="sm:hidden">{t('credentials.refresh')}</span>
+              <span className="sm:hidden">{t("credentials.refresh")}</span>
             </Button>
             <Button
               onClick={() => {
-                setShowForm((v) => !v);
-                setError(null);
-                setSuccessMsg(null);
+                setShowForm((v) => !v)
+                setError(null)
+                setSuccessMsg(null)
               }}
               className="w-full shrink-0 sm:w-auto"
             >
               <Plus className="h-4 w-4" />
-              {showForm ? t('credentials.cancel') : t('credentials.add')}
+              {showForm ? t("credentials.cancel") : t("credentials.add")}
             </Button>
           </div>
         </div>
@@ -182,10 +180,10 @@ export const CredentialsPanel = () => {
           <Card>
             <CardHeader>
               <CardTitle className="text-base">
-                {t('credentials.newTitle')}
+                {t("credentials.newTitle")}
               </CardTitle>
               <CardDescription>
-                {t('credentials.newDescription')}
+                {t("credentials.newDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -200,11 +198,11 @@ export const CredentialsPanel = () => {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('credentials.nameLabel')}</FormLabel>
+                          <FormLabel>{t("credentials.nameLabel")}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder={t('credentials.namePlaceholder')}
+                              placeholder={t("credentials.namePlaceholder")}
                             />
                           </FormControl>
                           <FormMessage />
@@ -216,11 +214,11 @@ export const CredentialsPanel = () => {
                       name="url"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('credentials.urlLabel')}</FormLabel>
+                          <FormLabel>{t("credentials.urlLabel")}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder={t('credentials.urlPlaceholder')}
+                              placeholder={t("credentials.urlPlaceholder")}
                             />
                           </FormControl>
                           <FormMessage />
@@ -232,11 +230,11 @@ export const CredentialsPanel = () => {
                       name="key"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('credentials.apiKeyLabel')}</FormLabel>
+                          <FormLabel>{t("credentials.apiKeyLabel")}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder={t('credentials.apiKeyPlaceholder')}
+                              placeholder={t("credentials.apiKeyPlaceholder")}
                             />
                           </FormControl>
                           <FormMessage />
@@ -248,11 +246,11 @@ export const CredentialsPanel = () => {
                       name="secret"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('credentials.secretLabel')}</FormLabel>
+                          <FormLabel>{t("credentials.secretLabel")}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder={t('credentials.secretPlaceholder')}
+                              placeholder={t("credentials.secretPlaceholder")}
                               type="password"
                             />
                           </FormControl>
@@ -267,14 +265,14 @@ export const CredentialsPanel = () => {
                       variant="outline"
                       className="w-full sm:w-auto"
                       onClick={() => {
-                        setShowForm(false);
-                        form.reset();
+                        setShowForm(false)
+                        form.reset()
                       }}
                     >
-                      {t('credentials.cancel')}
+                      {t("credentials.cancel")}
                     </Button>
                     <Button type="submit" className="w-full sm:w-auto">
-                      {t('credentials.save')}
+                      {t("credentials.save")}
                     </Button>
                   </div>
                 </form>
@@ -309,11 +307,11 @@ export const CredentialsPanel = () => {
                 <Server className="text-muted-foreground h-6 w-6" />
               </div>
               <p className="text-muted-foreground text-sm">
-                {t('credentials.empty')}
+                {t("credentials.empty")}
               </p>
               <Button size="sm" onClick={() => setShowForm(true)}>
                 <Plus className="h-4 w-4" />
-                {t('credentials.addFirst')}
+                {t("credentials.addFirst")}
               </Button>
             </CardContent>
           </Card>
@@ -330,11 +328,11 @@ export const CredentialsPanel = () => {
                     </div>
                     <div className="min-w-0">
                       <p className="truncate font-semibold">
-                        {cred.name ?? '—'}
+                        {cred.name ?? "—"}
                       </p>
                       <div className="mt-0.5 flex items-center gap-1">
                         <p className="text-muted-foreground truncate text-sm">
-                          {cred.url ?? '—'}
+                          {cred.url ?? "—"}
                         </p>
                         {cred.url && (
                           <a
@@ -352,25 +350,25 @@ export const CredentialsPanel = () => {
                   <div className="flex shrink-0 items-center gap-1.5">
                     {confirmDeleteId === cred.id && (
                       <span className="text-destructive text-xs">
-                        {t('credentials.confirmDelete')}
+                        {t("credentials.confirmDelete")}
                       </span>
                     )}
                     <Button
                       variant={
-                        confirmDeleteId === cred.id ? 'destructive' : 'ghost'
+                        confirmDeleteId === cred.id ? "destructive" : "ghost"
                       }
                       size="icon"
                       className={
                         confirmDeleteId === cred.id
-                          ? 'shrink-0'
-                          : 'text-muted-foreground hover:text-destructive shrink-0 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100'
+                          ? "shrink-0"
+                          : "text-muted-foreground hover:text-destructive shrink-0 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
                       }
                       disabled={deletingId === cred.id}
                       onClick={() => handleDelete(cred)}
                       aria-label={
                         confirmDeleteId === cred.id
-                          ? t('credentials.confirmDeleteLabel')
-                          : t('credentials.deleteLabel')
+                          ? t("credentials.confirmDeleteLabel")
+                          : t("credentials.deleteLabel")
                       }
                     >
                       <Trash2 className="h-4 w-4" />
@@ -389,12 +387,12 @@ export const CredentialsPanel = () => {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm">
               <ShieldCheck className="text-primary h-4 w-4" />
-              {t('credentials.whatTitle')}
+              {t("credentials.whatTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground space-y-3 text-sm">
-            <p>{t('credentials.whatP1')}</p>
-            <p>{t('credentials.whatP2')}</p>
+            <p>{t("credentials.whatP1")}</p>
+            <p>{t("credentials.whatP2")}</p>
           </CardContent>
         </Card>
 
@@ -402,24 +400,24 @@ export const CredentialsPanel = () => {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm">
               <KeyRound className="text-primary h-4 w-4" />
-              {t('credentials.howTitle')}
+              {t("credentials.howTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground space-y-3 text-sm">
             <ol className="list-inside list-decimal space-y-2">
-              <li>{t('credentials.howStep1')}</li>
+              <li>{t("credentials.howStep1")}</li>
               <li>
-                {t('credentials.howStep2').split('Settings → API Keys')[0]}
+                {t("credentials.howStep2").split("Settings → API Keys")[0]}
                 <span className="text-foreground font-medium">
                   Settings → API Keys
                 </span>
               </li>
-              <li>{t('credentials.howStep3')}</li>
-              <li>{t('credentials.howStep4')}</li>
+              <li>{t("credentials.howStep3")}</li>
+              <li>{t("credentials.howStep4")}</li>
             </ol>
           </CardContent>
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}

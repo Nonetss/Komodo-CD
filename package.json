@@ -8,7 +8,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "prepare": "husky",
-    "format": "prettier --write ."
+    "format": "biome check --write --linter-enabled=false .",
+    "lint": "biome lint --write .",
+    "check": "biome check ."
   },
   "dependencies": {
     "@astrojs/mdx": "5.0.2",

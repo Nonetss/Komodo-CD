@@ -1,10 +1,10 @@
-import { createAuthClient } from 'better-auth/react';
+import { createAuthClient } from "better-auth/react"
 
 const normalizeEnvUrl = (value?: string) => {
-  if (!value) return undefined;
+  if (!value) return undefined
   // Algunos .env incluyen comillas dobles/siempre; eliminarlas evita URLs inválidas.
-  return value.replace(/^['"]|['"]$/g, '');
-};
+  return value.replace(/^['"]|['"]$/g, "")
+}
 
 /**
  * SSR / middleware: debe usar el runtime (p. ej. Docker), no import.meta.env,
@@ -17,14 +17,14 @@ function getServerAuthBaseURL(): string | undefined {
     normalizeEnvUrl(process.env.BACKEND_URL) ??
     normalizeEnvUrl(import.meta.env.BETTER_AUTH_URL) ??
     normalizeEnvUrl(import.meta.env.PUBLIC_APP_URL)
-  );
+  )
 }
 
 // En navegador: mismo origen que la UI (cookies alineadas con el dominio público).
 // En servidor: URL interna del API de Better Auth (contenedor backend).
 const baseURL =
-  typeof window !== 'undefined'
+  typeof window !== "undefined"
     ? window.location.origin
-    : (getServerAuthBaseURL() ?? 'http://localhost:4321');
+    : (getServerAuthBaseURL() ?? "http://localhost:4321")
 
-export const authClient = createAuthClient({ baseURL });
+export const authClient = createAuthClient({ baseURL })
