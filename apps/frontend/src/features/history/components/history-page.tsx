@@ -10,18 +10,17 @@ import {
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { EmptyState } from "@/components/app/empty-state"
-import { PageHeader } from "@/components/app/page-header"
-import { Segmented } from "@/components/app/segmented"
-import { Badge } from "@/components/ui/badge"
+import { StateCard } from "@/components/shared/feedback/state-card"
+import { Segmented } from "@/components/shared/form/segmented"
+import { PageHero } from "@/components/shared/layout/page-hero"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ACTION_I18N } from "@/features/deploy"
+import { useHistory } from "@/features/history/hooks/use-history"
 import type { HistoryItem } from "@/lib/api-types"
-import { ACTION_I18N } from "@/lib/deploy-curl"
 import { getErrorMessage } from "@/lib/orpc"
 import { cn } from "@/lib/utils"
 import { withIsland } from "@/providers/island"
-import { useHistory } from "./hooks/use-history"
 
 type TimeGroup = "last-hour" | "today" | "last-week" | "older"
 type Filter = "all" | "success" | "failed"
@@ -58,23 +57,20 @@ function Actor({ item }: { item: HistoryItem }) {
   return (
     <span className="inline-flex min-w-0 items-center gap-1">
       <Icon className="size-3 shrink-0" />
-      <span className={cn("truncate", viaKey && "text-micro font-mono")}>
+      <span className={cn("truncate", viaKey && "text-meta-sm font-mono")}>
         {label}
       </span>
     </span>
   )
 }
 
-function HistoryEntry({ item, index }: { item: HistoryItem; index: number }) {
+function HistoryEntry({ item }: { item: HistoryItem }) {
   const { t, i18n } = useTranslation()
   const date = new Date(item.createdAt)
   const actionKey = ACTION_I18N[item.action as keyof typeof ACTION_I18N]
 
   return (
-    <li
-      className="reveal relative flex gap-3.5 py-3 pr-1 pl-0 sm:gap-4"
-      style={{ "--i": index } as React.CSSProperties}
-    >
+    <li className="relative flex gap-3.5 py-3 pr-1 pl-0 sm:gap-4">
       <span
         className={cn(
           "relative z-10 mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border",
@@ -93,16 +89,16 @@ function HistoryEntry({ item, index }: { item: HistoryItem; index: number }) {
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="text-sm font-medium">{item.stack}</span>
-          <Badge variant="outline">
+          <span className="text-muted-foreground text-meta-sm inline-flex items-center rounded-md border px-1.5 py-0.5 leading-none font-medium whitespace-nowrap">
             {actionKey ? t(`deploy.actions.${actionKey}.label`) : item.action}
-          </Badge>
+          </span>
           <time
             dateTime={item.createdAt}
             title={new Intl.DateTimeFormat(i18n.language, {
               dateStyle: "full",
               timeStyle: "medium",
             }).format(date)}
-            className="text-muted-foreground tabular ml-auto text-xs whitespace-nowrap"
+            className="text-muted-foreground ml-auto text-xs whitespace-nowrap tabular-nums"
           >
             {relativeTime(date, i18n.language)}
           </time>
@@ -125,7 +121,7 @@ function HistoryEntry({ item, index }: { item: HistoryItem; index: number }) {
   )
 }
 
-const HistoryPanelContent = () => {
+const HistoryPageContent = () => {
   const { t } = useTranslation()
   const historyQuery = useHistory()
   const history = historyQuery.data ?? []
@@ -163,17 +159,15 @@ const HistoryPanelContent = () => {
     older: t("history.group.older"),
   }
 
-  let running = 0
-
   return (
-    <div>
-      <PageHeader
+    <div className="flex flex-col gap-6">
+      <PageHero
+        surface="history"
         title={t("history.title")}
         description={t("history.description")}
-        actions={
+        action={
           <Button
             variant="outline"
-            size="sm"
             onClick={() => historyQuery.refetch()}
             disabled={refreshing}
             aria-label={t("history.refresh")}
@@ -185,8 +179,8 @@ const HistoryPanelContent = () => {
       />
 
       {historyQuery.isError ? (
-        <EmptyState
-          tone="danger"
+        <StateCard
+          tone="destructive"
           icon={ServerCrash}
           title={t("history.error")}
           description={getErrorMessage(historyQuery.error, "")}
@@ -213,13 +207,13 @@ const HistoryPanelContent = () => {
           ))}
         </div>
       ) : history.length === 0 ? (
-        <EmptyState
+        <StateCard
           icon={HistoryIcon}
           title={t("history.empty")}
           description={t("history.emptyDescription")}
         />
       ) : (
-        <div className="max-w-3xl space-y-6">
+        <div className="space-y-6">
           <Segmented
             value={filter}
             onChange={setFilter}
@@ -248,10 +242,12 @@ const HistoryPanelContent = () => {
 
           {groups.map(({ group, items }) => (
             <section key={group}>
-              <h2 className="section-label mb-1">{groupLabel[group]}</h2>
+              <h2 className="text-muted-foreground mb-1 text-xs font-medium">
+                {groupLabel[group]}
+              </h2>
               <ol className="relative before:bg-border before:absolute before:top-4 before:bottom-4 before:left-3 before:w-px">
                 {items.map((item) => (
-                  <HistoryEntry key={item.id} item={item} index={running++} />
+                  <HistoryEntry key={item.id} item={item} />
                 ))}
               </ol>
             </section>
@@ -262,4 +258,4 @@ const HistoryPanelContent = () => {
   )
 }
 
-export const HistoryPanel = withIsland(HistoryPanelContent)
+export const HistoryPage = withIsland(HistoryPageContent)
