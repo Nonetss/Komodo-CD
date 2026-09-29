@@ -4,6 +4,19 @@ import { logger } from "@komodo-cd/logger"
 import { eq } from "drizzle-orm"
 import { KomodoClient, type Types } from "komodo_client"
 
+/**
+ * Mensaje legible de un error de Komodo. komodo_client no lanza `Error`, sino
+ * `{ status, result: { error, trace } }`.
+ */
+export function komodoErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message
+  if (typeof err === "object" && err !== null && "result" in err) {
+    const result = (err as { result?: { error?: unknown } }).result
+    if (typeof result?.error === "string" && result.error) return result.error
+  }
+  return "Error desconocido"
+}
+
 type KomodoCredentials = {
   name: string
   url: string

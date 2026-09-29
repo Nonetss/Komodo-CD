@@ -1,5 +1,5 @@
 import { errors } from "#errors"
-import { komodoService } from "#lib/komodo"
+import { komodoErrorMessage, komodoService } from "#lib/komodo"
 import type { StackItem } from "#v0/stacks/output"
 
 export const stacksHandler = {
@@ -11,7 +11,7 @@ export const stacksHandler = {
       return { success: true, stacks: stacks as unknown as StackItem[] }
     } catch (err) {
       throw errors.INTERNAL_SERVER_ERROR({
-        message: err instanceof Error ? err.message : "Error desconocido",
+        message: komodoErrorMessage(err),
         cause: err,
       })
     }

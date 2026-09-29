@@ -5,7 +5,7 @@ import { logger } from "@komodo-cd/logger"
 import type { z } from "zod"
 
 import { errors } from "#errors"
-import { komodoService } from "#lib/komodo"
+import { komodoErrorMessage, komodoService } from "#lib/komodo"
 import type { deployInput } from "#v0/deploy/input"
 
 async function saveHistory(
@@ -54,7 +54,7 @@ export const deployHandler = {
 
       return { success: true, message, stack, action }
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Error desconocido"
+      const message = komodoErrorMessage(err)
       logger.error({ err }, `❌ Error en deploy — stack: ${stack}`)
       await saveHistory(user, stack, action, false, message)
 
