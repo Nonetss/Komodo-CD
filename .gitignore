@@ -47,3 +47,7 @@ temp
 .claude/*
 !.claude/settings.json
 !.claude/skills/
+
+# Binarios de la skill impeccable (16 MB por copia, x3). Se reinstalan con
+# las skills a partir de skills-lock.json; el hook tolera que no estén.
+**/skills/impeccable/scripts/bin/
