@@ -51,3 +51,11 @@ temp
 # Binarios de la skill impeccable (16 MB por copia, x3). Se reinstalan con
 # las skills a partir de skills-lock.json; el hook tolera que no estén.
 **/skills/impeccable/scripts/bin/
+
+# Skills y agentes de IA instalados en local (npx skills): no se versionan,
+# cada uno los reinstala desde skills-lock.json
+.agents/
+.claude/skills/
+.github/skills/
+.github/agents/
+.github/hooks/
