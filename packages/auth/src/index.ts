@@ -17,6 +17,14 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  session: {
+    // get-session (el middleware de Astro lo llama en cada página) se
+    // resuelve desde una cookie firmada durante 60 s, sin ir a la DB.
+    cookieCache: {
+      enabled: true,
+      maxAge: 60,
+    },
+  },
   plugins: [apiKey({ rateLimit: { enabled: false } })],
 })
 
