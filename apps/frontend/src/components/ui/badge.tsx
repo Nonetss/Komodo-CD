@@ -4,7 +4,7 @@ import type * as React from "react"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex shrink-0 items-center gap-1.5 rounded-md border px-1.5 py-0.5 text-[11px] leading-none font-medium whitespace-nowrap [&_svg]:size-3",
+  "inline-flex shrink-0 items-center gap-1.5 rounded-md border px-1.5 py-0.5 text-micro leading-none font-medium whitespace-nowrap [&_svg]:size-3",
   {
     variants: {
       variant: {

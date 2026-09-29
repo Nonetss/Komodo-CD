@@ -19,7 +19,7 @@ export function CodeBlock({ code, label, className }: CodeBlockProps) {
       )}
     >
       <div className="flex items-center justify-between gap-2 border-b py-1 pr-1 pl-3">
-        <span className="text-muted-foreground truncate font-mono text-[11px]">
+        <span className="text-muted-foreground truncate font-mono text-micro">
           {label}
         </span>
         <CopyButton value={code} withLabel />

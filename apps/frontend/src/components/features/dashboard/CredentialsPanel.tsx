@@ -130,9 +130,7 @@ function ConnectionCard({
           <Server className="size-5" />
         </div>
         <div className="min-w-0 flex-1 space-y-1.5">
-          <p className="font-display text-lg leading-tight font-semibold">
-            {credential.name ?? "—"}
-          </p>
+          <p className="text-heading">{credential.name ?? "—"}</p>
           {credential.url && (
             <a
               href={credential.url}
@@ -270,7 +268,7 @@ function ConnectionForm({
                           placeholder={placeholder[f.name]}
                           autoComplete={f.autoComplete}
                           spellCheck={false}
-                          className={cn(f.mono && "font-mono text-[13px]")}
+                          className={cn(f.mono && "text-label font-mono")}
                         />
                       </FormControl>
                       <FormMessage />
@@ -318,8 +316,8 @@ function HowTo() {
       <p className="section-label mb-3">{t("credentials.howTitle")}</p>
       <ol className="space-y-3">
         {steps.map((step, i) => (
-          <li key={step} className="flex gap-3 text-[13px]">
-            <span className="text-muted-foreground bg-card tabular flex size-6 shrink-0 items-center justify-center rounded-md border font-mono text-[11px]">
+          <li key={step} className="text-label flex gap-3">
+            <span className="text-muted-foreground bg-card tabular flex size-6 shrink-0 items-center justify-center rounded-md border font-mono text-micro">
               {i + 1}
             </span>
             <span className="text-muted-foreground pt-0.5 text-pretty">

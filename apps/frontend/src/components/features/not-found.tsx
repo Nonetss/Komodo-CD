@@ -13,12 +13,9 @@ const NotFoundContent = () => {
         aria-hidden
       />
       <div className="reveal relative max-w-sm space-y-5 text-center">
-        <p className="section-label">HTTP 404</p>
-        <p className="font-display text-7xl font-semibold tracking-tighter">
-          404
-        </p>
+        <p className="tabular text-7xl font-semibold tracking-tight">404</p>
         <div className="space-y-1.5">
-          <h1 className="text-lg font-semibold">{t("notFound.title")}</h1>
+          <h1 className="text-heading">{t("notFound.title")}</h1>
           <p className="text-muted-foreground text-sm">
             {t("notFound.description")}
           </p>

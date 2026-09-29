@@ -6,8 +6,26 @@
 @theme inline {
   /* Variables generadas por la Fonts API de Astro (astro.config.mjs) */
   --font-sans: var(--font-instrument);
-  --font-display: var(--font-instrument);
   --font-mono: var(--font-jetbrains);
+
+  /*
+   * Escala por rol (producto: fija, sin tipografía fluida).
+   * title > heading > sm (cuerpo) > label > xs (metadatos) > micro.
+   * `micro` es para insignias y para mono en línea junto a texto `xs`:
+   * JetBrains Mono tiene más altura x y a 11px iguala ópticamente al sans a 12.
+   */
+  --text-title: 1.5rem;
+  --text-title--line-height: 2rem;
+  --text-title--letter-spacing: -0.02em;
+  --text-title--font-weight: 600;
+  --text-heading: 0.9375rem;
+  --text-heading--line-height: 1.375rem;
+  --text-heading--letter-spacing: -0.01em;
+  --text-heading--font-weight: 600;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.25rem;
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1rem;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -123,11 +141,10 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
-  h1,
-  h2,
-  h3 {
-    @apply font-display;
-    letter-spacing: -0.015em;
+  /* Texto claro sobre fondo oscuro: un punto más de peso y aire */
+  .dark body {
+    font-weight: 420;
+    letter-spacing: 0.003em;
   }
   html {
     scrollbar-color: color-mix(
@@ -145,6 +162,13 @@
   pre,
   kbd {
     @apply font-mono;
+  }
+  /* Lo que se copia y pega se ve tal cual: sin ligaduras de programación */
+  code,
+  pre,
+  kbd,
+  .font-mono {
+    font-variant-ligatures: none;
   }
   ::selection {
     @apply bg-primary/25;

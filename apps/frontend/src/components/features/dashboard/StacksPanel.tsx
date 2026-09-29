@@ -137,7 +137,7 @@ function StackRow({
                   <span aria-hidden className="text-muted-foreground/50">
                     ·
                   </span>
-                  <span className="truncate font-mono text-[11px]">
+                  <span className="truncate font-mono text-micro">
                     {info.repo}
                     <span className="text-muted-foreground/70">
                       @{info.branch}
@@ -219,7 +219,7 @@ function StackRow({
             <div className="flex items-center gap-2 md:hidden">
               <StackStateBadge state={info.state} />
               {info.status && (
-                <span className="text-muted-foreground font-mono text-[11px]">
+                <span className="text-muted-foreground font-mono text-micro">
                   {info.status}
                 </span>
               )}
@@ -246,14 +246,14 @@ function StackRow({
                     key={svc.service}
                     className="flex items-center justify-between gap-3 px-3 py-2"
                   >
-                    <span className="flex shrink-0 items-center gap-2 text-[13px] font-medium">
+                    <span className="flex shrink-0 items-center gap-2 text-label font-medium">
                       {svc.service}
                       {svc.update_available && (
                         <Badge variant="primary">update</Badge>
                       )}
                     </span>
                     <span
-                      className="text-muted-foreground min-w-0 truncate font-mono text-[11px]"
+                      className="text-muted-foreground min-w-0 truncate font-mono text-micro"
                       title={svc.image}
                     >
                       {svc.image}
@@ -268,7 +268,7 @@ function StackRow({
                 <dt className="flex items-center">
                   <GitBranch className="size-3.5" />
                 </dt>
-                <dd className="min-w-0 truncate font-mono text-[11px]">
+                <dd className="min-w-0 truncate font-mono text-micro">
                   {info.repo_link ? (
                     <a
                       href={info.repo_link}
@@ -288,7 +288,7 @@ function StackRow({
                     <dt className="flex items-center">
                       <GitCommitHorizontal className="size-3.5" />
                     </dt>
-                    <dd className="font-mono text-[11px]">
+                    <dd className="font-mono text-micro">
                       {t("stacks.deployed")} {info.deployed_hash ?? "—"}
                       {update && info.latest_hash && (
                         <span className="text-primary">
@@ -321,7 +321,7 @@ function StackRow({
               code={buildDeployCurl(appUrl, stack.name, curlAction)}
               className="bg-card"
             />
-            <p className="text-muted-foreground text-[11px]">
+            <p className="text-muted-foreground text-xs">
               {t("stacks.ciHint")}
             </p>
           </div>

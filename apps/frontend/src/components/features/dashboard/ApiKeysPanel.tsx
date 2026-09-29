@@ -55,7 +55,7 @@ function CreatedKey({
       </div>
 
       <div className="bg-card flex items-center gap-1 rounded-lg border py-1 pr-1 pl-3">
-        <code className="min-w-0 flex-1 truncate text-[13px]">{value}</code>
+        <code className="min-w-0 flex-1 truncate text-label">{value}</code>
         <CopyButton value={value} withLabel size="sm" />
       </div>
 
@@ -120,7 +120,7 @@ function ApiKeyRow({ apiKey, index }: { apiKey: ApiKey; index: number }) {
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{apiKey.name ?? "—"}</p>
         <p className="text-muted-foreground flex flex-wrap items-center gap-x-2 text-xs">
-          <code className="text-[11px]">
+          <code className="text-micro">
             {apiKey.start ? `${apiKey.start}••••••` : apiKey.id}
           </code>
           <span className="text-border">/</span>
@@ -211,7 +211,7 @@ const ApiKeysPanelContent = () => {
             className="flex flex-col gap-3 sm:flex-row sm:items-end"
           >
             <div className="grid flex-1 gap-1.5">
-              <label htmlFor="apikey-name" className="text-[13px] font-medium">
+              <label htmlFor="apikey-name" className="text-label font-medium">
                 {t("apikeys.nameLabel")}
               </label>
               <Input
@@ -220,7 +220,6 @@ const ApiKeysPanelContent = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t("apikeys.namePlaceholder")}
-                className="font-mono text-[13px]"
                 onKeyDown={(e) => e.key === "Escape" && setShowForm(false)}
               />
             </div>

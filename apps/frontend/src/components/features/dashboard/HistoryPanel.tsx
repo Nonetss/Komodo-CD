@@ -58,7 +58,7 @@ function Actor({ item }: { item: HistoryItem }) {
   return (
     <span className="inline-flex min-w-0 items-center gap-1">
       <Icon className="size-3 shrink-0" />
-      <span className={cn("truncate", viaKey && "font-mono text-[11px]")}>
+      <span className={cn("truncate", viaKey && "text-micro font-mono")}>
         {label}
       </span>
     </span>
@@ -92,9 +92,7 @@ function HistoryEntry({ item, index }: { item: HistoryItem; index: number }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="font-mono text-[13px] font-medium">
-            {item.stack}
-          </span>
+          <span className="text-sm font-medium">{item.stack}</span>
           <Badge variant="outline">
             {actionKey ? t(`deploy.actions.${actionKey}.label`) : item.action}
           </Badge>

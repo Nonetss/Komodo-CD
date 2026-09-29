@@ -39,13 +39,11 @@ function BrandPanel() {
       />
       <div className="relative flex items-center gap-2.5">
         <img src="/logo.svg" alt="" aria-hidden className="h-7 w-auto" />
-        <span className="font-display text-lg font-semibold tracking-tight">
-          Komodo CD
-        </span>
+        <span className="text-lg font-semibold tracking-tight">Komodo CD</span>
       </div>
 
       <div className="relative max-w-md space-y-8">
-        <p className="font-display text-4xl leading-[1.05] font-semibold tracking-tight text-balance xl:text-5xl">
+        <p className="text-4xl leading-[1.08] font-semibold tracking-[-0.025em] text-balance xl:text-5xl">
           {t("login.subtitle")}
         </p>
 
@@ -54,11 +52,11 @@ function BrandPanel() {
             <span className="bg-danger/60 size-2 rounded-full" />
             <span className="bg-warning/60 size-2 rounded-full" />
             <span className="bg-success/60 size-2 rounded-full" />
-            <span className="text-muted-foreground ml-2 font-mono text-[10px]">
+            <span className="text-muted-foreground ml-2 font-mono text-micro">
               .github/workflows/deploy.yml
             </span>
           </div>
-          <pre className="text-muted-foreground p-4 font-mono text-[11.5px] leading-relaxed">
+          <pre className="text-muted-foreground p-4 font-mono text-xs leading-relaxed">
             <span className="text-primary">curl</span> -X POST
             $KOMODO_CD_URL/api/v0/deploy \{"\n"}
             {"  "}-H{" "}
@@ -123,9 +121,7 @@ const LoginPageContent = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 lg:invisible">
             <img src="/logo.svg" alt="" aria-hidden className="h-6 w-auto" />
-            <span className="font-display font-semibold tracking-tight">
-              Komodo CD
-            </span>
+            <span className="font-semibold tracking-tight">Komodo CD</span>
           </div>
           <div className="flex items-center gap-0.5">
             <LanguageSwitcherButton />
@@ -136,9 +132,7 @@ const LoginPageContent = () => {
         <div className="flex flex-1 items-center justify-center py-10">
           <div className="reveal w-full max-w-90 space-y-7">
             <div className="space-y-2">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                {t("login.title")}
-              </h1>
+              <h1 className="text-title">{t("login.title")}</h1>
               <p className="text-muted-foreground text-sm text-pretty lg:hidden">
                 {t("login.subtitle")}
               </p>
