@@ -1,14 +1,15 @@
 ---
-import { Toaster } from "@/components/app/toaster"
-import { ButtonLogOut } from "@/components/features/login/buttonLogOut"
-import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { Toaster } from "@/components/shared/feedback/toaster"
 import {
   BottomNav,
+  LanguageSwitcher,
+  LogOutButton,
   type NavItem,
   SidebarNav,
-} from "@/components/layout/app-nav"
-import { ThemeToggle } from "@/components/ThemeToggle"
+  ThemeToggle,
+} from "@/features/app-shell"
 import Main from "@/layouts/main.astro"
+import { APP_SURFACES } from "@/lib/app-surfaces"
 import { getLang } from "@/lib/lang"
 import en from "@/locales/en"
 import es from "@/locales/es"
@@ -19,13 +20,11 @@ const { user } = Astro.locals
 const lang = getLang(Astro.cookies)
 const nav = (lang === "en" ? en : es).nav
 
-const NAV: NavItem[] = [
-  { key: "stacks", href: "/stacks", label: nav.stacks },
-  { key: "deploy", href: "/deploy", label: nav.deploy },
-  { key: "history", href: "/history", label: nav.history },
-  { key: "credentials", href: "/credentials", label: nav.credentials },
-  { key: "apikeys", href: "/keys", label: nav.apikeys },
-]
+const NAV: NavItem[] = APP_SURFACES.map((s) => ({
+  key: s.id,
+  href: s.path,
+  label: nav[s.id],
+}))
 
 const path = Astro.url.pathname
 const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
@@ -38,20 +37,20 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
   >
     <a href="/stacks" class="flex h-16 items-center gap-2.5 px-5">
       <img src="/logo.svg" alt="" aria-hidden="true" class="h-6 w-auto">
-      <span class="text-[15px] font-semibold tracking-tight">Komodo CD</span>
+      <span class="text-headline font-semibold tracking-tight">Komodo CD</span>
     </a>
     <div class="flex-1 overflow-y-auto px-3 py-2">
       <SidebarNav items={NAV} path={path} />
     </div>
     <div class="border-t p-3">
-      <div class="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
+      <div class="flex items-center gap-2.5 px-2 py-1.5">
         <span
-          class="bg-primary/12 text-primary flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+          class="bg-muted text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-full border text-xs font-medium"
           >{initial}</span
         >
         <div class="min-w-0 flex-1">
-          <p class="truncate text-[13px] font-medium">{user?.name}</p>
-          <p class="text-muted-foreground truncate text-[11px]">
+          <p class="text-meta truncate font-medium">{user?.name}</p>
+          <p class="text-muted-foreground text-meta-sm truncate">
             {user?.email}
           </p>
         </div>
@@ -60,33 +59,33 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
         <LanguageSwitcher client:load lang={lang} />
         <ThemeToggle client:load />
         <div class="flex-1"></div>
-        <ButtonLogOut client:load lang={lang} />
+        <LogOutButton client:load lang={lang} />
       </div>
     </div>
   </aside>
 
   <!-- Barra superior (móvil) -->
   <header
-    class="bg-background/85 sticky top-0 z-30 border-b backdrop-blur-lg lg:hidden"
+    class="bg-background/80 sticky top-0 z-30 border-b backdrop-blur lg:hidden"
   >
     <div class="flex h-14 items-center gap-2 px-4">
       <a href="/stacks" class="flex min-w-0 items-center gap-2">
         <img src="/logo.svg" alt="" aria-hidden="true" class="h-5 w-auto">
-        <span class="truncate text-sm font-semibold tracking-tight"
+        <span class="text-headline truncate font-semibold tracking-tight"
           >Komodo CD</span
         >
       </a>
       <div class="ml-auto flex items-center gap-0.5">
         <LanguageSwitcher client:load lang={lang} />
         <ThemeToggle client:load />
-        <ButtonLogOut client:load lang={lang} />
+        <LogOutButton client:load lang={lang} />
       </div>
     </div>
   </header>
 
   <div class="lg:pl-60">
     <main
-      class="pb-mobile-nav mx-auto w-full max-w-6xl px-4 pt-5 sm:px-6 sm:pt-8 lg:px-10 lg:pt-10 lg:pb-12"
+      class="pb-mobile-nav mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 lg:px-10 lg:pt-10 lg:pb-12"
     >
       <slot />
     </main>

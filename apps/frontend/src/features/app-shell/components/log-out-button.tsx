@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
 import { withIsland } from "@/providers/island"
 
-const ButtonLogOutBase = () => {
+const LogOutButtonContent = () => {
   const { t } = useTranslation()
 
   const handleLogout = async () => {
@@ -28,4 +28,4 @@ const ButtonLogOutBase = () => {
   )
 }
 
-export const ButtonLogOut = withIsland(ButtonLogOutBase)
+export const LogOutButton = withIsland(LogOutButtonContent)

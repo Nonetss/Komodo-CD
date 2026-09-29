@@ -21,7 +21,7 @@ export const LanguageSwitcherButton = () => {
       variant="ghost"
       size="icon-sm"
       onClick={toggle}
-      className="font-mono text-[11px] font-semibold"
+      className="text-meta-sm font-mono font-bold"
       aria-label={isEs ? "Switch to English" : "Cambiar a Español"}
       title={isEs ? "Switch to English" : "Cambiar a Español"}
     >
