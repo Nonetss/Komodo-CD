@@ -60,6 +60,13 @@
   --color-warning: var(--warning);
   --color-danger: var(--danger);
   --color-info: var(--info);
+
+  /* Resaltado de sintaxis (CodeBlock): tonos suaves, solo en texto */
+  --color-syntax-flag: var(--syntax-flag);
+  --color-syntax-keyword: var(--syntax-keyword);
+  --color-syntax-url: var(--syntax-url);
+  --color-syntax-string: var(--syntax-string);
+  --color-syntax-property: var(--syntax-property);
 }
 
 /*
@@ -97,6 +104,13 @@
   --danger: oklch(0.54 0.2 25);
   --info: oklch(0.52 0.16 256);
 
+  /* Sobre blanco el color se percibe más apagado: más croma que en oscuro */
+  --syntax-flag: oklch(0.47 0.17 300);
+  --syntax-keyword: oklch(0.52 0.14 55);
+  --syntax-url: oklch(0.46 0.12 225);
+  --syntax-string: oklch(0.46 0.13 155);
+  --syntax-property: oklch(0.46 0.16 258);
+
   color-scheme: light;
 }
 
@@ -127,6 +141,12 @@
   --warning: oklch(0.8 0.14 75);
   --danger: oklch(0.7 0.18 22);
   --info: oklch(0.72 0.13 254);
+
+  --syntax-flag: oklch(0.78 0.08 300);
+  --syntax-keyword: oklch(0.82 0.09 70);
+  --syntax-url: oklch(0.8 0.07 220);
+  --syntax-string: oklch(0.8 0.09 160);
+  --syntax-property: oklch(0.78 0.08 254);
 }
 
 ::view-transition-old(root),

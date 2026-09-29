@@ -136,6 +136,7 @@ const DeployPageContent = () => {
         </div>
         <CodeBlock
           label={`POST /api/v0/deploy · ${action}`}
+          language="shell"
           code={buildDeployCurl(appUrl, stack.trim() || "mi-stack", action)}
         />
         <Text as="p" variant="meta" tone="muted">

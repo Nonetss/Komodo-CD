@@ -45,6 +45,7 @@ export function CreatedKey({
           {t("apikeys.useInGithubActions")}
         </Text>
         <CodeBlock
+          language="shell"
           label="POST /api/v0/deploy"
           code={buildDeployCurl(appUrl, "mi-stack", "redeploy", value)}
         />
