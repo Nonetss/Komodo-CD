@@ -86,8 +86,12 @@ export function PageHero({
         className
       )}
     >
-      <div className="flex min-w-0 items-center gap-2.5">
-        <Icon aria-hidden className="text-primary size-5 shrink-0" />
+      <div className="flex min-w-0 items-start gap-2.5">
+        {/* Caja de la altura de una línea del título: el icono se centra con
+            él y no con el bloque título + descripción */}
+        <span className="flex h-[calc(var(--text-display)*var(--text-display--line-height))] shrink-0 items-center">
+          <Icon aria-hidden className="text-primary size-5" />
+        </span>
         <div className="min-w-0">
           <Text as="h1" variant="display" className="text-balance">
             {title}
