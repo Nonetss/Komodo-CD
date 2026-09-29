@@ -31,22 +31,39 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
       Math.max(y, window.innerHeight - y)
     )
 
-    const transition = document.startViewTransition(() => flushSync(apply))
-    transition.ready.then(() => {
-      document.documentElement.animate(
-        {
-          clipPath: [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${endRadius}px at ${x}px ${y}px)`,
-          ],
-        },
-        {
-          duration: 400,
-          easing: "ease-in-out",
-          pseudoElement: "::view-transition-new(root)",
-        }
-      )
-    })
+    // Activa las reglas de la raíz de global.css solo durante el cambio de
+    // tema, para que no anulen el fundido de las navegaciones del ClientRouter
+    const root = document.documentElement
+    root.classList.add("theme-transitioning")
+
+    try {
+      const transition = document.startViewTransition(() => flushSync(apply))
+      void transition.ready
+        .then(() => {
+          root.animate(
+            {
+              clipPath: [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`,
+              ],
+            },
+            {
+              duration: 400,
+              easing: "ease-in-out",
+              pseudoElement: "::view-transition-new(root)",
+            }
+          )
+        })
+        .catch(() => {
+          // Transición omitida o abortada (pestaña oculta, reduced motion…)
+        })
+      void transition.finished.finally(() => {
+        root.classList.remove("theme-transitioning")
+      })
+    } catch {
+      root.classList.remove("theme-transitioning")
+      flushSync(apply)
+    }
   }
 
   return (

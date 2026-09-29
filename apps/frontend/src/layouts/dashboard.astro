@@ -1,4 +1,6 @@
 ---
+import { fade } from "astro:transitions"
+
 import { Toaster } from "@/components/shared/feedback/toaster"
 import {
   BottomNav,
@@ -32,8 +34,14 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
 
 <Main title={`${title} · Komodo CD`}>
   <!-- Barra lateral (escritorio) -->
+  <!--
+    El chrome no es `transition:persist` (como en console) porque el elemento
+    activo del menú se renderiza en SSR: se sustituye en cada navegación, pero
+    con nombre propio y sin animación. Solo la página hace el fundido.
+  -->
   <aside
     class="bg-sidebar fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r lg:flex"
+    transition:name="sidebar-chrome"
   >
     <a href="/stacks" class="flex h-16 items-center gap-2.5 px-5">
       <img src="/logo.svg" alt="" aria-hidden="true" class="h-6 w-auto">
@@ -67,6 +75,7 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
   <!-- Barra superior (móvil) -->
   <header
     class="bg-background/80 sticky top-0 z-30 border-b backdrop-blur lg:hidden"
+    transition:name="mobile-header"
   >
     <div class="flex h-14 items-center gap-2 px-4">
       <a href="/stacks" class="flex min-w-0 items-center gap-2">
@@ -86,11 +95,15 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
   <div class="lg:pl-60">
     <main
       class="pb-mobile-nav mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 lg:px-10 lg:pt-10 lg:pb-12"
+      transition:animate={fade({ duration: "0.2s" })}
+      transition:name="dashboard-page"
     >
       <slot />
     </main>
   </div>
 
-  <BottomNav items={NAV} path={path} />
+  <div transition:name="bottom-nav">
+    <BottomNav items={NAV} path={path} />
+  </div>
   <Toaster client:idle />
 </Main>

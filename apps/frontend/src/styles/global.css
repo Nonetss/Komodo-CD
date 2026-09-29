@@ -149,10 +149,32 @@
   --syntax-property: oklch(0.78 0.08 254);
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
+/* Revelado circular del cambio de tema (theme-toggle.tsx). Va acotado a
+   `.theme-transitioning` para que las navegaciones del ClientRouter conserven
+   el fundido por defecto de la raíz, como en console. */
+html.theme-transitioning::view-transition-old(root),
+html.theme-transitioning::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+html.theme-transitioning::view-transition-old(root) {
+  z-index: 1;
+}
+
+html.theme-transitioning::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* El chrome (barra lateral, cabecera y barra inferior en móvil) no se funde
+   al navegar: cambia en seco y solo la página hace el fundido. */
+::view-transition-old(sidebar-chrome),
+::view-transition-new(sidebar-chrome),
+::view-transition-old(mobile-header),
+::view-transition-new(mobile-header),
+::view-transition-old(bottom-nav),
+::view-transition-new(bottom-nav) {
+  animation: none;
 }
 
 @layer base {
