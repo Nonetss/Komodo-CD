@@ -1,6 +1,20 @@
-# Komodo CD — Docker
+# Komodo CD
 
-Monorepo (Turborepo + Bun workspaces) for Komodo CD, plus the production deployment using images published on GHCR.
+A small continuous-deployment dashboard on top of [Komodo](https://komo.do):
+see the state of every stack, pull or redeploy them by hand, and trigger the
+same actions from CI with an API key.
+
+- **Stacks**: state, services and images of every stack, with search and
+  filters (running, stopped, with issues) and one-click Pull, Redeploy or
+  Pull + Redeploy
+- **CI snippets**: a ready-to-paste, syntax-highlighted `curl` per stack and
+  action
+- **History**: every action launched from the dashboard or from CI, with who
+  ran it and how it ended
+- **API keys** for pipelines, a single Komodo connection, English and Spanish
+  UI, dark and light themes
+
+Monorepo (Turborepo + Bun workspaces), plus the production deployment using images published on GHCR.
 
 |              | Path                             | Stack                                          |
 | ------------ | -------------------------------- | ---------------------------------------------- |
@@ -16,13 +30,15 @@ Monorepo (Turborepo + Bun workspaces) for Komodo CD, plus the production deploym
 | `@komodo-cd/logger` | Shared pino logger                                               |
 | `@komodo-cd/config` | Shared `tsconfig`                                                |
 
-| Stacks                    | Deploy                    |
-| ------------------------- | ------------------------- |
-| ![Stacks](img/stacks.png) | ![Deploy](img/deploy.png) |
+![Stacks](img/stacks.png)
 
-| History                       | Credentials                          |
-| ----------------------------- | ------------------------------------ |
-| ![History](img/historial.png) | ![Credentials](img/credenciales.png) |
+| Deploy                    | History                       |
+| ------------------------- | ----------------------------- |
+| ![Deploy](img/deploy.png) | ![History](img/historial.png) |
+
+| Connection                          | Light theme                                |
+| ----------------------------------- | ------------------------------------------ |
+| ![Connection](img/credenciales.png) | ![Stacks, light theme](img/stacks-light.png) |
 
 ## Requirements
 
@@ -53,6 +69,10 @@ cd Komodo-CD
 
 Pin a release with `KCD_REF=v1.0.0` (defaults to `main`). The script never
 overwrites an existing `.env`.
+
+Images are published as `latest` (the `main` branch) and with the release
+version (`1.0.0`, `1.0`). To pin one, change the tags in `compose.yml`, for
+example `ghcr.io/nonetss/komodo-cd-backend:1.0.0`.
 
 ---
 
@@ -205,7 +225,6 @@ jobs:
 | ---------------- | -------- | ------------------------------------------------------------------------- |
 | `KOMODO_CD_URL`  | Secret   | URL of your Komodo CD instance (example: `https://komodo-cd.example.com`) |
 | `KOMODO_API_KEY` | Secret   | API key generated from the dashboard                                      |
-| `APP_URL`        | Variable | Public app URL used to bake both frontend build args                      |
 | `STACK_NAME`     | Variable | Stack name in Komodo                                                      |
 
 ---
@@ -241,7 +260,19 @@ docker build -f apps/backend/Dockerfile -t komodo-cd-backend .
 docker build -f apps/frontend/Dockerfile -t komodo-cd-frontend .
 ```
 
-`.github/workflows/docker-build.yml` builds and pushes both images to `ghcr.io/nonetss/komodo-cd-backend` and `ghcr.io/nonetss/komodo-cd-frontend` on every push to `main`.
+`.github/workflows/docker-build.yml` builds and pushes both images to `ghcr.io/nonetss/komodo-cd-backend` and `ghcr.io/nonetss/komodo-cd-frontend`:
+
+| Trigger           | Tags                                   |
+| ----------------- | -------------------------------------- |
+| Push to `main`    | `latest`, `main`, `main-<sha>`         |
+| Tag `vX.Y.Z`      | `X.Y.Z`, `X.Y`                         |
+
+To publish a release, tag the commit and create the GitHub release:
+
+```bash
+git tag -a v1.0.0 -m "v1.0.0" && git push origin v1.0.0
+gh release create v1.0.0 --generate-notes
+```
 
 ---
 
