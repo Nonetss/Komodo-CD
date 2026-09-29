@@ -1,6 +1,8 @@
 import "@/lib/i18n"
-import { navigate } from "astro/virtual-modules/transitions-router.js"
+import { navigate } from "astro:transitions/client"
+import { LogOut } from "lucide-react"
 import { useTranslation } from "react-i18next"
+
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
 
@@ -13,8 +15,15 @@ export const ButtonLogOut = () => {
   }
 
   return (
-    <Button className="w-full rounded-md" onClick={handleLogout}>
-      {t("nav.logout")}
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      onClick={handleLogout}
+      aria-label={t("nav.logout")}
+      title={t("nav.logout")}
+    >
+      <LogOut />
     </Button>
   )
 }

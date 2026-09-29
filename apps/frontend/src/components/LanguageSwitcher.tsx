@@ -1,6 +1,8 @@
 import "@/lib/i18n"
 import { useTranslation } from "react-i18next"
 
+import { Button } from "@/components/ui/button"
+
 export const LanguageSwitcher = () => {
   const { i18n } = useTranslation()
   const isEs = i18n.language.startsWith("es")
@@ -14,13 +16,16 @@ export const LanguageSwitcher = () => {
   }
 
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
+      size="icon-sm"
       onClick={toggle}
-      className="text-muted-foreground hover:text-foreground rounded px-2 py-1 text-xs font-medium transition-colors"
+      className="font-mono text-[11px] font-semibold"
       aria-label={isEs ? "Switch to English" : "Cambiar a Español"}
+      title={isEs ? "Switch to English" : "Cambiar a Español"}
     >
       {isEs ? "EN" : "ES"}
-    </button>
+    </Button>
   )
 }

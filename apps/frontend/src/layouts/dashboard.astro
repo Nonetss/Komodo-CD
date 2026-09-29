@@ -1,115 +1,98 @@
 ---
+import { Toaster } from "@/components/app/toaster"
 import { ButtonLogOut } from "@/components/features/login/buttonLogOut"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import {
+  BottomNav,
+  type NavItem,
+  SidebarNav,
+} from "@/components/layout/app-nav"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import Main from "@/layouts/main.astro"
+import en from "@/locales/en"
+import es from "@/locales/es"
 
 const { title = "Komodo CD" } = Astro.props
 const { user } = Astro.locals
 
-const lang = (Astro.cookies.get("lang")?.value ?? "es") as "es" | "en"
+const lang = Astro.cookies.get("lang")?.value === "en" ? "en" : "es"
+const nav = (lang === "en" ? en : es).nav
 
-const NAV_LABELS = {
-  es: {
-    stacks: "Stacks",
-    history: "Historial",
-    deploy: "Deploy",
-    credentials: "Credenciales",
-    apikeys: "API Keys",
-  },
-  en: {
-    stacks: "Stacks",
-    history: "History",
-    deploy: "Deploy",
-    credentials: "Credentials",
-    apikeys: "API Keys",
-  },
-}
-
-const labels = NAV_LABELS[lang] ?? NAV_LABELS.es
-
-const NAV = [
-  { href: "/stacks", label: labels.stacks },
-  { href: "/history", label: labels.history },
-  { href: "/deploy", label: labels.deploy },
-  { href: "/credentials", label: labels.credentials },
-  { href: "/keys", label: labels.apikeys },
+const NAV: NavItem[] = [
+  { key: "stacks", href: "/stacks", label: nav.stacks },
+  { key: "deploy", href: "/deploy", label: nav.deploy },
+  { key: "history", href: "/history", label: nav.history },
+  { key: "credentials", href: "/credentials", label: nav.credentials },
+  { key: "apikeys", href: "/keys", label: nav.apikeys },
 ]
 
 const path = Astro.url.pathname
+const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
 ---
 
-<Main title={`${title} — Komodo CD`}>
-  <div class="flex min-h-screen flex-col">
-    <header class="bg-card/60 sticky top-0 z-50 backdrop-blur-md">
-      <div class="mx-auto max-w-5xl px-4 sm:px-6">
-        <div
-          class="flex min-h-14 flex-wrap items-center gap-x-4 gap-y-2 py-2 sm:flex-nowrap sm:gap-6 sm:py-0"
-        >
-          <!-- Brand -->
-          <a href="/stacks" class="group flex shrink-0 items-center gap-2">
-            <img
-              src="/logo.svg"
-              alt=""
-              aria-hidden="true"
-              class="h-6 w-auto opacity-90 transition-opacity group-hover:opacity-100"
-            >
-            <span
-              class="text-foreground group-hover:text-primary text-sm font-semibold tracking-tight transition-colors"
-              >Komodo CD</span
-            >
-          </a>
+<Main title={`${title} · Komodo CD`}>
+  <div class="atmosphere bg-grid" aria-hidden="true"></div>
 
-          <!-- Divider -->
-          <div class="bg-border hidden h-5 w-px shrink-0 sm:block"></div>
-
-          <!-- Nav links -->
-          <nav
-            class="order-3 -mx-1 flex w-full items-center gap-1 overflow-x-auto pb-1 sm:order-0 sm:mx-0 sm:w-auto sm:min-w-0 sm:flex-1 sm:overflow-visible sm:pb-0"
-          >
-            {NAV.map((item) => {
-  const isActive = path === item.href || path.startsWith(`${item.href}/`)
-  return (
-    <a
-      href={item.href}
-      class={`rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
-        isActive
-          ? "bg-primary/10 text-primary"
-          : "text-muted-foreground hover:text-foreground hover:bg-accent"
-      }`}
-    >
-      {item.label}
+  <!-- Barra lateral (escritorio) -->
+  <aside
+    class="bg-sidebar fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r lg:flex"
+  >
+    <a href="/stacks" class="flex h-16 items-center gap-2.5 px-5">
+      <img src="/logo.svg" alt="" aria-hidden="true" class="h-6 w-auto">
+      <span class="text-[15px] font-semibold tracking-tight">Komodo CD</span>
     </a>
-  )
-})}
-          </nav>
-
-          <!-- User -->
-          <div
-            class="ml-auto flex shrink-0 items-center gap-2 sm:ml-0 sm:gap-3"
-          >
-            <span
-              class="text-muted-foreground hidden max-w-[160px] truncate text-xs lg:block"
-            >
-              {user?.email}
-            </span>
-            <LanguageSwitcher client:only="react" />
-            <ButtonLogOut client:only="react" />
-            <ThemeToggle
-              client:only="react"
-              className="absolute right-0 mr-4"
-            />
-          </div>
+    <div class="flex-1 overflow-y-auto px-3 py-2">
+      <SidebarNav items={NAV} path={path} />
+    </div>
+    <div class="border-t p-3">
+      <div class="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
+        <span
+          class="bg-primary/12 text-primary flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+          >{initial}</span
+        >
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-[13px] font-medium">{user?.name}</p>
+          <p class="text-muted-foreground truncate text-[11px]">
+            {user?.email}
+          </p>
         </div>
       </div>
-      <!-- gradient separator line -->
-      <div
-        class="from-primary/0 via-primary/20 to-primary/0 h-px bg-linear-to-r"
-      ></div>
-    </header>
+      <div class="mt-1 flex items-center gap-0.5 px-1">
+        <LanguageSwitcher client:only="react" />
+        <ThemeToggle client:only="react" />
+        <div class="flex-1"></div>
+        <ButtonLogOut client:only="react" />
+      </div>
+    </div>
+  </aside>
 
-    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-5 sm:px-6 sm:py-8">
+  <!-- Barra superior (móvil) -->
+  <header
+    class="bg-background/85 sticky top-0 z-30 border-b backdrop-blur-lg lg:hidden"
+  >
+    <div class="flex h-14 items-center gap-2 px-4">
+      <a href="/stacks" class="flex min-w-0 items-center gap-2">
+        <img src="/logo.svg" alt="" aria-hidden="true" class="h-5 w-auto">
+        <span class="truncate text-sm font-semibold tracking-tight"
+          >Komodo CD</span
+        >
+      </a>
+      <div class="ml-auto flex items-center gap-0.5">
+        <LanguageSwitcher client:only="react" />
+        <ThemeToggle client:only="react" />
+        <ButtonLogOut client:only="react" />
+      </div>
+    </div>
+  </header>
+
+  <div class="lg:pl-60">
+    <main
+      class="pb-mobile-nav mx-auto w-full max-w-6xl px-4 pt-5 sm:px-6 sm:pt-8 lg:px-10 lg:pt-10 lg:pb-12"
+    >
       <slot />
     </main>
   </div>
+
+  <BottomNav items={NAV} path={path} />
+  <Toaster client:only="react" />
 </Main>

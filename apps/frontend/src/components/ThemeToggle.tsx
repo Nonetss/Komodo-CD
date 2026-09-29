@@ -1,6 +1,7 @@
 import { Moon, Sun } from "lucide-react"
 import { flushSync } from "react-dom"
-import { cn } from "@/lib/utils"
+
+import { Button } from "@/components/ui/button"
 
 export interface ThemeToggleProps {
   className?: string
@@ -8,15 +9,17 @@ export interface ThemeToggleProps {
 
 export const ThemeToggle = ({ className }: ThemeToggleProps) => {
   const toggle = (e: React.MouseEvent) => {
-    const isDark = document.documentElement.classList.contains("dark")
-    const next = !isDark
+    const next = !document.documentElement.classList.contains("dark")
 
     const apply = () => {
       document.documentElement.classList.toggle("dark", next)
       localStorage.setItem("theme", next ? "dark" : "light")
     }
 
-    if (!document.startViewTransition) {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches
+    if (!document.startViewTransition || reduceMotion) {
       flushSync(apply)
       return
     }
@@ -29,7 +32,6 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
     )
 
     const transition = document.startViewTransition(() => flushSync(apply))
-
     transition.ready.then(() => {
       document.documentElement.animate(
         {
@@ -39,7 +41,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
           ],
         },
         {
-          duration: 450,
+          duration: 400,
           easing: "ease-in-out",
           pseudoElement: "::view-transition-new(root)",
         }
@@ -48,17 +50,17 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
   }
 
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
+      size="icon-sm"
       onClick={toggle}
       aria-label="Cambiar tema"
-      className={cn(
-        "border-border bg-card text-muted-foreground hover:bg-secondary hover:text-foreground flex h-9 w-9 items-center justify-center border transition-colors",
-        className
-      )}
+      title="Cambiar tema"
+      className={className}
     >
-      <Sun className="size-4 shrink-0 hidden dark:block" aria-hidden />
-      <Moon className="size-4 shrink-0 block dark:hidden" aria-hidden />
-    </button>
+      <Sun className="hidden dark:block" aria-hidden />
+      <Moon className="block dark:hidden" aria-hidden />
+    </Button>
   )
 }
