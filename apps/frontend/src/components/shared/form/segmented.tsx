@@ -26,8 +26,8 @@ type SegmentedProps<T extends string> = {
 
 /**
  * Selector de un valor entre pocos (SegmentedPicker de console) sobre radios
- * nativos, con flechas de teclado incluidas. La opción elegida se invierte en
- * tinta: nunca en el color de acento.
+ * nativos, con flechas de teclado incluidas. La opción elegida toma el acento
+ * en suave (fondo al 15 % y borde al 50 %), nunca relleno sólido.
  */
 export function Segmented<T extends string>({
   value,
@@ -58,13 +58,13 @@ export function Segmented<T extends string>({
               variant === "pill" && "h-8 border",
               variant === "pill" &&
                 (active
-                  ? "border-foreground bg-foreground text-background"
+                  ? "border-primary/50 bg-primary/15 text-primary"
                   : "border-input text-muted-foreground hover:bg-muted/40 hover:text-foreground"),
               variant === "tabs" &&
                 "relative h-full min-h-9 after:absolute after:inset-x-2.5 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
               variant === "tabs" &&
                 (active
-                  ? "text-foreground after:bg-foreground"
+                  ? "text-foreground after:bg-primary"
                   : "text-muted-foreground hover:text-foreground after:bg-transparent")
             )}
           >

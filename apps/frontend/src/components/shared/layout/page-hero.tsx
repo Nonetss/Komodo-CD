@@ -1,12 +1,18 @@
 import { Fragment, type ReactNode } from "react"
 
 import { Text } from "@/components/shared/brand/typography"
+import {
+  type StatusTone,
+  statusInkClass,
+} from "@/components/shared/data-display/status-dot"
 import { getAppSurface, type SurfaceId } from "@/lib/app-surfaces"
 import { cn } from "@/lib/utils"
 
 export interface HeroCountSegment {
   count: number
   label: string
+  /** Tiñe la cifra (p. ej. running en verde, problemas en rojo) */
+  tone?: StatusTone
 }
 
 /**
@@ -34,7 +40,13 @@ export function HeroCount({
       {segments.map((segment, index) => (
         <Fragment key={segment.label}>
           {index > 0 ? <span className="text-border mx-2">·</span> : null}
-          <span className="text-foreground">{segment.count}</span>{" "}
+          <span
+            className={
+              segment.tone ? statusInkClass(segment.tone) : "text-foreground"
+            }
+          >
+            {segment.count}
+          </span>{" "}
           {segment.label}
         </Fragment>
       ))}

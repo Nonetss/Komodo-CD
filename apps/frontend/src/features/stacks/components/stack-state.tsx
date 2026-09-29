@@ -26,9 +26,8 @@ const PULSING: StackState[] = ["deploying", "restarting"]
 export const stateTone = (state: StackState): StatusTone =>
   STATE_TONE[state] ?? "muted"
 
-/** El estado pide atención: la palabra se tiñe además del punto. */
-const needsAttention = (state: StackState) =>
-  ["info", "warning", "danger"].includes(stateTone(state))
+/** La palabra se tiñe con el punto salvo en los estados neutros (parado…). */
+const inked = (state: StackState) => stateTone(state) !== "muted"
 
 export function StackStateDot({
   state,
@@ -47,8 +46,8 @@ export function StackStateDot({
 }
 
 /**
- * Punto + palabra en micro-caps. "Running" se queda en gris: 40 filas en
- * verde convertirían la lista en ruido; solo se tiñe lo que pide atención.
+ * Punto + palabra en micro-caps, teñida con su tono. Los estados neutros
+ * (parado, down, desconocido) se quedan en gris para que destaque lo vivo.
  */
 export function StackStateTag({
   state,
@@ -62,7 +61,7 @@ export function StackStateTag({
     <StatusTag
       tone={stateTone(state)}
       pulse={PULSING.includes(state)}
-      ink={needsAttention(state)}
+      ink={inked(state)}
       className={className}
     >
       {t(`stacks.states.${state}`, { defaultValue: state })}

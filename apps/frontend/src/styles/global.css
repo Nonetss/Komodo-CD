@@ -117,25 +117,25 @@
 .dark {
   color-scheme: dark;
 
-  --background: oklch(0.155 0.008 255);
-  --foreground: oklch(0.94 0.005 250);
-  --card: oklch(0.185 0.009 255);
+  --background: oklch(0.175 0.014 258);
+  --foreground: oklch(0.95 0.006 250);
+  --card: oklch(0.205 0.016 258);
   --card-foreground: oklch(0.94 0.005 250);
-  --popover: oklch(0.2 0.01 255);
+  --popover: oklch(0.22 0.017 258);
   --popover-foreground: oklch(0.94 0.005 250);
   --primary: oklch(0.7 0.14 254);
   --primary-foreground: oklch(0.16 0.02 255);
-  --secondary: oklch(0.23 0.01 255);
+  --secondary: oklch(0.25 0.016 258);
   --secondary-foreground: oklch(0.9 0.005 250);
-  --muted: oklch(0.22 0.009 255);
-  --muted-foreground: oklch(0.68 0.012 255);
-  --accent: oklch(0.25 0.014 255);
+  --muted: oklch(0.24 0.016 258);
+  --muted-foreground: oklch(0.72 0.018 255);
+  --accent: oklch(0.27 0.022 258);
   --accent-foreground: oklch(0.95 0.005 250);
   --destructive: oklch(0.66 0.2 22);
-  --border: oklch(0.27 0.01 255);
-  --input: oklch(0.3 0.012 255);
+  --border: oklch(0.29 0.018 258);
+  --input: oklch(0.32 0.02 258);
   --ring: oklch(0.7 0.14 254);
-  --sidebar: oklch(0.135 0.008 255);
+  --sidebar: oklch(0.16 0.016 258);
 
   --success: oklch(0.74 0.15 155);
   --warning: oklch(0.8 0.14 75);

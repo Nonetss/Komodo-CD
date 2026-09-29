@@ -214,12 +214,17 @@ const StacksPageContent = () => {
         meta={
           <HeroCount
             segments={[
-              { count: counts.running, label: t("stacks.count.running") },
+              {
+                count: counts.running,
+                label: t("stacks.count.running"),
+                tone: "success" as const,
+              },
               ...(counts.problems > 0
                 ? [
                     {
                       count: counts.problems,
                       label: t("stacks.count.problems"),
+                      tone: "danger" as const,
                     },
                   ]
                 : []),

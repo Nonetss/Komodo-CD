@@ -55,7 +55,7 @@ export function StackRow({
       <div
         className={cn(
           "flex items-center gap-3 px-4 py-3 transition-colors",
-          expanded ? "bg-muted/40" : "hover:bg-muted/40"
+          expanded ? "bg-primary/6" : "hover:bg-muted/40"
         )}
       >
         <button
