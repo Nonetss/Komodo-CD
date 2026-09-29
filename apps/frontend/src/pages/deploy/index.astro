@@ -1,5 +1,5 @@
 ---
-import { DeployPanel } from "@/components/features/dashboard/DeployPanel"
+import { DeployPage } from "@/features/deploy"
 import DashboardLayout from "@/layouts/dashboard.astro"
 import { getLang } from "@/lib/lang"
 
@@ -7,5 +7,5 @@ const lang = getLang(Astro.cookies)
 ---
 
 <DashboardLayout title="Deploy">
-  <DeployPanel client:load lang={lang} />
+  <DeployPage client:load lang={lang} />
 </DashboardLayout>

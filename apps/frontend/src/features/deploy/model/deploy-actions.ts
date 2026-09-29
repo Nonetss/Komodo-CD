@@ -1,3 +1,5 @@
+import { Download, RotateCw, Zap } from "lucide-react"
+
 import type { DeployAction } from "@/lib/api-types"
 
 export const DEPLOY_ACTIONS: DeployAction[] = [
@@ -5,6 +7,13 @@ export const DEPLOY_ACTIONS: DeployAction[] = [
   "redeploy",
   "pull-redeploy",
 ]
+
+/** Icono canónico de cada acción, igual en Stacks y en Deploy */
+export const ACTION_ICON = {
+  pull: Download,
+  redeploy: RotateCw,
+  "pull-redeploy": Zap,
+} as const satisfies Record<DeployAction, unknown>
 
 /** Clave i18n de cada acción (`deploy.actions.<key>`) */
 export const ACTION_I18N: Record<DeployAction, string> = {

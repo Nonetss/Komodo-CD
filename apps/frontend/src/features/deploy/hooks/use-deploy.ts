@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { historyListKey } from "@/features/history/hooks/use-history"
+import { stacksListKey } from "@/features/stacks/hooks/use-stacks"
 import { orpc } from "@/lib/orpc"
-import { historyListKey } from "./use-history"
-import { stacksListKey } from "./use-stacks"
 
 /** Dispara una acción en Komodo y refresca el historial y el estado de los stacks. */
 export const useDeployTrigger = () => {
