@@ -1,11 +1,11 @@
 import type { ReactNode } from "react"
 
+import { CopyButton } from "@/components/shared/form/copy-button"
 import { cn } from "@/lib/utils"
-import { CopyButton } from "./copy-button"
 
 type CodeBlockProps = {
   code: string
-  /** Etiqueta en la barra superior (p. ej. "curl · redeploy") */
+  /** Etiqueta en la barra superior (p. ej. "POST /api/v0/deploy · redeploy") */
   label?: ReactNode
   className?: string
 }
@@ -14,12 +14,12 @@ export function CodeBlock({ code, label, className }: CodeBlockProps) {
   return (
     <div
       className={cn(
-        "bg-muted/60 overflow-hidden rounded-lg border text-left",
+        "bg-card/40 overflow-hidden rounded-xl border text-left",
         className
       )}
     >
       <div className="flex items-center justify-between gap-2 border-b py-1 pr-1 pl-3">
-        <span className="text-muted-foreground truncate font-mono text-micro">
+        <span className="text-muted-foreground truncate font-mono text-xs tracking-tight">
           {label}
         </span>
         <CopyButton value={code} withLabel />

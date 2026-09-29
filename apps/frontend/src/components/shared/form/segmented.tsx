@@ -7,7 +7,7 @@ type SegmentedOption<T extends string> = {
   label: string
   /** Contador opcional a la derecha de la etiqueta */
   count?: number
-  /** Resalta el contador cuando es distinto de 0 (p. ej. stacks con problemas) */
+  /** Tiñe el contador cuando es distinto de 0 (p. ej. stacks con problemas) */
   alert?: boolean
 }
 
@@ -19,7 +19,11 @@ type SegmentedProps<T extends string> = {
   "aria-label"?: string
 }
 
-/** Control segmentado sobre radios nativos (flechas del teclado incluidas). */
+/**
+ * Selector de un valor entre pocos (SegmentedPicker de console) sobre radios
+ * nativos, con flechas de teclado incluidas. La opción elegida se invierte en
+ * tinta: nunca en el color de acento.
+ */
 export function Segmented<T extends string>({
   value,
   onChange,
@@ -31,10 +35,7 @@ export function Segmented<T extends string>({
   return (
     <fieldset
       aria-label={props["aria-label"]}
-      className={cn(
-        "bg-muted inline-flex max-w-full min-w-0 overflow-x-auto rounded-lg border p-0.5 text-xs",
-        className
-      )}
+      className={cn("flex max-w-full min-w-0 gap-1", className)}
     >
       {options.map((o) => {
         const active = o.value === value
@@ -43,10 +44,10 @@ export function Segmented<T extends string>({
           <label
             key={o.value}
             className={cn(
-              "flex h-7 cursor-pointer items-center gap-1.5 rounded-md px-2.5 font-medium whitespace-nowrap transition-colors has-focus-visible:ring-ring/40 has-focus-visible:ring-2",
+              "has-focus-visible:ring-ring/50 flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md border px-2.5 text-xs whitespace-nowrap transition-colors has-focus-visible:ring-2",
               active
-                ? "bg-card text-foreground ring-border shadow-xs ring-1"
-                : "text-muted-foreground hover:text-foreground"
+                ? "border-foreground bg-foreground text-background"
+                : "border-input text-muted-foreground hover:bg-muted/40 hover:text-foreground"
             )}
           >
             <input
@@ -61,12 +62,8 @@ export function Segmented<T extends string>({
             {o.count !== undefined && (
               <span
                 className={cn(
-                  "tabular",
-                  alert
-                    ? "text-danger"
-                    : active
-                      ? "text-muted-foreground"
-                      : "text-muted-foreground/80"
+                  "font-mono tabular-nums",
+                  active ? "opacity-70" : alert && "text-danger"
                 )}
               >
                 {o.count}

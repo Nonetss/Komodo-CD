@@ -40,7 +40,11 @@ export function CopyButton({
       size={size ?? (withLabel ? "xs" : "icon-xs")}
       onClick={copy}
       aria-label={copied ? t("common.copied") : t("common.copy")}
-      className={cn(copied && "text-success hover:text-success", className)}
+      className={cn(
+        "text-muted-foreground",
+        copied && "text-success hover:text-success",
+        className
+      )}
     >
       {copied ? <Check /> : <Copy />}
       {withLabel && (copied ? t("common.copied") : t("common.copy"))}
