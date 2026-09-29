@@ -46,6 +46,7 @@ export const Dashboard = () => {
       <div className="border-border flex overflow-x-auto border-b">
         {TABS.map((t) => (
           <button
+            type="button"
             key={t.id}
             onClick={() => handleTabChange(t.id)}
             className={`px-4 py-2.5 text-xs tracking-widest whitespace-nowrap uppercase transition-colors ${

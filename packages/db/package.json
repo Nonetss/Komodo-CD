@@ -1,0 +1,39 @@
+{
+  "name": "@komodo-cd/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#schema": "./src/schema/index.ts",
+    "#schema/*": "./src/schema/*/index.ts",
+    "#seed/*": "./src/seed/*.ts",
+    "#*": "./src/*.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema/index.ts",
+    "./schema/*": "./src/schema/*/index.ts",
+    "./seed": "./src/seed/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit -p .",
+    "db:generate": "drizzle-kit generate",
+    "db:check": "drizzle-kit check",
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@komodo-cd/env": "workspace:*",
+    "@komodo-cd/logger": "workspace:*",
+    "@libsql/client": "catalog:",
+    "drizzle-orm": "catalog:"
+  },
+  "devDependencies": {
+    "@komodo-cd/config": "workspace:*",
+    "@types/bun": "catalog:",
+    "dotenv": "catalog:",
+    "drizzle-kit": "catalog:",
+    "typescript": "catalog:"
+  }
+}

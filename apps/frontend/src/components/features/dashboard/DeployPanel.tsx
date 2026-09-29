@@ -16,21 +16,30 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { type DeployAction, deployApi, stacksApi } from "@/lib/api"
+import type { DeployAction } from "@/lib/api-types"
+import { getErrorMessage } from "@/lib/orpc"
+import { withQueryProvider } from "@/providers/query-provider"
+import { useDeployTrigger } from "./hooks/use-deploy"
+import { useStacks } from "./hooks/use-stacks"
 
 type DeployFormValues = {
   stack: string
   action: DeployAction
 }
 
-export const DeployPanel = () => {
+const DeployPanelContent = () => {
   const { t, i18n } = useTranslation()
   const [result, setResult] = useState<{
     success: boolean
     message: string
   } | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [stackNames, setStackNames] = useState<string[]>([])
+  const deployTrigger = useDeployTrigger()
+  const loading = deployTrigger.isPending
+  const stacksQuery = useStacks()
+  const stackNames = useMemo(
+    () => (stacksQuery.data ?? []).map((s) => s.name),
+    [stacksQuery.data]
+  )
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const suggestionsRef = useRef<HTMLDivElement>(null)
@@ -66,15 +75,6 @@ export const DeployPanel = () => {
     [i18n.language]
   )
 
-  useEffect(() => {
-    stacksApi
-      .list()
-      .then((res) => {
-        setStackNames(res.data.stacks.map((s) => s.name))
-      })
-      .catch(() => {})
-  }, [])
-
   const form = useForm<DeployFormValues>({
     resolver: zodResolver(deploySchema),
     defaultValues: { stack: "", action: "redeploy" as const },
@@ -108,15 +108,14 @@ export const DeployPanel = () => {
 
   const onSubmit = async (data: DeployFormValues) => {
     setResult(null)
-    setLoading(true)
     try {
-      const res = await deployApi.trigger(data)
-      setResult({ success: res.data.success, message: res.data.message })
-    } catch (err: any) {
-      const msg = err?.response?.data?.error ?? t("deploy.error")
-      setResult({ success: false, message: msg })
-    } finally {
-      setLoading(false)
+      const res = await deployTrigger.mutateAsync(data)
+      setResult({ success: res.success, message: res.message })
+    } catch (err) {
+      setResult({
+        success: false,
+        message: getErrorMessage(err, t("deploy.error")),
+      })
     }
   }
 
@@ -251,3 +250,5 @@ export const DeployPanel = () => {
     </div>
   )
 }
+
+export const DeployPanel = withQueryProvider(DeployPanelContent)

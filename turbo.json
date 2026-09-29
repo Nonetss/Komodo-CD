@@ -1,0 +1,54 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "futureFlags": {
+    "watchUsingTaskInputs": true
+  },
+  "globalDependencies": ["packages/config/tsconfig.base.json"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**"],
+      "env": [
+        "PUBLIC_APP_URL",
+        "BETTER_AUTH_URL",
+        "NODE_ENV",
+        "SKIP_ENV_VALIDATION"
+      ]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"],
+      "outputs": []
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "inputs": ["package.json", ".env*"],
+      "cache": false,
+      "persistent": true,
+      "interruptible": false
+    },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:check": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false,
+      "interactive": true
+    },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

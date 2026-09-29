@@ -1,0 +1,27 @@
+# Igual que compose.yml pero construyendo las imágenes desde el monorepo
+# en lugar de tirarlas de GHCR:
+#   docker compose -f compose.build.yml up -d --build
+services:
+  backend:
+    extends:
+      file: compose.yml
+      service: backend
+    image: komodo-cd-backend:local
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+
+  frontend:
+    extends:
+      file: compose.yml
+      service: frontend
+    image: komodo-cd-frontend:local
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+
+networks:
+  komodo_net:
+
+volumes:
+  db_data:

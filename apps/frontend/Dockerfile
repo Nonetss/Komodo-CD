@@ -1,29 +1,46 @@
+# Build context: raíz del monorepo
+#   docker build -f apps/frontend/Dockerfile .
 FROM oven/bun:1 AS builder
 WORKDIR /app
-COPY package.json bun.lock ./
-RUN bun install
-COPY . .
 
-RUN bun run build
+# Solo manifests: la capa de install queda cacheada hasta que cambie un
+# package.json o el lockfile.
+COPY package.json bun.lock bunfig.toml ./
+COPY apps/backend/package.json apps/backend/
+COPY apps/frontend/package.json apps/frontend/
+COPY packages/api/package.json packages/api/
+COPY packages/auth/package.json packages/auth/
+COPY packages/config/package.json packages/config/
+COPY packages/db/package.json packages/db/
+COPY packages/env/package.json packages/env/
+COPY packages/logger/package.json packages/logger/
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile --filter frontend
+
+# packages/ solo aporta tipos (el cliente oRPC importa AppRouter como type).
+COPY packages packages
+COPY apps/frontend apps/frontend
+ENV NODE_ENV=production
+# vite.ssr.noExternal (astro.config.mjs) empaqueta todas las dependencias en
+# dist/server, así que la imagen final no necesita node_modules.
+RUN cd apps/frontend && bun run build
 
 # ── Imagen final ─────────────────────────────────────────────────────────────
-FROM oven/bun:1
+FROM oven/bun:1-slim
+COPY --from=caddy:2-alpine /usr/bin/caddy /usr/local/bin/caddy
 WORKDIR /app
+ENV NODE_ENV=production
 
-RUN apt-get update && apt-get install -y nginx gettext-base && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app/apps/frontend/dist ./dist
+COPY apps/frontend/Caddyfile /etc/caddy/Caddyfile
+COPY --chmod=755 apps/frontend/start.sh /start.sh
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/gateway/nginx.conf ./gateway/nginx.conf
-COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
-
-RUN chmod +x /app/entrypoint.sh
-
-# Astro SSR corre internamente en el puerto 4321
-ENV HOST=0.0.0.0
+# Astro SSR escucha solo en localhost; Caddy expone el 80
+ENV HOST=127.0.0.1
 ENV PORT=4321
 
-# Nginx escucha en el 80 y hace proxy al backend y al Astro
 EXPOSE 80
-CMD ["/app/entrypoint.sh"]
+# Sin root: Caddy puede abrir el :80 porque Docker fija
+# net.ipv4.ip_unprivileged_port_start=0 en los contenedores (Docker >= 20.10).
+USER bun
+CMD ["/start.sh"]

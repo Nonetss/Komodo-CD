@@ -30,7 +30,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { type Credential, credentialsApi } from "@/lib/api"
+import type { Credential } from "@/lib/api-types"
+import { withQueryProvider } from "@/providers/query-provider"
+import {
+  useCredentials,
+  useCredentialsDelete,
+  useCredentialsSave,
+} from "./hooks/use-credentials"
 
 type SaveFormValues = {
   name: string
@@ -43,11 +49,17 @@ function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
 }
 
-export const CredentialsPanel = () => {
+const CredentialsPanelContent = () => {
   const { t, i18n } = useTranslation()
-  const [credentials, setCredentials] = useState<Credential[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const credentialsQuery = useCredentials()
+  const saveCredentials = useCredentialsSave()
+  const deleteCredentials = useCredentialsDelete()
+  const credentials = credentialsQuery.data ?? []
+  const loading = credentialsQuery.isLoading || credentialsQuery.isFetching
+  const [actionError, setError] = useState<string | null>(null)
+  const error =
+    actionError ??
+    (credentialsQuery.isError ? t("credentials.errorLoad") : null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [deletingId, setDeletingId] = useState<number | null>(null)
@@ -57,7 +69,7 @@ export const CredentialsPanel = () => {
     () =>
       z.object({
         name: z.string().min(1, t("credentials.required")),
-        url: z.string().url(t("credentials.invalidUrl")),
+        url: z.url(t("credentials.invalidUrl")),
         key: z.string().min(1, t("credentials.required")),
         secret: z.string().min(1, t("credentials.required")),
       }),
@@ -69,22 +81,10 @@ export const CredentialsPanel = () => {
     defaultValues: { name: "", url: "", key: "", secret: "" },
   })
 
-  const fetchCredentials = async () => {
-    setLoading(true)
+  const fetchCredentials = () => {
     setError(null)
-    try {
-      const res = await credentialsApi.list()
-      setCredentials(res.data.credentials)
-    } catch {
-      setError(t("credentials.errorLoad"))
-    } finally {
-      setLoading(false)
-    }
+    credentialsQuery.refetch()
   }
-
-  useEffect(() => {
-    fetchCredentials()
-  }, [])
 
   useEffect(() => {
     if (!confirmDeleteId) return
@@ -96,11 +96,10 @@ export const CredentialsPanel = () => {
     setError(null)
     setSuccessMsg(null)
     try {
-      const res = await credentialsApi.save(data)
-      setSuccessMsg(res.data.message)
+      const res = await saveCredentials.mutateAsync(data)
+      setSuccessMsg(res.message)
       form.reset()
       setShowForm(false)
-      await fetchCredentials()
     } catch {
       setError(t("credentials.errorSave"))
     }
@@ -117,9 +116,8 @@ export const CredentialsPanel = () => {
     setError(null)
     setSuccessMsg(null)
     try {
-      await credentialsApi.delete(cred.name)
+      await deleteCredentials.mutateAsync({ name: cred.name })
       setSuccessMsg(t("credentials.deleted", { name: cred.name }))
-      await fetchCredentials()
     } catch {
       setError(t("credentials.errorDelete"))
     } finally {
@@ -421,3 +419,5 @@ export const CredentialsPanel = () => {
     </div>
   )
 }
+
+export const CredentialsPanel = withQueryProvider(CredentialsPanelContent)

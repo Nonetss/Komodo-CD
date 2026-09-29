@@ -1,11 +1,20 @@
 # Komodo CD — Docker
 
-Production deployment for Komodo CD using images published on GHCR.
+Monorepo (Turborepo + Bun workspaces) for Komodo CD, plus the production deployment using images published on GHCR.
 
-|              | Repository                                                                  |
-| ------------ | --------------------------------------------------------------------------- |
-| **Backend**  | [Nonetss/komodo-cd-backend](https://github.com/Nonetss/komodo-cd-backend)   |
-| **Frontend** | [Nonetss/komodo-cd-frontend](https://github.com/Nonetss/komodo-cd-frontend) |
+|              | Path                             | Stack                                          |
+| ------------ | -------------------------------- | ---------------------------------------------- |
+| **Backend**  | [`apps/backend`](apps/backend)   | Bun + Hono (thin server: auth, oRPC, OpenAPI)  |
+| **Frontend** | [`apps/frontend`](apps/frontend) | Astro 7 (SSR) + React + TanStack Query + Caddy |
+
+| Package             | Description                                                      |
+| ------------------- | ---------------------------------------------------------------- |
+| `@komodo-cd/api`    | oRPC routers (`v0`), Komodo client service                       |
+| `@komodo-cd/auth`   | Better Auth config + session resolver (cookie or `x-api-key`)    |
+| `@komodo-cd/db`     | Drizzle v1 (SQLite/libsql): schema, relations, migrations, seed  |
+| `@komodo-cd/env`    | Validated server env (t3-env + zod)                              |
+| `@komodo-cd/logger` | Shared pino logger                                               |
+| `@komodo-cd/config` | Shared `tsconfig`                                                |
 
 | Stacks                    | Deploy                    |
 | ------------------------- | ------------------------- |
@@ -189,6 +198,41 @@ jobs:
 | `KOMODO_API_KEY` | Secret   | API key generated from the dashboard                                      |
 | `APP_URL`        | Variable | Public app URL used to bake both frontend build args                      |
 | `STACK_NAME`     | Variable | Stack name in Komodo                                                      |
+
+---
+
+## Development
+
+Requirements: [Bun](https://bun.sh) ≥ 1.4.
+
+```bash
+bun install
+
+cp apps/backend/.env.example apps/backend/.env   # SQLite: DATABASE_URL=file:./dev.db
+
+bun run dev            # backend (:3000) + frontend (:4321) with turbo watch
+bun run dev:backend    # only backend
+bun run dev:frontend   # only frontend
+```
+
+| Script                  | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| `bun run build`         | Build all apps (`turbo build`)                    |
+| `bun run check-types`   | Type-check all apps                               |
+| `bun run format`        | Format with Biome                                 |
+| `bun run check`         | Biome lint + format with autofix                  |
+| `bun run db:generate`   | Generate Drizzle migrations (`packages/db`)       |
+| `bun run db:studio`     | Open Drizzle Studio (`packages/db`)               |
+| `bun run docker:up`     | Build images from source and start the stack      |
+
+The Dockerfiles live in `apps/*/Dockerfile` but the build context is always the repo root:
+
+```bash
+docker build -f apps/backend/Dockerfile -t komodo-cd-backend .
+docker build -f apps/frontend/Dockerfile -t komodo-cd-frontend .
+```
+
+`.github/workflows/docker-build.yml` builds and pushes both images to `ghcr.io/nonetss/komodo-cd-backend` and `ghcr.io/nonetss/komodo-cd-frontend` on every push to `main`.
 
 ---
 

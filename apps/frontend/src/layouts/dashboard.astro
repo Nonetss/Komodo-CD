@@ -68,22 +68,20 @@ const path = Astro.url.pathname
             class="order-3 -mx-1 flex w-full items-center gap-1 overflow-x-auto pb-1 sm:order-0 sm:mx-0 sm:w-auto sm:min-w-0 sm:flex-1 sm:overflow-visible sm:pb-0"
           >
             {NAV.map((item) => {
-                const isActive =
-                  path === item.href || path.startsWith(item.href + '/');
-                return (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    class={`rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
-                      isActive
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                    }`}
-                  >
-                    {item.label}
-                  </a>
-                );
-              })}
+  const isActive = path === item.href || path.startsWith(`${item.href}/`)
+  return (
+    <a
+      href={item.href}
+      class={`rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
+        isActive
+          ? "bg-primary/10 text-primary"
+          : "text-muted-foreground hover:text-foreground hover:bg-accent"
+      }`}
+    >
+      {item.label}
+    </a>
+  )
+})}
           </nav>
 
           <!-- User -->

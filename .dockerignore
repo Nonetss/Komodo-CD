@@ -1,0 +1,32 @@
+.git
+
+**/node_modules
+**/dist
+**/.astro
+**/.turbo
+*.log
+
+Dockerfile
+**/Dockerfile
+compose*.yml
+
+# Secrets stay out of image layers; runtime env comes from compose,
+# build-time public values come from build args
+**/.env
+**/.env.*
+!**/.env.example
+
+# SQLite local de desarrollo
+**/*.db
+**/*.sqlite
+
+# Nothing below is COPYed by any Dockerfile; excluding it keeps the build
+# context small. The context is the repo root, so per-app .dockerignore
+# files would not be read.
+.agents
+.claude
+.github
+.vscode
+img
+*.md
+start.sh

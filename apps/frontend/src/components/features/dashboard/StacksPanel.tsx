@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import "@/lib/i18n"
 import {
   AlertTriangle,
@@ -15,13 +15,11 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import {
-  type DeployAction,
-  deployApi,
-  type Stack,
-  type StackState,
-  stacksApi,
-} from "@/lib/api"
+import type { DeployAction, Stack, StackState } from "@/lib/api-types"
+import { getErrorMessage } from "@/lib/orpc"
+import { withQueryProvider } from "@/providers/query-provider"
+import { useDeployTrigger } from "./hooks/use-deploy"
+import { useStacks } from "./hooks/use-stacks"
 
 const APP_URL =
   (import.meta.env.PUBLIC_APP_URL as string | undefined)?.replace(/\/$/, "") ??
@@ -134,6 +132,7 @@ function CurlSnippet({ stackName }: { stackName: string }) {
   return (
     <div>
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
         className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-xs transition-colors"
       >
@@ -150,6 +149,7 @@ function CurlSnippet({ stackName }: { stackName: string }) {
                   {a.label}
                 </span>
                 <button
+                  type="button"
                   onClick={() => copy(a.value)}
                   className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-xs transition-colors"
                 >
@@ -176,11 +176,17 @@ function CurlSnippet({ stackName }: { stackName: string }) {
 
 type ActionResult = { success: boolean; message: string }
 
-export const StacksPanel = () => {
+const EMPTY_STACKS: Stack[] = []
+
+const StacksPanelContent = () => {
   const { t } = useTranslation()
-  const [stacks, setStacks] = useState<Stack[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const stacksQuery = useStacks()
+  const deployTrigger = useDeployTrigger()
+  const stacks = stacksQuery.data ?? EMPTY_STACKS
+  const loading = stacksQuery.isLoading || stacksQuery.isFetching
+  const error = stacksQuery.isError
+    ? getErrorMessage(stacksQuery.error, t("stacks.errorLoad"))
+    : null
   const [pending, setPending] = useState<Record<string, DeployAction | null>>(
     {}
   )
@@ -190,34 +196,19 @@ export const StacksPanel = () => {
   const [search, setSearch] = useState("")
   const [filterState, setFilterState] = useState<StackState | null>(null)
 
-  const fetchStacks = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await stacksApi.list()
-      setStacks(res.data.stacks)
-    } catch (err: any) {
-      setError(err?.response?.data?.error ?? t("stacks.errorLoad"))
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchStacks()
-  }, [])
+  const fetchStacks = () => stacksQuery.refetch()
 
   const handleAction = async (stackName: string, action: DeployAction) => {
     setPending((p) => ({ ...p, [stackName]: action }))
     setResults((r) => ({ ...r, [stackName]: undefined }))
     try {
-      const res = await deployApi.trigger({ stack: stackName, action })
+      const res = await deployTrigger.mutateAsync({ stack: stackName, action })
       setResults((r) => ({
         ...r,
-        [stackName]: { success: true, message: res.data.message },
+        [stackName]: { success: true, message: res.message },
       }))
-    } catch (err: any) {
-      const msg = err?.response?.data?.error ?? t("stacks.errorAction")
+    } catch (err) {
+      const msg = getErrorMessage(err, t("stacks.errorAction"))
       setResults((r) => ({
         ...r,
         [stackName]: { success: false, message: msg },
@@ -229,7 +220,7 @@ export const StacksPanel = () => {
 
   const availableStates = useMemo(() => {
     const seen = new Set<StackState>()
-    stacks.forEach((s) => seen.add(s.info.state))
+    for (const s of stacks) seen.add(s.info.state)
     return Array.from(seen).sort()
   }, [stacks])
 
@@ -286,6 +277,7 @@ export const StacksPanel = () => {
               />
               {search && (
                 <button
+                  type="button"
                   onClick={() => setSearch("")}
                   className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors"
                 >
@@ -303,6 +295,7 @@ export const StacksPanel = () => {
                   ).length
                   return (
                     <button
+                      type="button"
                       key={state}
                       onClick={() => setFilterState(isActive ? null : state)}
                       className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${isActive ? s.badge : "border-border text-muted-foreground hover:text-foreground bg-secondary"}`}
@@ -315,6 +308,7 @@ export const StacksPanel = () => {
                 })}
                 {hasFilters && (
                   <button
+                    type="button"
                     onClick={() => {
                       setSearch("")
                       setFilterState(null)
@@ -488,3 +482,5 @@ export const StacksPanel = () => {
     </Card>
   )
 }
+
+export const StacksPanel = withQueryProvider(StacksPanelContent)

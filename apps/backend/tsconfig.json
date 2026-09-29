@@ -1,11 +1,10 @@
 {
-	"compilerOptions": {
-		"strict": true,
-		"jsx": "react-jsx",
-		"jsxImportSource": "hono/jsx",
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"]
-		}
-	}
+  "extends": "@komodo-cd/config/tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
 }

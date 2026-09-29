@@ -1,0 +1,34 @@
+{
+    admin off
+    auto_https off
+}
+
+# BACKEND_URL llega desde compose (http://backend:3000 por defecto)
+(backend) {
+    reverse_proxy {$BACKEND_URL:http://backend:3000}
+}
+
+:80 {
+    encode zstd gzip
+
+    # oRPC (cliente tipado del frontend)
+    handle /rpc/* {
+        import backend
+    }
+    # API REST pública (GitHub/Gitea Actions) y Better Auth (/api/auth/*)
+    handle /api/* {
+        import backend
+    }
+    # OpenAPI + Scalar
+    handle /doc {
+        import backend
+    }
+    handle /scalar* {
+        import backend
+    }
+
+    # Todo lo demás al SSR de Astro
+    handle {
+        reverse_proxy 127.0.0.1:4321
+    }
+}

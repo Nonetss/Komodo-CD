@@ -1,0 +1,49 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+build
+*.tsbuildinfo
+
+# Generated files
+.astro
+
+# Environment variables
+.env
+.env*.local
+.env.production
+
+# SQLite local
+*.db
+*.sqlite
+
+# IDEs and editors
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Turbo
+.turbo
+
+# Misc
+*.tgz
+.cache
+tmp
+temp
+
+# Claude
+.claude/*
+!.claude/settings.json
+!.claude/skills/

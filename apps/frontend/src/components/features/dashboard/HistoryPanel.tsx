@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react"
 import "@/lib/i18n"
 import { CheckCircle2, RefreshCw, XCircle } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { type HistoryItem, historyApi } from "@/lib/api"
+import type { HistoryItem } from "@/lib/api-types"
+import { withQueryProvider } from "@/providers/query-provider"
+import { useHistory } from "./hooks/use-history"
 
 const ACTION_LABELS: Record<string, string> = {
   pull: "Pull",
@@ -50,28 +51,13 @@ function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
 }
 
-export const HistoryPanel = () => {
+const HistoryPanelContent = () => {
   const { t, i18n } = useTranslation()
-  const [history, setHistory] = useState<HistoryItem[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchHistory = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await historyApi.list()
-      setHistory(res.data.history)
-    } catch {
-      setError(t("history.error"))
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchHistory()
-  }, [])
+  const historyQuery = useHistory()
+  const history = historyQuery.data ?? []
+  const loading = historyQuery.isLoading || historyQuery.isFetching
+  const error = historyQuery.isError ? t("history.error") : null
+  const fetchHistory = () => historyQuery.refetch()
 
   return (
     <Card>
@@ -182,3 +168,5 @@ export const HistoryPanel = () => {
     </Card>
   )
 }
+
+export const HistoryPanel = withQueryProvider(HistoryPanelContent)

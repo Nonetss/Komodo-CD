@@ -20,13 +20,19 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      // La imagen de runtime no lleva node_modules: en build se empaqueta
+      // todo en dist/server (en dev se resuelve normal).
+      noExternal: process.argv.includes("dev") ? undefined : true,
+    },
     server: {
-      proxy: {
-        "/api/": {
-          target: "http://localhost:3000",
-          changeOrigin: true,
-        },
-      },
+      // Mismo enrutado que Caddy en producción (Caddyfile)
+      proxy: Object.fromEntries(
+        ["/api/", "/rpc/", "/doc", "/scalar"].map((path) => [
+          path,
+          { target: "http://localhost:3000", changeOrigin: true },
+        ])
+      ),
     },
     envPrefix: ["BETTER_AUTH_"],
   },

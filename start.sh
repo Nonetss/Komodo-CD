@@ -88,7 +88,7 @@ cat > .env << EOF
 # Without trailing slash. Used for CORS, trusted origins, and curl snippets.
 APP_URL=$APP_URL
 
-# Port that Nginx exposes on the host (default 80)
+# Port that Caddy exposes on the host (default 80)
 PORT=$PORT
 
 # ─── Better Auth ──────────────────────────────────────────────────────────────

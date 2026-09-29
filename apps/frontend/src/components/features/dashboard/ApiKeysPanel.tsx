@@ -5,7 +5,12 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { type ApiKey, apiKeysApi } from "@/lib/api"
+import { withQueryProvider } from "@/providers/query-provider"
+import {
+  useApiKeyCreate,
+  useApiKeyDelete,
+  useApiKeys,
+} from "./hooks/use-api-keys"
 
 const APP_URL =
   (import.meta.env.PUBLIC_APP_URL as string | undefined)?.replace(/\/$/, "") ??
@@ -15,10 +20,13 @@ function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
 }
 
-export const ApiKeysPanel = () => {
+const ApiKeysPanelContent = () => {
   const { t, i18n } = useTranslation()
-  const [keys, setKeys] = useState<ApiKey[]>([])
-  const [loading, setLoading] = useState(false)
+  const keysQuery = useApiKeys()
+  const createKey = useApiKeyCreate()
+  const deleteKey = useApiKeyDelete()
+  const keys = keysQuery.data ?? []
+  const loading = keysQuery.isLoading || keysQuery.isFetching
   const [error, setError] = useState<string | null>(null)
   const [newKeyName, setNewKeyName] = useState("")
   const [showForm, setShowForm] = useState(false)
@@ -26,22 +34,12 @@ export const ApiKeysPanel = () => {
   const [copied, setCopied] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
-  const fetchKeys = async () => {
-    setLoading(true)
+  const fetchKeys = () => {
     setError(null)
-    try {
-      const res = await apiKeysApi.list()
-      setKeys(res.data.keys)
-    } catch {
-      setError(t("apikeys.errorLoad"))
-    } finally {
-      setLoading(false)
-    }
+    keysQuery.refetch()
   }
-
-  useEffect(() => {
-    fetchKeys()
-  }, [])
+  const errorMessage =
+    error ?? (keysQuery.isError ? t("apikeys.errorLoad") : null)
 
   useEffect(() => {
     if (!confirmDelete) return
@@ -53,11 +51,10 @@ export const ApiKeysPanel = () => {
     if (!newKeyName.trim()) return
     setError(null)
     try {
-      const res = await apiKeysApi.create(newKeyName.trim())
-      setCreatedKey(res.data.key)
+      const res = await createKey.mutateAsync({ name: newKeyName.trim() })
+      setCreatedKey(res.key)
       setNewKeyName("")
       setShowForm(false)
-      await fetchKeys()
     } catch {
       setError(t("apikeys.errorCreate"))
     }
@@ -71,8 +68,7 @@ export const ApiKeysPanel = () => {
     setConfirmDelete(null)
     setError(null)
     try {
-      await apiKeysApi.delete(id)
-      await fetchKeys()
+      await deleteKey.mutateAsync({ id })
     } catch {
       setError(t("apikeys.errorDelete"))
     }
@@ -111,7 +107,9 @@ export const ApiKeysPanel = () => {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        {error && <p className="text-destructive text-sm">{error}</p>}
+        {errorMessage && (
+          <p className="text-destructive text-sm">{errorMessage}</p>
+        )}
 
         {createdKey && (
           <div className="space-y-3 rounded-lg border border-emerald-800 bg-emerald-950/20 p-4">
@@ -233,3 +231,5 @@ export const ApiKeysPanel = () => {
     </Card>
   )
 }
+
+export const ApiKeysPanel = withQueryProvider(ApiKeysPanelContent)

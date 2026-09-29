@@ -1,106 +1,62 @@
-import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { Scalar } from "@scalar/hono-api-reference";
-import type { Session, User } from "better-auth/types";
-import { Context, Handler } from "hono";
-import { cors } from "hono/cors";
-import { HTTPException } from "hono/http-exception";
-import { logger as honoLogger } from "hono/logger";
-import api from "@/api";
-import { auth } from "@/core/auth";
-import { bootstrap } from "@/lib/bootstrap";
-import { logger } from "@/lib/logger";
-import { authMiddleware } from "@/middleware";
+import { komodoService } from "@komodo-cd/api/lib/komodo"
+import { auth } from "@komodo-cd/auth"
+import { seed } from "@komodo-cd/db/seed"
+import { logger } from "@komodo-cd/logger"
+import { Hono } from "hono"
+import { cors } from "hono/cors"
+import { logger as honoLogger } from "hono/logger"
 
-const app = new OpenAPIHono<{
-	Variables: {
-		user: User | null;
-		session: Session | null;
-	};
-}>();
+import { type AuthVariables, sessionMiddleware } from "@/middlewares/auth"
+import authRouter from "@/routers/auth"
+import openapiRouter from "@/routers/openapi"
+import rpcRouter from "@/routers/rpc"
 
-app.openAPIRegistry.registerComponent("securitySchemes", "ApiKeyAuth", {
-	type: "apiKey",
-	in: "header",
-	name: "x-api-key",
-	description:
-		"API Key generada desde Better Auth. Pásala en el header `x-api-key`.",
-});
-
-app.onError((err, c) => {
-	logger.error(`${err}`);
-	const status = err instanceof HTTPException ? err.status : 500;
-	return c.json({ error: err.message }, status);
-});
+const app = new Hono<{ Variables: AuthVariables }>()
 
 app.use(
-	"*",
-	cors({
-		origin: (origin) => origin || "*",
-		credentials: true,
-		allowHeaders: ["Content-Type", "Authorization", "x-api-key"],
-		allowMethods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-	}),
-);
-app.use("*", honoLogger());
-app.use("/api/v0/*", authMiddleware);
+  "*",
+  cors({
+    origin: (origin) => origin || "*",
+    credentials: true,
+    allowHeaders: ["Content-Type", "Authorization", "x-api-key"],
+    allowMethods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  })
+)
+app.use("*", honoLogger())
 
-app.on(["POST", "GET"], "/api/auth/*", (c) => {
-	return auth.handler(c.req.raw);
-});
+app.get("/health-check", (c) => c.json({ message: "API is running" }))
 
-const rootSchema = z.object({
-	message: z.string().openapi({ example: "API is running" }),
-});
+app.route("/", authRouter)
+app.use("*", sessionMiddleware)
+app.route("/", rpcRouter)
+app.route("/", openapiRouter)
 
-const rootRoute = createRoute({
-	method: "get",
-	path: "/health-check",
-	tags: ["Health Check"],
-	responses: {
-		200: {
-			content: {
-				"application/json": {
-					schema: rootSchema,
-				},
-			},
-			description: "Health Check endpoint",
-		},
-	},
-});
+// `bun --hot` re-ejecuta este módulo en cada cambio; globalThis sobrevive a
+// los hot reloads, así que el bootstrap (migraciones, seed, Komodo) y los
+// handlers de señales solo se registran una vez.
+declare global {
+  var __backendBootstrapped: boolean | undefined
+}
 
-const rootHandler: Handler = (c: Context) => {
-	return c.json({ message: "API is running" });
-};
+if (!globalThis.__backendBootstrapped) {
+  globalThis.__backendBootstrapped = true
 
-app.openapi(rootRoute, rootHandler);
+  logger.info("🚀 Iniciando bootstrap...")
+  await seed(auth)
+  await komodoService.initialize()
+  logger.info("✅ Bootstrap completado")
 
-app.doc("/doc", {
-	openapi: "3.0.0",
-	info: {
-		version: "1.0.0",
-		title: "Komodo Action API",
-		description:
-			"API para gestionar credenciales de Komodo y disparar deploys. " +
-			"Todos los endpoints requieren autenticación mediante API Key (`x-api-key`) o sesión de usuario.",
-	},
-});
+  for (const signal of ["SIGINT", "SIGTERM"] as const) {
+    process.on(signal, () => {
+      logger.info({ signal }, "🛑 Señal de apagado recibida, cerrando servidor")
+      process.exit(0)
+    })
+  }
 
-app.get("/scalar", Scalar({ url: "/doc" }));
+  logger.info("🌐 Servidor corriendo en http://localhost:3000")
+}
 
-app.route("/", api);
-
-// Ejecutar bootstrap e iniciar servicios al iniciar
-bootstrap().then(() => {
-	const server = Bun.serve({ port: 3000, fetch: app.fetch });
-	logger.info("🌐 Servidor corriendo en http://localhost:3000");
-
-	const shutdown = async () => {
-		logger.info("🛑 Señal de apagado recibida, cerrando servidor...");
-		server.stop();
-		logger.info("✅ Servidor cerrado correctamente");
-		process.exit(0);
-	};
-
-	process.on("SIGTERM", shutdown);
-	process.on("SIGINT", shutdown);
-});
+export default {
+  port: 3000,
+  fetch: app.fetch,
+}

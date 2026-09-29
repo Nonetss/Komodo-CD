@@ -1,0 +1,27 @@
+{
+  "name": "@komodo-cd/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#*": "./src/*.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@better-auth/api-key": "catalog:",
+    "@komodo-cd/db": "workspace:*",
+    "@komodo-cd/env": "workspace:*",
+    "better-auth": "catalog:"
+  },
+  "devDependencies": {
+    "@komodo-cd/config": "workspace:*",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  }
+}

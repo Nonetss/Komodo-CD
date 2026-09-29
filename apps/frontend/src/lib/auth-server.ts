@@ -2,31 +2,12 @@
 // that ends up in the browser bundle, so this lives apart from auth-client.ts.
 
 import { BACKEND_URL } from "astro:env/server"
-import {
-  adminClient,
-  apiKeyClient,
-  genericOAuthClient,
-  organizationClient,
-} from "better-auth/client/plugins"
 import { createAuthClient } from "better-auth/react"
-import { ac } from "@/lib/auth-client"
+import { authPlugins } from "@/lib/auth-client"
 
 // SSR runs inside the container, where the public origin (localhost) points
 // to the container itself — reach the backend through the compose network.
 export const authServer = createAuthClient({
   baseURL: BACKEND_URL,
-  plugins: [
-    apiKeyClient(),
-    adminClient(),
-    organizationClient({
-      ac,
-      dynamicAccessControl: {
-        enabled: true,
-      },
-      teams: {
-        enabled: true,
-      },
-    }),
-    genericOAuthClient(),
-  ],
+  plugins: authPlugins,
 })
