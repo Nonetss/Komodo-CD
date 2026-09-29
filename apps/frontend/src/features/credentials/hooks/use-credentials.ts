@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { stacksListKey } from "@/features/stacks"
 import { useHydratedQuery } from "@/hooks/use-hydrated-query"
 import { orpc } from "@/lib/orpc"
-import { stacksListKey } from "./use-stacks"
 
 export const credentialsListKey = orpc.v0.credentials.list.queryKey()
 
