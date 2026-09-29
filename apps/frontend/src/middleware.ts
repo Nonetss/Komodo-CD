@@ -1,0 +1,40 @@
+import { defineMiddleware } from "astro:middleware"
+import { authServer } from "@/lib/auth-server"
+
+const publicPaths = ["/login", "/signup", "/api/auth", "/pending"]
+const adminPaths = ["/admin"]
+
+export const onRequest = defineMiddleware(async (context, next) => {
+  const path = context.url.pathname
+
+  if (publicPaths.some((p) => path.startsWith(p))) {
+    return next()
+  }
+
+  const sessionResult = await authServer.getSession({
+    fetchOptions: {
+      headers: Object.fromEntries(context.request.headers.entries()),
+    },
+  })
+
+  if (sessionResult.error || sessionResult.data === null) {
+    return context.redirect("/login")
+  }
+
+  const { user, session } = sessionResult.data
+
+  if (user.role === "pending") {
+    return context.redirect("/pending")
+  }
+
+  if (adminPaths.some((p) => path.startsWith(p))) {
+    if (user.role !== "admin") {
+      return context.redirect("/")
+    }
+  }
+
+  context.locals.session = session as App.AdminSession
+  context.locals.user = user as App.User
+
+  return next()
+})
