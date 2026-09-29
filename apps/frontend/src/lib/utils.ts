@@ -5,7 +5,9 @@ import { extendTailwindMerge } from "tailwind-merge"
 // los toma por colores y descarta `text-label` al lado de `text-muted-foreground`.
 const twMerge = extendTailwindMerge({
   extend: {
-    theme: { text: ["title", "heading", "label", "micro"] },
+    theme: {
+      text: ["display", "stat", "headline", "body", "meta", "meta-sm", "label"],
+    },
   },
 })
 

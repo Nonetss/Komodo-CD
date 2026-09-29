@@ -20,18 +20,19 @@ export default defineConfig({
   fonts: [
     {
       provider: fontsource,
-      name: "Instrument Sans",
-      cssVariable: "--font-instrument",
-      weights: ["400 700"],
+      name: "Space Grotesk",
+      cssVariable: "--font-grotesk",
+      weights: ["300 700"],
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
     },
     {
       provider: fontsource,
-      name: "JetBrains Mono",
-      cssVariable: "--font-jetbrains",
-      weights: ["400 600"],
+      name: "Space Mono",
+      cssVariable: "--font-space-mono",
+      // Space Mono no es variable: solo pesos estáticos 400/700
+      weights: [400, 700],
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["ui-monospace", "SFMono-Regular", "monospace"],
