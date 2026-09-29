@@ -56,7 +56,8 @@ export default {
     services_other: "{{count}} services",
     servicesTitle: "Services",
     ciTitle: "Call from CI",
-    ciHint: "Replace <your-api-key> with a key from the API Keys section.",
+    ciHint:
+      "Replace <code>{{placeholder}}</code> with a key from <keys>API Keys</keys>.",
     expand: "Show details",
     collapse: "Hide details",
     projectMissing: "Project not found on host",
@@ -64,7 +65,6 @@ export default {
     updateAvailable: "Update available",
     deployed: "Deployed",
     latest: "Latest",
-    stateLabel: "State",
     repoLabel: "Repository",
     commitLabel: "Commit",
     count: {

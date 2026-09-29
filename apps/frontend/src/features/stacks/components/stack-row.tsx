@@ -16,7 +16,9 @@ import {
   ACTION_ICON,
   buildDeployCurl,
   DEPLOY_ACTIONS,
+  DeployCurlHint,
 } from "@/features/deploy"
+import { ImageRef } from "@/features/stacks/components/image-ref"
 import {
   StackStateDot,
   StackStateTag,
@@ -46,6 +48,7 @@ export function StackRow({
   const appUrl = useAppUrl()
   const [curlAction, setCurlAction] = useState<DeployAction>("redeploy")
   const detailsId = `stack-${stack.id}`
+  const hasCommit = !!(info.deployed_hash || info.latest_hash)
 
   return (
     <li id={`row-${stack.name}`} className="group scroll-mt-24">
@@ -160,37 +163,28 @@ export function StackRow({
       {expanded && (
         <div
           id={detailsId}
-          className="grid grid-cols-1 gap-x-10 gap-y-6 border-t px-4 py-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:pl-8.5"
+          className="bg-muted/40 dark:bg-muted/20 space-y-6 border-t px-4 pt-4 pb-5 md:pl-8.5"
         >
-          <div className="min-w-0 space-y-5">
-            {problem && (
-              <p className="text-danger text-meta flex items-start gap-2">
-                <AlertTriangle
-                  aria-hidden
-                  className="mt-0.5 size-3.5 shrink-0"
-                />
-                <span className="wrap-break-word">
-                  {info.project_missing
-                    ? t("stacks.projectMissing")
-                    : t("stacks.missingFiles", {
-                        files: info.missing_files.join(", "),
-                      })}
-                </span>
-              </p>
-            )}
+          {problem && (
+            <p className="text-danger text-meta flex items-start gap-2">
+              <AlertTriangle aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+              <span className="wrap-break-word">
+                {info.project_missing
+                  ? t("stacks.projectMissing")
+                  : t("stacks.missingFiles", {
+                      files: info.missing_files.join(", "),
+                    })}
+              </span>
+            </p>
+          )}
 
-            <MetadataList columns={2} className="pt-0 pb-5">
-              <MetadataCell label={t("stacks.stateLabel")}>
-                <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <StackStateTag state={info.state} />
-                  {info.status && (
-                    <Text variant="data" tone="muted">
-                      {info.status}
-                    </Text>
-                  )}
-                </span>
-              </MetadataCell>
-              {(info.deployed_hash || info.latest_hash) && (
+          {(hasCommit || info.repo) && (
+            <MetadataList
+              columns={3}
+              bordered={false}
+              className="flex flex-wrap gap-x-10 gap-y-4 py-0"
+            >
+              {hasCommit && (
                 <MetadataCell label={t("stacks.commitLabel")}>
                   <Text variant="data">
                     {info.deployed_hash ?? "—"}
@@ -206,7 +200,7 @@ export function StackRow({
               {info.repo && (
                 <MetadataCell
                   label={t("stacks.repoLabel")}
-                  className="sm:col-span-2"
+                  className="basis-60 grow"
                 >
                   <Text variant="data" className="block truncate">
                     {info.repo_link ? (
@@ -229,62 +223,66 @@ export function StackRow({
                 </MetadataCell>
               )}
             </MetadataList>
+          )}
 
-            <div className="space-y-2">
-              <Text as="p" variant="label" tone="muted">
-                {t("stacks.servicesTitle")}
-              </Text>
-              <ul className="divide-y">
-                {info.services.map((svc) => (
-                  <li
-                    key={svc.service}
-                    className="flex items-center justify-between gap-3 py-2"
-                  >
-                    <span className="flex shrink-0 items-center gap-2 font-medium">
-                      {svc.service}
-                      {svc.update_available && (
-                        <StatusTag tone="primary" ink>
-                          update
-                        </StatusTag>
-                      )}
-                    </span>
-                    <Text
-                      variant="data"
-                      tone="muted"
-                      className="min-w-0 truncate"
-                      title={svc.image}
-                    >
-                      {svc.image}
-                    </Text>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="min-w-0 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <Text as="p" variant="label" tone="muted">
-                {t("stacks.ciTitle")}
-              </Text>
-              <Segmented
-                value={curlAction}
-                onChange={setCurlAction}
-                aria-label={t("stacks.ciTitle")}
-                options={DEPLOY_ACTIONS.map((a) => ({
-                  value: a,
-                  label: t(`deploy.actions.${ACTION_I18N[a]}.label`),
-                }))}
-              />
-            </div>
-            <CodeBlock
-              label={`POST /api/v0/deploy · ${curlAction}`}
-              code={buildDeployCurl(appUrl, stack.name, curlAction)}
-            />
-            <Text as="p" variant="meta" tone="muted">
-              {t("stacks.ciHint")}
+          <section className="space-y-2">
+            <Text
+              as="h3"
+              variant="label"
+              tone="muted"
+              className="flex items-baseline gap-2"
+            >
+              {t("stacks.servicesTitle")}
+              <span className="font-mono tabular-nums">
+                {info.services.length}
+              </span>
             </Text>
-          </div>
+            <ul className="grid grid-cols-1 gap-x-8 gap-y-1 sm:grid-cols-2 xl:grid-cols-3">
+              {info.services.map((svc) => (
+                <li
+                  key={svc.service}
+                  className="flex min-w-0 items-baseline gap-2.5"
+                >
+                  <span className="flex shrink-0 items-center gap-2 font-medium">
+                    {svc.service}
+                    {svc.update_available && (
+                      <StatusTag
+                        tone="primary"
+                        ink
+                        title={t("stacks.updateAvailable")}
+                      >
+                        update
+                      </StatusTag>
+                    )}
+                  </span>
+                  <ImageRef image={svc.image} />
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="space-y-2">
+            <Text as="h3" variant="label" tone="muted">
+              {t("stacks.ciTitle")}
+            </Text>
+            <CodeBlock
+              language="shell"
+              code={buildDeployCurl(appUrl, stack.name, curlAction)}
+              header={
+                <Segmented
+                  variant="tabs"
+                  value={curlAction}
+                  onChange={setCurlAction}
+                  aria-label={t("stacks.ciTitle")}
+                  options={DEPLOY_ACTIONS.map((a) => ({
+                    value: a,
+                    label: t(`deploy.actions.${ACTION_I18N[a]}.label`),
+                  }))}
+                />
+              }
+            />
+            <DeployCurlHint />
+          </section>
         </div>
       )}
     </li>

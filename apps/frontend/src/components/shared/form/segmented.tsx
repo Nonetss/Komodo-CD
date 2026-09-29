@@ -15,6 +15,11 @@ type SegmentedProps<T extends string> = {
   value: T
   onChange: (value: T) => void
   options: SegmentedOption<T>[]
+  /**
+   * `pill` (por defecto): botones con borde. `tabs`: pestañas subrayadas para
+   * la barra de un bloque (p. ej. `CodeBlock`); el subrayado se apoya en su borde.
+   */
+  variant?: "pill" | "tabs"
   className?: string
   "aria-label"?: string
 }
@@ -28,6 +33,7 @@ export function Segmented<T extends string>({
   value,
   onChange,
   options,
+  variant = "pill",
   className,
   ...props
 }: SegmentedProps<T>) {
@@ -35,7 +41,11 @@ export function Segmented<T extends string>({
   return (
     <fieldset
       aria-label={props["aria-label"]}
-      className={cn("flex max-w-full min-w-0 gap-1", className)}
+      className={cn(
+        "flex max-w-full min-w-0",
+        variant === "pill" ? "gap-1" : "self-stretch overflow-x-auto",
+        className
+      )}
     >
       {options.map((o) => {
         const active = o.value === value
@@ -44,10 +54,18 @@ export function Segmented<T extends string>({
           <label
             key={o.value}
             className={cn(
-              "has-focus-visible:ring-ring/50 flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md border px-2.5 text-xs whitespace-nowrap transition-colors has-focus-visible:ring-2",
-              active
-                ? "border-foreground bg-foreground text-background"
-                : "border-input text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+              "has-focus-visible:ring-ring/50 flex cursor-pointer items-center justify-center gap-1.5 rounded-md px-2.5 text-xs whitespace-nowrap transition-colors has-focus-visible:ring-2",
+              variant === "pill" && "h-8 border",
+              variant === "pill" &&
+                (active
+                  ? "border-foreground bg-foreground text-background"
+                  : "border-input text-muted-foreground hover:bg-muted/40 hover:text-foreground"),
+              variant === "tabs" &&
+                "relative h-full min-h-9 after:absolute after:inset-x-2.5 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
+              variant === "tabs" &&
+                (active
+                  ? "text-foreground after:bg-foreground"
+                  : "text-muted-foreground hover:text-foreground after:bg-transparent")
             )}
           >
             <input
@@ -63,7 +81,9 @@ export function Segmented<T extends string>({
               <span
                 className={cn(
                   "font-mono tabular-nums",
-                  active ? "opacity-70" : alert && "text-danger"
+                  active && variant === "pill"
+                    ? "opacity-70"
+                    : alert && "text-danger"
                 )}
               >
                 {o.count}

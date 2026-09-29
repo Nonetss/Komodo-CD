@@ -22,11 +22,14 @@ export const ACTION_I18N: Record<DeployAction, string> = {
   "pull-redeploy": "pullRedeploy",
 }
 
+/** Marcador de la key en los `curl` de ejemplo (se resalta al mostrarlos) */
+export const API_KEY_PLACEHOLDER = "<tu-api-key>"
+
 export function buildDeployCurl(
   appUrl: string,
   stack: string,
   action: DeployAction,
-  apiKey = "<tu-api-key>"
+  apiKey = API_KEY_PLACEHOLDER
 ) {
   return [
     `curl -X POST ${appUrl}/api/v0/deploy \\`,

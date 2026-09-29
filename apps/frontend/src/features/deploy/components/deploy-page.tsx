@@ -9,6 +9,7 @@ import { FormField } from "@/components/shared/form/field-label"
 import { PageHero } from "@/components/shared/layout/page-hero"
 import { Button } from "@/components/ui/button"
 import { ActionChoice } from "@/features/deploy/components/action-choice"
+import { DeployCurlHint } from "@/features/deploy/components/deploy-curl-hint"
 import { StackCombobox } from "@/features/deploy/components/stack-combobox"
 import { useDeployTrigger } from "@/features/deploy/hooks/use-deploy"
 import {
@@ -135,13 +136,11 @@ const DeployPageContent = () => {
           </Text>
         </div>
         <CodeBlock
-          label={`POST /api/v0/deploy · ${action}`}
           language="shell"
+          label={`POST /api/v0/deploy · ${action}`}
           code={buildDeployCurl(appUrl, stack.trim() || "mi-stack", action)}
         />
-        <Text as="p" variant="meta" tone="muted">
-          {t("stacks.ciHint")}
-        </Text>
+        <DeployCurlHint />
       </section>
     </div>
   )
