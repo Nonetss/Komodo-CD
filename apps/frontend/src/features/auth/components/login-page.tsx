@@ -3,8 +3,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 
-import { LanguageSwitcherButton } from "@/components/LanguageSwitcher"
-import { ThemeToggle } from "@/components/ThemeToggle"
+import { Text } from "@/components/shared/brand/typography"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -14,6 +13,7 @@ import {
   FormLabel,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { LanguageSwitcherButton, ThemeToggle } from "@/features/app-shell"
 import { useHydrated } from "@/hooks/use-hydrated"
 import { authClient } from "@/lib/auth-client"
 import { withIsland } from "@/providers/island"
@@ -32,29 +32,27 @@ const STRIP_COLOR: Record<string, string> = {
 function BrandPanel() {
   const { t } = useTranslation()
   return (
-    <div className="bg-sidebar relative hidden overflow-hidden border-r lg:flex lg:flex-col lg:justify-between lg:p-12">
-      <div
-        className="bg-grid absolute inset-0 opacity-40 mask-[radial-gradient(ellipse_at_30%_20%,black_20%,transparent_70%)]"
-        aria-hidden
-      />
+    <div className="bg-sidebar bg-dot-grid relative hidden overflow-hidden border-r lg:flex lg:flex-col lg:justify-between lg:p-12">
       <div className="relative flex items-center gap-2.5">
         <img src="/logo.svg" alt="" aria-hidden className="h-7 w-auto" />
-        <span className="text-lg font-semibold tracking-tight">Komodo CD</span>
+        <Text variant="headline" className="font-semibold">
+          Komodo CD
+        </Text>
       </div>
 
       <div className="relative max-w-md space-y-8">
-        <p className="text-4xl leading-[1.08] font-semibold tracking-[-0.025em] text-balance xl:text-5xl">
+        <p className="text-4xl leading-[1.08] font-semibold tracking-tight text-balance xl:text-5xl">
           {t("login.subtitle")}
         </p>
 
-        <div className="bg-card/80 overflow-hidden rounded-xl border shadow-2xl backdrop-blur">
+        <div className="bg-card overflow-hidden rounded-xl border">
           <div className="flex items-center gap-1.5 border-b px-3 py-2">
             <span className="bg-danger/60 size-2 rounded-full" />
             <span className="bg-warning/60 size-2 rounded-full" />
             <span className="bg-success/60 size-2 rounded-full" />
-            <span className="text-muted-foreground ml-2 font-mono text-micro">
+            <Text variant="data" tone="muted" className="ml-2">
               .github/workflows/deploy.yml
-            </span>
+            </Text>
           </div>
           <pre className="text-muted-foreground p-4 font-mono text-xs leading-relaxed">
             <span className="text-primary">curl</span> -X POST
@@ -80,9 +78,9 @@ function BrandPanel() {
         </div>
       </div>
 
-      <p className="section-label relative">
+      <Text as="p" variant="status" tone="muted" className="relative">
         pull · redeploy · pull + redeploy
-      </p>
+      </Text>
     </div>
   )
 }
@@ -121,7 +119,9 @@ const LoginPageContent = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 lg:invisible">
             <img src="/logo.svg" alt="" aria-hidden className="h-6 w-auto" />
-            <span className="font-semibold tracking-tight">Komodo CD</span>
+            <Text variant="headline" className="font-semibold">
+              Komodo CD
+            </Text>
           </div>
           <div className="flex items-center gap-0.5">
             <LanguageSwitcherButton />
@@ -130,12 +130,19 @@ const LoginPageContent = () => {
         </div>
 
         <div className="flex flex-1 items-center justify-center py-10">
-          <div className="reveal w-full max-w-90 space-y-7">
-            <div className="space-y-2">
-              <h1 className="text-title">{t("login.title")}</h1>
-              <p className="text-muted-foreground text-sm text-pretty lg:hidden">
+          <div className="w-full max-w-90 space-y-7">
+            <div className="space-y-1">
+              <Text as="h1" variant="display">
+                {t("login.title")}
+              </Text>
+              <Text
+                as="p"
+                variant="meta"
+                tone="muted"
+                className="text-pretty lg:hidden"
+              >
                 {t("login.subtitle")}
-              </p>
+              </Text>
             </div>
 
             <Form {...form}>
@@ -187,7 +194,7 @@ const LoginPageContent = () => {
                 {loginError && (
                   <p
                     role="alert"
-                    className="bg-danger/10 border-danger/25 text-danger flex items-center gap-2 rounded-md border px-3 py-2 text-xs"
+                    className="text-destructive text-meta flex items-center gap-2"
                   >
                     <AlertCircle className="size-3.5 shrink-0" />
                     {loginError}
