@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - "v*"
+    # Una release (tag vX.Y.Z) publica también las imágenes versionadas
+    tags:
+      - "v*.*.*"
 
 # Un push nuevo a la misma ref cancela el run anterior.
 concurrency:
@@ -46,10 +49,14 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository_owner }}/komodo-cd-${{ matrix.name }}
+          # main -> latest, main, main-<sha>; tag v1.2.3 -> 1.2.3, 1.2.
+          # La tag sha solo en ramas: en un tag no hay {{branch}} y saldría "-<sha>".
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=branch
-            type=sha,prefix={{branch}}-,format=short
+            type=sha,prefix={{branch}}-,format=short,enable=${{ github.ref_type == 'branch' }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       # El contexto es la raíz del monorepo (bun.lock y workspaces viven ahí).
       - name: Build and push ${{ matrix.name }}
