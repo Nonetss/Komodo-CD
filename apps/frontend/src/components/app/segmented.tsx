@@ -33,7 +33,7 @@ export function Segmented<T extends string>({
           <label
             key={o.value}
             className={cn(
-              "flex h-7 cursor-pointer items-center rounded-md px-2.5 font-medium whitespace-nowrap transition-colors has-[:focus-visible]:ring-ring/40 has-[:focus-visible]:ring-2",
+              "flex h-7 cursor-pointer items-center rounded-md px-2.5 font-medium whitespace-nowrap transition-colors has-focus-visible:ring-ring/40 has-focus-visible:ring-2",
               active
                 ? "bg-card text-foreground ring-border shadow-xs ring-1"
                 : "text-muted-foreground hover:text-foreground"

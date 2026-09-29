@@ -41,7 +41,7 @@ function CreatedKey({
   const { t } = useTranslation()
   const appUrl = useAppUrl()
   return (
-    <div className="reveal border-success/30 bg-success/[0.06] mb-6 space-y-4 rounded-xl border p-4 sm:p-5">
+    <div className="reveal border-success/30 bg-success/6 mb-6 space-y-4 rounded-xl border p-4 sm:p-5">
       <div className="flex items-start gap-3">
         <span className="bg-success/15 text-success flex size-8 shrink-0 items-center justify-center rounded-md">
           <ShieldCheck className="size-4" />

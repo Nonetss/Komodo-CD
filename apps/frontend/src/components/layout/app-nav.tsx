@@ -92,7 +92,7 @@ export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
                   active && "bg-primary/12"
                 )}
               >
-                <Icon className="size-[18px]" />
+                <Icon className="size-4.5" />
               </span>
               <span className="max-w-full truncate px-1">{item.label}</span>
             </a>

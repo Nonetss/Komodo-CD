@@ -34,7 +34,7 @@ function BrandPanel() {
   return (
     <div className="bg-sidebar relative hidden overflow-hidden border-r lg:flex lg:flex-col lg:justify-between lg:p-12">
       <div
-        className="bg-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_30%_20%,black_20%,transparent_70%)]"
+        className="bg-grid absolute inset-0 opacity-40 mask-[radial-gradient(ellipse_at_30%_20%,black_20%,transparent_70%)]"
         aria-hidden
       />
       <div className="relative flex items-center gap-2.5">
@@ -71,7 +71,7 @@ function BrandPanel() {
               '{"{"}"stack":"web","action":"pull-redeploy"{"}"}'
             </span>
           </pre>
-          <div className="flex gap-[3px] border-t px-4 py-3" aria-hidden>
+          <div className="flex gap-0.75 border-t px-4 py-3" aria-hidden>
             {STRIP.map((c, i) => (
               <span
                 key={i}
@@ -132,7 +132,7 @@ const LoginPageContent = () => {
         </div>
 
         <div className="flex flex-1 items-center justify-center py-10">
-          <div className="reveal w-full max-w-[360px] space-y-7">
+          <div className="reveal w-full max-w-90 space-y-7">
             <div className="space-y-2">
               <h1 className="text-2xl font-semibold tracking-tight">
                 {t("login.title")}

@@ -92,7 +92,7 @@ function StatusStrip({
     [stacks]
   )
   return (
-    <div className="flex h-2.5 gap-[3px]" aria-hidden>
+    <div className="flex h-2.5 gap-0.75" aria-hidden>
       {sorted.map((s) => (
         <button
           key={s.id}
@@ -101,7 +101,7 @@ function StatusStrip({
           title={`${s.name} · ${s.info.state}`}
           onClick={() => onPick(s.name)}
           className={cn(
-            "min-w-[3px] flex-1 cursor-pointer rounded-[2px] transition-colors",
+            "min-w-0.75 flex-1 cursor-pointer rounded-[2px] transition-colors",
             SEGMENT[stateTone(s.info.state)]
           )}
         />
@@ -133,7 +133,7 @@ function StatTile({
       className={cn(
         "group bg-card flex cursor-pointer flex-col gap-1.5 rounded-lg border px-3 py-2.5 text-left transition-[border-color,background-color,box-shadow] sm:gap-2 sm:px-3.5 sm:py-3",
         active
-          ? "border-primary/50 bg-primary/[0.04] ring-primary/20 ring-2"
+          ? "border-primary/50 bg-primary/4 ring-primary/20 ring-2"
           : "hover:border-foreground/15"
       )}
     >
@@ -296,7 +296,7 @@ function StackRow({
             {problem && (
               <div className="bg-danger/10 border-danger/20 text-danger flex items-start gap-2 rounded-md border px-3 py-2 text-xs">
                 <AlertTriangle className="mt-px size-3.5 shrink-0" />
-                <span className="break-words">
+                <span className="wrap-break-word">
                   {info.project_missing
                     ? t("stacks.projectMissing")
                     : t("stacks.missingFiles", {
@@ -625,7 +625,7 @@ function StacksSkeleton() {
       <Skeleton className="h-2.5 w-full" />
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
         {[0, 1, 2, 3].map((i) => (
-          <Skeleton key={i} className="h-[74px] rounded-lg" />
+          <Skeleton key={i} className="h-18.5 rounded-lg" />
         ))}
       </div>
       <div className="divide-y rounded-xl border">

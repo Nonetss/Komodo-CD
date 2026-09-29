@@ -9,7 +9,7 @@ const NotFoundContent = () => {
   return (
     <div className="relative flex min-h-dvh items-center justify-center px-6">
       <div
-        className="bg-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_60%)]"
+        className="bg-grid absolute inset-0 opacity-40 mask-[radial-gradient(ellipse_at_center,black_10%,transparent_60%)]"
         aria-hidden
       />
       <div className="reveal relative max-w-sm space-y-5 text-center">

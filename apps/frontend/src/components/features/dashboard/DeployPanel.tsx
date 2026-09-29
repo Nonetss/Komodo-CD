@@ -264,7 +264,7 @@ const DeployPanelContent = () => {
                         className={cn(
                           "relative flex cursor-pointer gap-3 rounded-lg border p-3 transition-[border-color,background-color,box-shadow] xl:flex-col xl:gap-2",
                           checked
-                            ? "border-primary/60 bg-primary/[0.05] ring-primary/20 ring-2"
+                            ? "border-primary/60 bg-primary/5 ring-primary/20 ring-2"
                             : "hover:border-foreground/15"
                         )}
                       >
@@ -334,7 +334,7 @@ const DeployPanelContent = () => {
               )}
               <div className="min-w-0 space-y-0.5">
                 <p className="label-mono">{t("deploy.lastResult")}</p>
-                <p className="break-words">{result.message}</p>
+                <p className="wrap-break-word">{result.message}</p>
               </div>
             </div>
           )}

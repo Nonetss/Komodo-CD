@@ -112,7 +112,7 @@ function HistoryEntry({ item, index }: { item: HistoryItem; index: number }) {
         {item.message && (
           <p
             className={cn(
-              "mt-1 text-xs break-words",
+              "mt-1 text-xs wrap-break-word",
               item.success ? "text-muted-foreground" : "text-danger/90"
             )}
           >
