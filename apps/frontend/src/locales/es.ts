@@ -64,6 +64,14 @@ export default {
     updateAvailable: "Update disponible",
     deployed: "Desplegado",
     latest: "Último",
+    stateLabel: "Estado",
+    repoLabel: "Repositorio",
+    commitLabel: "Commit",
+    count: {
+      running: "running",
+      problems: "con problemas",
+      total: "total",
+    },
     states: {
       running: "Running",
       deploying: "Deploying",
@@ -122,6 +130,10 @@ export default {
       failed: "Fallidas",
     },
     via: "por",
+    count: {
+      failed: "fallidas",
+      total: "total",
+    },
     group: {
       lastHour: "Última hora",
       today: "Hoy",
@@ -148,6 +160,7 @@ export default {
     deleteLabel: "Eliminar API key",
     deleted: "API key eliminada",
     created: "Creada el {{date}}",
+    count: "total",
     empty: "No hay API keys",
     emptyDescription:
       "Crea una para que tus pipelines puedan lanzar deploys sin sesión.",
@@ -183,6 +196,8 @@ export default {
     emptyDescription:
       "Conecta tu instancia de Komodo para ver y desplegar tus stacks.",
     connected: "Conectado",
+    statusLabel: "Estado",
+    stacksLabel: "Stacks",
     checking: "Comprobando…",
     unreachable: "Sin conexión",
     stacksCount_one: "{{count}} stack",
