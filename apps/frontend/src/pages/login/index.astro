@@ -1,6 +1,9 @@
 ---
 import { LoginPage } from "@/components/features/login/LoginPage"
 import Main from "@/layouts/main.astro"
+import { getLang } from "@/lib/lang"
+
+const lang = getLang(Astro.cookies)
 ---
 
-<Main title="Login · Komodo CD"> <LoginPage client:only="react" /> </Main>
+<Main title="Login · Komodo CD"> <LoginPage client:load lang={lang} /> </Main>

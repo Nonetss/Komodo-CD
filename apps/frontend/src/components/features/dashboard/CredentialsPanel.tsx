@@ -1,5 +1,3 @@
-import { useEffect, useMemo, useState } from "react"
-import "@/lib/i18n"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   AlertTriangle,
@@ -11,6 +9,7 @@ import {
   ServerCrash,
   Trash2,
 } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
@@ -40,7 +39,7 @@ import type { Credential } from "@/lib/api-types"
 import { getErrorMessage } from "@/lib/orpc"
 import { notifyError, notifySuccess } from "@/lib/toast"
 import { cn } from "@/lib/utils"
-import { withQueryProvider } from "@/providers/query-provider"
+import { withIsland } from "@/providers/island"
 import {
   useCredentials,
   useCredentialsDelete,
@@ -407,4 +406,4 @@ const CredentialsPanelContent = () => {
   )
 }
 
-export const CredentialsPanel = withQueryProvider(CredentialsPanelContent)
+export const CredentialsPanel = withIsland(CredentialsPanelContent)

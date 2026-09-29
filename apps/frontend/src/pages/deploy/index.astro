@@ -1,8 +1,11 @@
 ---
 import { DeployPanel } from "@/components/features/dashboard/DeployPanel"
 import DashboardLayout from "@/layouts/dashboard.astro"
+import { getLang } from "@/lib/lang"
+
+const lang = getLang(Astro.cookies)
 ---
 
 <DashboardLayout title="Deploy">
-  <DeployPanel client:only="react" />
+  <DeployPanel client:load lang={lang} />
 </DashboardLayout>

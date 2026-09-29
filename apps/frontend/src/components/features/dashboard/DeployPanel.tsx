@@ -1,5 +1,3 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react"
-import "@/lib/i18n"
 import {
   CheckCircle2,
   ChevronsUpDown,
@@ -10,6 +8,7 @@ import {
   XCircle,
   Zap,
 } from "lucide-react"
+import { useEffect, useId, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { CodeBlock } from "@/components/app/code-block"
@@ -25,12 +24,14 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { useAppUrl } from "@/hooks/use-app-url"
+import { useHydrated } from "@/hooks/use-hydrated"
 import type { DeployAction, Stack } from "@/lib/api-types"
 import { ACTION_I18N, buildDeployCurl, DEPLOY_ACTIONS } from "@/lib/deploy-curl"
 import { getErrorMessage } from "@/lib/orpc"
 import { notifyError, notifySuccess } from "@/lib/toast"
 import { cn } from "@/lib/utils"
-import { withQueryProvider } from "@/providers/query-provider"
+import { withIsland } from "@/providers/island"
 import { useDeployTrigger } from "./hooks/use-deploy"
 import { useStacks } from "./hooks/use-stacks"
 
@@ -185,6 +186,8 @@ const DeployPanelContent = () => {
   const stacksQuery = useStacks()
   const deployTrigger = useDeployTrigger()
   const stacks = stacksQuery.data ?? []
+  const appUrl = useAppUrl()
+  const hydrated = useHydrated()
 
   const [stack, setStack] = useState("")
   const [action, setAction] = useState<DeployAction>("redeploy")
@@ -221,7 +224,7 @@ const DeployPanelContent = () => {
 
       <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-6">
         <Card className="reveal min-w-0">
-          <form onSubmit={onSubmit} noValidate>
+          <form method="post" onSubmit={onSubmit} noValidate>
             <CardContent className="space-y-6">
               <div className="grid gap-1.5">
                 <label
@@ -300,7 +303,7 @@ const DeployPanelContent = () => {
             <CardFooter className="justify-end">
               <Button
                 type="submit"
-                disabled={loading}
+                disabled={!hydrated || loading}
                 className="w-full sm:w-auto"
               >
                 {loading ? <Loader2 className="animate-spin" /> : <Rocket />}
@@ -344,7 +347,11 @@ const DeployPanelContent = () => {
             <CardContent className="space-y-2">
               <CodeBlock
                 label={`POST /api/v0/deploy · ${action}`}
-                code={buildDeployCurl(stack.trim() || "mi-stack", action)}
+                code={buildDeployCurl(
+                  appUrl,
+                  stack.trim() || "mi-stack",
+                  action
+                )}
               />
               <p className="text-muted-foreground text-[11px]">
                 {t("stacks.ciHint")}
@@ -357,4 +364,4 @@ const DeployPanelContent = () => {
   )
 }
 
-export const DeployPanel = withQueryProvider(DeployPanelContent)
+export const DeployPanel = withIsland(DeployPanelContent)

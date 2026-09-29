@@ -1,8 +1,11 @@
 ---
 import { StacksPanel } from "@/components/features/dashboard/StacksPanel"
 import DashboardLayout from "@/layouts/dashboard.astro"
+import { getLang } from "@/lib/lang"
+
+const lang = getLang(Astro.cookies)
 ---
 
 <DashboardLayout title="Stacks">
-  <StacksPanel client:only="react" />
+  <StacksPanel client:load lang={lang} />
 </DashboardLayout>

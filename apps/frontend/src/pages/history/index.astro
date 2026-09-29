@@ -1,8 +1,11 @@
 ---
 import { HistoryPanel } from "@/components/features/dashboard/HistoryPanel"
 import DashboardLayout from "@/layouts/dashboard.astro"
+import { getLang } from "@/lib/lang"
+
+const lang = getLang(Astro.cookies)
 ---
 
 <DashboardLayout title="Historial">
-  <HistoryPanel client:only="react" />
+  <HistoryPanel client:load lang={lang} />
 </DashboardLayout>

@@ -1,6 +1,9 @@
 ---
 import { NotFound } from "@/components/features/not-found"
 import Main from "@/layouts/main.astro"
+import { getLang } from "@/lib/lang"
+
+const lang = getLang(Astro.cookies)
 ---
 
-<Main title="404 · Komodo CD"> <NotFound client:only="react" /> </Main>
+<Main title="404 · Komodo CD"> <NotFound client:load lang={lang} /> </Main>

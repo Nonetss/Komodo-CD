@@ -1,15 +1,15 @@
-import "@/lib/i18n"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
+import { withIsland } from "@/providers/island"
 
-export const LanguageSwitcher = () => {
+/** Versión sin envoltorio, para usar dentro de otra isla (hereda su idioma). */
+export const LanguageSwitcherButton = () => {
   const { i18n } = useTranslation()
   const isEs = i18n.language.startsWith("es")
 
   const toggle = () => {
     const next = isEs ? "en" : "es"
-    localStorage.setItem("lang", next)
     // biome-ignore lint/suspicious/noDocumentCookie: cookie simple que lee el SSR para el idioma
     document.cookie = `lang=${next};path=/;max-age=31536000`
     window.location.reload()
@@ -29,3 +29,5 @@ export const LanguageSwitcher = () => {
     </Button>
   )
 }
+
+export const LanguageSwitcher = withIsland(LanguageSwitcherButton)

@@ -1,10 +1,9 @@
-import { useState } from "react"
-import "@/lib/i18n"
 import { AlertCircle, ArrowRight, Loader2 } from "lucide-react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 
-import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { LanguageSwitcherButton } from "@/components/LanguageSwitcher"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,7 +14,9 @@ import {
   FormLabel,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useHydrated } from "@/hooks/use-hydrated"
 import { authClient } from "@/lib/auth-client"
+import { withIsland } from "@/providers/island"
 
 type LoginFormValues = { email: string; password: string }
 
@@ -86,7 +87,7 @@ function BrandPanel() {
   )
 }
 
-export const LoginPage = () => {
+const LoginPageContent = () => {
   const { t } = useTranslation()
   const [loginError, setLoginError] = useState<string | null>(null)
 
@@ -94,6 +95,10 @@ export const LoginPage = () => {
     defaultValues: { email: "", password: "" },
   })
   const submitting = form.formState.isSubmitting
+  // El formulario llega en el HTML del SSR: hasta hidratar, un envío sería
+  // nativo. Botón deshabilitado + method="post" para que las credenciales
+  // nunca acaben en la URL.
+  const hydrated = useHydrated()
 
   const onSubmit = async (data: LoginFormValues) => {
     setLoginError(null)
@@ -121,7 +126,7 @@ export const LoginPage = () => {
             </span>
           </div>
           <div className="flex items-center gap-0.5">
-            <LanguageSwitcher />
+            <LanguageSwitcherButton />
             <ThemeToggle />
           </div>
         </div>
@@ -139,6 +144,7 @@ export const LoginPage = () => {
 
             <Form {...form}>
               <form
+                method="post"
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
               >
@@ -196,7 +202,7 @@ export const LoginPage = () => {
                   type="submit"
                   size="lg"
                   className="group w-full"
-                  disabled={submitting}
+                  disabled={!hydrated || submitting}
                 >
                   {submitting ? <Loader2 className="animate-spin" /> : null}
                   {submitting ? t("login.submitting") : t("login.submit")}
@@ -212,3 +218,5 @@ export const LoginPage = () => {
     </div>
   )
 }
+
+export const LoginPage = withIsland(LoginPageContent)

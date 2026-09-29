@@ -9,13 +9,14 @@ import {
 } from "@/components/layout/app-nav"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import Main from "@/layouts/main.astro"
+import { getLang } from "@/lib/lang"
 import en from "@/locales/en"
 import es from "@/locales/es"
 
 const { title = "Komodo CD" } = Astro.props
 const { user } = Astro.locals
 
-const lang = Astro.cookies.get("lang")?.value === "en" ? "en" : "es"
+const lang = getLang(Astro.cookies)
 const nav = (lang === "en" ? en : es).nav
 
 const NAV: NavItem[] = [
@@ -58,10 +59,10 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
         </div>
       </div>
       <div class="mt-1 flex items-center gap-0.5 px-1">
-        <LanguageSwitcher client:only="react" />
-        <ThemeToggle client:only="react" />
+        <LanguageSwitcher client:load lang={lang} />
+        <ThemeToggle client:load />
         <div class="flex-1"></div>
-        <ButtonLogOut client:only="react" />
+        <ButtonLogOut client:load lang={lang} />
       </div>
     </div>
   </aside>
@@ -78,9 +79,9 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
         >
       </a>
       <div class="ml-auto flex items-center gap-0.5">
-        <LanguageSwitcher client:only="react" />
-        <ThemeToggle client:only="react" />
-        <ButtonLogOut client:only="react" />
+        <LanguageSwitcher client:load lang={lang} />
+        <ThemeToggle client:load />
+        <ButtonLogOut client:load lang={lang} />
       </div>
     </div>
   </header>
@@ -94,5 +95,5 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
   </div>
 
   <BottomNav items={NAV} path={path} />
-  <Toaster client:only="react" />
+  <Toaster client:idle />
 </Main>

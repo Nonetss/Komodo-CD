@@ -1,10 +1,10 @@
-import "@/lib/i18n"
 import { ArrowLeft } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
+import { withIsland } from "@/providers/island"
 
-export const NotFound = () => {
+const NotFoundContent = () => {
   const { t } = useTranslation()
   return (
     <div className="relative flex min-h-dvh items-center justify-center px-6">
@@ -33,3 +33,5 @@ export const NotFound = () => {
     </div>
   )
 }
+
+export const NotFound = withIsland(NotFoundContent)

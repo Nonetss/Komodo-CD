@@ -1,5 +1,3 @@
-import { useMemo, useState } from "react"
-import "@/lib/i18n"
 import {
   AlertTriangle,
   ChevronDown,
@@ -15,6 +13,7 @@ import {
   X,
   Zap,
 } from "lucide-react"
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { CodeBlock } from "@/components/app/code-block"
@@ -30,12 +29,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useAppUrl } from "@/hooks/use-app-url"
 import type { DeployAction, Stack, StackState } from "@/lib/api-types"
 import { ACTION_I18N, buildDeployCurl, DEPLOY_ACTIONS } from "@/lib/deploy-curl"
 import { getErrorMessage } from "@/lib/orpc"
 import { notifyError, notifySuccess } from "@/lib/toast"
 import { cn } from "@/lib/utils"
-import { withQueryProvider } from "@/providers/query-provider"
+import { withIsland } from "@/providers/island"
 import { useDeployTrigger } from "./hooks/use-deploy"
 import { useStacks } from "./hooks/use-stacks"
 
@@ -177,6 +177,7 @@ function StackRow({
   const { info } = stack
   const update = hasUpdate(stack)
   const problem = info.project_missing || info.missing_files.length > 0
+  const appUrl = useAppUrl()
   const [curlAction, setCurlAction] = useState<DeployAction>("redeploy")
   const detailsId = `stack-${stack.id}`
 
@@ -385,7 +386,7 @@ function StackRow({
             </div>
             <CodeBlock
               label={`POST /api/v0/deploy · ${curlAction}`}
-              code={buildDeployCurl(stack.name, curlAction)}
+              code={buildDeployCurl(appUrl, stack.name, curlAction)}
             />
             <p className="text-muted-foreground text-[11px]">
               {t("stacks.ciHint")}
@@ -643,4 +644,4 @@ function StacksSkeleton() {
   )
 }
 
-export const StacksPanel = withQueryProvider(StacksPanelContent)
+export const StacksPanel = withIsland(StacksPanelContent)

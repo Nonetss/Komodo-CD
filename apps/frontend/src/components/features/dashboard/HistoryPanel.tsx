@@ -1,5 +1,3 @@
-import { useMemo, useState } from "react"
-import "@/lib/i18n"
 import {
   Check,
   History as HistoryIcon,
@@ -9,6 +7,7 @@ import {
   User,
   X,
 } from "lucide-react"
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { EmptyState } from "@/components/app/empty-state"
@@ -21,7 +20,7 @@ import type { HistoryItem } from "@/lib/api-types"
 import { ACTION_I18N } from "@/lib/deploy-curl"
 import { getErrorMessage } from "@/lib/orpc"
 import { cn } from "@/lib/utils"
-import { withQueryProvider } from "@/providers/query-provider"
+import { withIsland } from "@/providers/island"
 import { useHistory } from "./hooks/use-history"
 
 type TimeGroup = "last-hour" | "today" | "last-week" | "older"
@@ -265,4 +264,4 @@ const HistoryPanelContent = () => {
   )
 }
 
-export const HistoryPanel = withQueryProvider(HistoryPanelContent)
+export const HistoryPanel = withIsland(HistoryPanelContent)

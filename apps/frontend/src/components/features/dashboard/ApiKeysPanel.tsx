@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from "react"
-import "@/lib/i18n"
 import {
   KeyRound,
   Loader2,
@@ -8,6 +6,7 @@ import {
   ShieldCheck,
   Trash2,
 } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { CodeBlock } from "@/components/app/code-block"
@@ -18,11 +17,12 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useAppUrl } from "@/hooks/use-app-url"
 import type { ApiKey } from "@/lib/api-types"
 import { buildDeployCurl } from "@/lib/deploy-curl"
 import { getErrorMessage } from "@/lib/orpc"
 import { notifyError, notifySuccess } from "@/lib/toast"
-import { withQueryProvider } from "@/providers/query-provider"
+import { withIsland } from "@/providers/island"
 import {
   useApiKeyCreate,
   useApiKeyDelete,
@@ -39,6 +39,7 @@ function CreatedKey({
   onDismiss: () => void
 }) {
   const { t } = useTranslation()
+  const appUrl = useAppUrl()
   return (
     <div className="reveal border-success/30 bg-success/[0.06] mb-6 space-y-4 rounded-xl border p-4 sm:p-5">
       <div className="flex items-start gap-3">
@@ -64,7 +65,7 @@ function CreatedKey({
         </p>
         <CodeBlock
           label="POST /api/v0/deploy"
-          code={buildDeployCurl("mi-stack", "redeploy", value)}
+          code={buildDeployCurl(appUrl, "mi-stack", "redeploy", value)}
         />
       </div>
 
@@ -302,4 +303,4 @@ const ApiKeysPanelContent = () => {
   )
 }
 
-export const ApiKeysPanel = withQueryProvider(ApiKeysPanelContent)
+export const ApiKeysPanel = withIsland(ApiKeysPanelContent)
