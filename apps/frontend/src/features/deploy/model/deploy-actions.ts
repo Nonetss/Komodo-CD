@@ -23,7 +23,7 @@ export const ACTION_I18N: Record<DeployAction, string> = {
 }
 
 /** Marcador de la key en los `curl` de ejemplo (se resalta al mostrarlos) */
-export const API_KEY_PLACEHOLDER = "<tu-api-key>"
+export const API_KEY_PLACEHOLDER = "<api-key>"
 
 export function buildDeployCurl(
   appUrl: string,

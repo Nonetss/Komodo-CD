@@ -27,7 +27,7 @@ const TONE: Record<TokenKind, string | undefined> = {
   plain: undefined,
 }
 
-/** Marcadores que el usuario debe sustituir, p. ej. `<tu-api-key>` */
+/** Marcadores que el usuario debe sustituir, p. ej. `<api-key>` */
 const PLACEHOLDER = /(<[^<>\s]+>)/
 
 /**
