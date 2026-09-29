@@ -15,14 +15,7 @@ import { CodeBlock } from "@/components/app/code-block"
 import { PageHeader } from "@/components/app/page-header"
 import { StackStateDot } from "@/components/app/stack-state"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useAppUrl } from "@/hooks/use-app-url"
 import { useHydrated } from "@/hooks/use-hydrated"
@@ -48,15 +41,19 @@ type Result = { success: boolean; message: string; stack: string }
 function StackCombobox({
   id,
   stacks,
+  loading,
   value,
   onChange,
   invalid,
+  describedBy,
 }: {
   id: string
   stacks: Stack[]
+  loading: boolean
   value: string
   onChange: (value: string) => void
   invalid: boolean
+  describedBy?: string
 }) {
   const { t } = useTranslation()
   const listId = useId()
@@ -102,6 +99,7 @@ function StackCombobox({
   }
 
   const selected = stacks.find((s) => s.name === value)
+  const TrailingIcon = loading ? Loader2 : ChevronsUpDown
 
   return (
     <div ref={rootRef} className="relative">
@@ -119,6 +117,7 @@ function StackCombobox({
           aria-controls={listId}
           aria-autocomplete="list"
           aria-invalid={invalid || undefined}
+          aria-describedby={describedBy}
           value={value}
           onChange={(e) => {
             onChange(e.target.value)
@@ -130,15 +129,17 @@ function StackCombobox({
           placeholder={t("deploy.stackPlaceholder")}
           autoComplete="off"
           spellCheck={false}
+          className={cn("h-10 pr-9", selected && "pl-8")}
+        />
+        <TrailingIcon
           className={cn(
-            "pr-9 font-mono text-[13px] placeholder:font-sans",
-            selected && "pl-8"
+            "text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2",
+            loading && "animate-spin"
           )}
         />
-        <ChevronsUpDown className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2" />
       </div>
 
-      {open && (
+      {open && !loading && (
         <div
           id={listId}
           role="listbox"
@@ -159,13 +160,13 @@ function StackCombobox({
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => select(s.name)}
                 className={cn(
-                  "flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-left font-mono text-[13px]",
+                  "flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm",
                   i === highlight && "bg-accent"
                 )}
               >
                 <StackStateDot state={s.info.state} />
                 <span className="truncate">{s.name}</span>
-                <span className="text-muted-foreground ml-auto font-sans text-[11px]">
+                <span className="text-muted-foreground ml-auto text-xs">
                   {t(`stacks.states.${s.info.state}`, {
                     defaultValue: s.info.state,
                   })}
@@ -179,6 +180,68 @@ function StackCombobox({
   )
 }
 
+// ── Elección de acción ──────────────────────────────────────────────────────
+
+function ActionChoice({
+  value,
+  onChange,
+}: {
+  value: DeployAction
+  onChange: (action: DeployAction) => void
+}) {
+  const { t } = useTranslation()
+  return (
+    <fieldset>
+      <legend className="text-label mb-2 font-medium">
+        {t("deploy.actionLabel")}
+      </legend>
+      <div className="grid gap-2 sm:grid-cols-3">
+        {DEPLOY_ACTIONS.map((a) => {
+          const Icon = ACTION_ICON[a]
+          const checked = value === a
+          return (
+            <label
+              key={a}
+              className={cn(
+                "has-focus-visible:ring-ring/40 flex cursor-pointer flex-col gap-1 rounded-lg border px-3 py-2.5 transition-[border-color,background-color] has-focus-visible:ring-2",
+                checked
+                  ? "border-primary bg-primary/5"
+                  : "hover:border-foreground/20 hover:bg-muted/40"
+              )}
+            >
+              <input
+                type="radio"
+                name="action"
+                value={a}
+                checked={checked}
+                onChange={() => onChange(a)}
+                className="sr-only"
+              />
+              <span
+                className={cn(
+                  "flex items-center gap-2 text-sm font-medium",
+                  checked && "text-primary"
+                )}
+              >
+                <Icon
+                  className={cn(
+                    "size-4 shrink-0",
+                    !checked && "text-muted-foreground"
+                  )}
+                />
+                {t(`deploy.actions.${ACTION_I18N[a]}.label`)}
+              </span>
+              <span className="text-muted-foreground text-xs text-pretty">
+                {t(`deploy.actions.${ACTION_I18N[a]}.description`)}
+              </span>
+            </label>
+          )
+        })}
+      </div>
+    </fieldset>
+  )
+}
+
 // ── Panel ───────────────────────────────────────────────────────────────────
 
 const DeployPanelContent = () => {
@@ -188,6 +251,7 @@ const DeployPanelContent = () => {
   const stacks = stacksQuery.data ?? []
   const appUrl = useAppUrl()
   const hydrated = useHydrated()
+  const errorId = useId()
 
   const [stack, setStack] = useState("")
   const [action, setAction] = useState<DeployAction>("redeploy")
@@ -216,150 +280,84 @@ const DeployPanelContent = () => {
   }
 
   return (
-    <div>
+    <div className="max-w-3xl">
       <PageHeader
         title={t("deploy.title")}
         description={t("deploy.description")}
       />
 
-      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-6">
-        <Card className="reveal min-w-0">
-          <form method="post" onSubmit={onSubmit} noValidate>
-            <CardContent className="space-y-6">
-              <div className="grid gap-1.5">
-                <label
-                  htmlFor="deploy-stack"
-                  className="text-[13px] font-medium"
-                >
-                  {t("deploy.stackLabel")}
-                </label>
-                <StackCombobox
-                  id="deploy-stack"
-                  stacks={stacks}
-                  value={stack}
-                  onChange={(v) => {
-                    setStack(v)
-                    setResult(null)
-                  }}
-                  invalid={invalid}
-                />
-                {invalid && (
-                  <p className="text-destructive text-xs">
-                    {t("deploy.required")}
-                  </p>
-                )}
-              </div>
-
-              <fieldset className="grid gap-1.5">
-                <legend className="mb-1.5 text-[13px] font-medium">
-                  {t("deploy.actionLabel")}
-                </legend>
-                <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                  {DEPLOY_ACTIONS.map((a) => {
-                    const Icon = ACTION_ICON[a]
-                    const checked = action === a
-                    return (
-                      <label
-                        key={a}
-                        className={cn(
-                          "relative flex cursor-pointer gap-3 rounded-lg border p-3 transition-[border-color,background-color,box-shadow] xl:flex-col xl:gap-2",
-                          checked
-                            ? "border-primary/60 bg-primary/5 ring-primary/20 ring-2"
-                            : "hover:border-foreground/15"
-                        )}
-                      >
-                        <input
-                          type="radio"
-                          name="action"
-                          value={a}
-                          checked={checked}
-                          onChange={() => setAction(a)}
-                          className="sr-only"
-                        />
-                        <span
-                          className={cn(
-                            "flex size-8 shrink-0 items-center justify-center rounded-md border",
-                            checked
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-muted text-muted-foreground"
-                          )}
-                        >
-                          <Icon className="size-4" />
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block text-sm font-medium">
-                            {t(`deploy.actions.${ACTION_I18N[a]}.label`)}
-                          </span>
-                          <span className="text-muted-foreground block text-xs text-pretty">
-                            {t(`deploy.actions.${ACTION_I18N[a]}.description`)}
-                          </span>
-                        </span>
-                      </label>
-                    )
-                  })}
-                </div>
-              </fieldset>
-            </CardContent>
-            <CardFooter className="justify-end">
-              <Button
-                type="submit"
-                disabled={!hydrated || loading}
-                className="w-full sm:w-auto"
-              >
-                {loading ? <Loader2 className="animate-spin" /> : <Rocket />}
-                {loading ? t("deploy.executing") : t("deploy.submit")}
-              </Button>
-            </CardFooter>
-          </form>
-        </Card>
-
-        <div
-          className="reveal min-w-0 space-y-4"
-          style={{ "--i": 2 } as React.CSSProperties}
-        >
-          {result && (
-            <div
-              role="status"
-              className={cn(
-                "flex items-start gap-3 rounded-lg border p-3.5 text-sm",
-                result.success
-                  ? "bg-success/10 border-success/25"
-                  : "bg-danger/10 border-danger/25"
-              )}
-            >
-              {result.success ? (
-                <CheckCircle2 className="text-success mt-0.5 size-4 shrink-0" />
-              ) : (
-                <XCircle className="text-danger mt-0.5 size-4 shrink-0" />
-              )}
-              <div className="min-w-0 space-y-0.5">
-                <p className="section-label">{t("deploy.lastResult")}</p>
-                <p className="wrap-break-word">{result.message}</p>
-              </div>
-            </div>
-          )}
-
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("deploy.ciTitle")}</CardTitle>
-              <CardDescription>{t("deploy.ciDescription")}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <CodeBlock
-                label={`POST /api/v0/deploy · ${action}`}
-                code={buildDeployCurl(
-                  appUrl,
-                  stack.trim() || "mi-stack",
-                  action
-                )}
+      <Card>
+        <form method="post" onSubmit={onSubmit} noValidate>
+          <CardContent className="space-y-6">
+            <div className="grid gap-1.5">
+              <label htmlFor="deploy-stack" className="text-label font-medium">
+                {t("deploy.stackLabel")}
+              </label>
+              <StackCombobox
+                id="deploy-stack"
+                stacks={stacks}
+                loading={stacksQuery.isLoading}
+                value={stack}
+                onChange={(v) => {
+                  setStack(v)
+                  setResult(null)
+                }}
+                invalid={invalid}
+                describedBy={invalid ? errorId : undefined}
               />
-              <p className="text-muted-foreground text-[11px]">
-                {t("stacks.ciHint")}
-              </p>
-            </CardContent>
-          </Card>
+              {invalid && (
+                <p id={errorId} className="text-destructive text-xs">
+                  {t("deploy.required")}
+                </p>
+              )}
+            </div>
+
+            <ActionChoice value={action} onChange={setAction} />
+          </CardContent>
+
+          <CardFooter className="flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+            <div role="status" className="min-w-0 flex-1">
+              {result && (
+                <p className="reveal flex items-start gap-2 text-sm">
+                  {result.success ? (
+                    <CheckCircle2 className="text-success mt-0.5 size-4 shrink-0" />
+                  ) : (
+                    <XCircle className="text-danger mt-0.5 size-4 shrink-0" />
+                  )}
+                  <span
+                    className={cn(
+                      "min-w-0 wrap-break-word",
+                      !result.success && "text-danger"
+                    )}
+                  >
+                    {result.message}
+                  </span>
+                </p>
+              )}
+            </div>
+            <Button type="submit" disabled={!hydrated || loading}>
+              {loading ? <Loader2 className="animate-spin" /> : <Rocket />}
+              {loading ? t("deploy.executing") : t("deploy.submit")}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+
+      <section aria-labelledby="deploy-ci" className="mt-10 space-y-3">
+        <div className="space-y-0.5">
+          <h2 id="deploy-ci" className="text-heading">
+            {t("deploy.ciTitle")}
+          </h2>
+          <p className="text-muted-foreground text-label text-pretty">
+            {t("deploy.ciDescription")}
+          </p>
         </div>
-      </div>
+        <CodeBlock
+          label={`POST /api/v0/deploy · ${action}`}
+          code={buildDeployCurl(appUrl, stack.trim() || "mi-stack", action)}
+        />
+        <p className="text-muted-foreground text-xs">{t("stacks.ciHint")}</p>
+      </section>
     </div>
   )
 }
