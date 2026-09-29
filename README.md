@@ -33,17 +33,26 @@ Monorepo (Turborepo + Bun workspaces) for Komodo CD, plus the production deploym
 
 ### One-line install (interactive)
 
+Run it in the folder where the stack should live. It asks for the host port,
+public URL and initial admin, generates `.env` with a random
+`BETTER_AUTH_SECRET` (mode `600`), downloads `compose.yml` and optionally
+starts the stack:
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Nonetss/komodo-cd-docker/main/start.sh | bash
+mkdir komodo-cd && cd komodo-cd
+curl -fsSL https://raw.githubusercontent.com/Nonetss/Komodo-CD/main/scripts/bootstrap.sh | bash
 ```
 
-Or clone and run manually:
+Or from a clone:
 
 ```bash
-git clone https://github.com/Nonetss/komodo-cd-docker.git
-cd komodo-cd-docker
-./start.sh
+git clone https://github.com/Nonetss/Komodo-CD.git
+cd Komodo-CD
+./scripts/bootstrap.sh
 ```
+
+Pin a release with `KCD_REF=v1.0.0` (defaults to `main`). The script never
+overwrites an existing `.env`.
 
 ---
 
