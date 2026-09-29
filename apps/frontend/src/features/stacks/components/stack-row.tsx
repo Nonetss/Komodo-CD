@@ -237,11 +237,11 @@ export function StackRow({
                 {info.services.length}
               </span>
             </Text>
-            <ul className="grid grid-cols-1 gap-x-8 gap-y-1 sm:grid-cols-2 xl:grid-cols-3">
+            <ul className="flex flex-wrap gap-x-6 gap-y-1">
               {info.services.map((svc) => (
                 <li
                   key={svc.service}
-                  className="flex min-w-0 items-baseline gap-2.5"
+                  className="flex max-w-full min-w-0 items-baseline gap-2"
                 >
                   <span className="flex shrink-0 items-center gap-2 font-medium">
                     {svc.service}
