@@ -37,6 +37,8 @@
     "format": "biome check --write --linter-enabled=false .",
     "lint": "biome lint .",
     "check": "biome check --write .",
+    "tailwind:check": "bun run scripts/patch-tailwint.mjs && cd apps/frontend && tailwint",
+    "tailwind:fix": "bun run scripts/patch-tailwint.mjs && cd apps/frontend && tailwint --fix",
     "db:generate": "turbo -F @komodo-cd/db db:generate",
     "db:check": "turbo -F @komodo-cd/db db:check",
     "db:push": "turbo -F @komodo-cd/db db:push",
@@ -51,6 +53,7 @@
     "@biomejs/biome": "2.5.14",
     "@komodo-cd/config": "workspace:*",
     "@types/bun": "catalog:",
+    "tailwint": "1.1.15",
     "turbo": "^2.11.5",
     "typescript": "catalog:"
   },

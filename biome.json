@@ -9,6 +9,12 @@
     "ignoreUnknown": false,
     "includes": [
       "**",
+      "!!.agents",
+      "!!.claude",
+      "!!.github/agents",
+      "!!.github/hooks",
+      "!!.github/skills",
+      "!!**/modern-screenshot.umd.js",
       "!apps/frontend/public",
       "!**/migrations/**/snapshot.json"
     ]
