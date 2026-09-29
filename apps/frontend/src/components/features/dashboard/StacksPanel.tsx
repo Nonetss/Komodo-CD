@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   ChevronDown,
+  CircleArrowUp,
   Download,
   GitBranch,
   GitCommitHorizontal,
@@ -68,106 +69,28 @@ const ACTION_ICON = {
   "pull-redeploy": Zap,
 } as const
 
+// El punto ya lleva el color: el texto del estado solo se tiñe cuando pide
+// atención, para que 40 filas "Running" no conviertan la lista en verde.
+const STATE_TEXT: Record<ReturnType<typeof stateTone>, string> = {
+  success: "text-muted-foreground",
+  neutral: "text-muted-foreground",
+  info: "text-info",
+  warning: "text-warning",
+  danger: "text-danger",
+}
+
 const EMPTY_STACKS: Stack[] = []
-
-// ── Regleta de estado: un segmento por stack ────────────────────────────────
-
-const SEGMENT: Record<ReturnType<typeof stateTone>, string> = {
-  success: "bg-success/80 hover:bg-success",
-  warning: "bg-warning/80 hover:bg-warning",
-  danger: "bg-danger/85 hover:bg-danger",
-  info: "bg-info/80 hover:bg-info animate-pulse",
-  neutral: "bg-muted-foreground/25 hover:bg-muted-foreground/45",
-}
-
-function StatusStrip({
-  stacks,
-  onPick,
-}: {
-  stacks: Stack[]
-  onPick: (name: string) => void
-}) {
-  const sorted = useMemo(
-    () => [...stacks].sort((a, b) => a.name.localeCompare(b.name)),
-    [stacks]
-  )
-  return (
-    <div className="flex h-2.5 gap-0.75" aria-hidden>
-      {sorted.map((s) => (
-        <button
-          key={s.id}
-          type="button"
-          tabIndex={-1}
-          title={`${s.name} · ${s.info.state}`}
-          onClick={() => onPick(s.name)}
-          className={cn(
-            "min-w-0.75 flex-1 cursor-pointer rounded-[2px] transition-colors",
-            SEGMENT[stateTone(s.info.state)]
-          )}
-        />
-      ))}
-    </div>
-  )
-}
-
-// ── Contadores (también filtran) ────────────────────────────────────────────
-
-function StatTile({
-  label,
-  value,
-  tone,
-  active,
-  onClick,
-}: {
-  label: string
-  value: number
-  tone: "neutral" | "success" | "danger" | "muted"
-  active: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        "group bg-card flex cursor-pointer flex-col gap-1.5 rounded-lg border px-3 py-2.5 text-left transition-[border-color,background-color,box-shadow] sm:gap-2 sm:px-3.5 sm:py-3",
-        active
-          ? "border-primary/50 bg-primary/4 ring-primary/20 ring-2"
-          : "hover:border-foreground/15"
-      )}
-    >
-      <span className="label-mono flex items-center gap-2">
-        <span
-          className={cn(
-            "size-1.5 rounded-full",
-            tone === "success" && "bg-success led text-success",
-            tone === "danger" && "bg-danger led text-danger",
-            tone === "muted" && "bg-muted-foreground/40",
-            tone === "neutral" && "bg-primary"
-          )}
-        />
-        {label}
-      </span>
-      <span className="font-display tabular text-xl leading-none font-semibold tracking-tight sm:text-2xl">
-        {value}
-      </span>
-    </button>
-  )
-}
 
 // ── Fila de stack ───────────────────────────────────────────────────────────
 
 function StackRow({
   stack,
-  index,
   expanded,
   onToggle,
   pendingAction,
   onAction,
 }: {
   stack: Stack
-  index: number
   expanded: boolean
   onToggle: () => void
   pendingAction: DeployAction | null
@@ -182,15 +105,11 @@ function StackRow({
   const detailsId = `stack-${stack.id}`
 
   return (
-    <li
-      id={`row-${stack.name}`}
-      className="reveal group/row scroll-mt-24"
-      style={{ "--i": index } as React.CSSProperties}
-    >
+    <li id={`row-${stack.name}`} className="scroll-mt-24">
       <div
         className={cn(
           "flex items-center gap-3 px-3 py-2.5 transition-colors sm:px-4",
-          expanded ? "bg-accent/40" : "hover:bg-accent/30"
+          expanded ? "bg-muted/60" : "hover:bg-muted/40"
         )}
       >
         <button
@@ -199,78 +118,91 @@ function StackRow({
           aria-expanded={expanded}
           aria-controls={detailsId}
           aria-label={expanded ? t("stacks.collapse") : t("stacks.expand")}
-          className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left outline-none"
+          className="focus-visible:ring-ring/40 -my-1 flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md py-1 text-left outline-none focus-visible:ring-2"
         >
           <StackStateDot state={info.state} />
           <span className="min-w-0 flex-1">
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5">
               <span className="truncate text-sm font-medium">{stack.name}</span>
-              {update && (
-                <Badge variant="primary" className="hidden sm:inline-flex">
-                  {t("stacks.updateAvailable")}
-                </Badge>
-              )}
               {problem && (
                 <AlertTriangle className="text-danger size-3.5 shrink-0" />
               )}
             </span>
-            <span className="text-muted-foreground mt-0.5 flex items-center gap-1.5 text-xs">
-              <span className="tabular">
+            <span className="text-muted-foreground mt-0.5 flex min-w-0 items-center gap-1.5 text-xs">
+              <span className="tabular shrink-0">
                 {t("stacks.services", { count: info.services.length })}
               </span>
               {info.repo && (
-                <>
-                  <span className="text-border">/</span>
-                  <span className="hidden min-w-0 truncate font-mono text-[11px] sm:inline">
+                <span className="hidden min-w-0 items-center gap-1.5 sm:flex">
+                  <span aria-hidden className="text-muted-foreground/50">
+                    ·
+                  </span>
+                  <span className="truncate font-mono text-[11px]">
                     {info.repo}
-                    <span className="text-muted-foreground/60">
+                    <span className="text-muted-foreground/70">
                       @{info.branch}
                     </span>
                   </span>
-                </>
+                </span>
               )}
               {update && (
-                <span className="bg-primary size-1.5 rounded-full sm:hidden" />
+                <span
+                  className="bg-primary size-1.5 shrink-0 rounded-full sm:hidden"
+                  title={t("stacks.updateAvailable")}
+                />
               )}
             </span>
           </span>
-          <span className="hidden md:block">
-            <StackStateBadge state={info.state} />
+          {update && (
+            <span className="text-primary hidden shrink-0 items-center gap-1 text-xs font-medium sm:inline-flex">
+              <CircleArrowUp className="size-3.5" />
+              {t("stacks.updateAvailable")}
+            </span>
+          )}
+          <span
+            className={cn(
+              "hidden w-20 shrink-0 text-xs md:block",
+              STATE_TEXT[stateTone(info.state)]
+            )}
+          >
+            {t(`stacks.states.${info.state}`, { defaultValue: info.state })}
           </span>
         </button>
 
         <div className="flex shrink-0 items-center gap-1">
-          {DEPLOY_ACTIONS.map((action) => {
-            const Icon = ACTION_ICON[action]
-            const label = t(`deploy.actions.${ACTION_I18N[action]}.label`)
-            const running = pendingAction === action
-            return (
-              <Button
-                key={action}
-                type="button"
-                variant="outline"
-                size="xs"
-                disabled={pendingAction !== null}
-                onClick={() => onAction(action)}
-                title={label}
-                aria-label={`${label} ${stack.name}`}
-                className="size-7 px-0 lg:w-auto lg:px-2"
-              >
-                {running ? <Loader2 className="animate-spin" /> : <Icon />}
-                <span className="hidden lg:inline">{label}</span>
-              </Button>
-            )
-          })}
+          <div className="bg-card flex items-center divide-x overflow-hidden rounded-md border">
+            {DEPLOY_ACTIONS.map((action) => {
+              const Icon = ACTION_ICON[action]
+              const label = t(`deploy.actions.${ACTION_I18N[action]}.label`)
+              const running = pendingAction === action
+              return (
+                <Button
+                  key={action}
+                  type="button"
+                  variant="ghost"
+                  size="xs"
+                  disabled={pendingAction !== null}
+                  onClick={() => onAction(action)}
+                  title={label}
+                  aria-label={`${label} ${stack.name}`}
+                  className="w-8 rounded-none px-0 focus-visible:ring-2 focus-visible:ring-inset lg:w-auto lg:px-2.5"
+                >
+                  {running ? <Loader2 className="animate-spin" /> : <Icon />}
+                  <span className="hidden lg:inline">{label}</span>
+                </Button>
+              )
+            })}
+          </div>
           <button
             type="button"
             onClick={onToggle}
             tabIndex={-1}
             aria-hidden
-            className="text-muted-foreground hover:text-foreground ml-0.5 hidden size-7 cursor-pointer items-center justify-center rounded-md sm:flex"
+            className="text-muted-foreground hover:text-foreground hidden size-7 cursor-pointer items-center justify-center rounded-md sm:flex"
           >
             <ChevronDown
               className={cn(
-                "size-4 transition-transform",
+                "size-4 transition-transform duration-200",
                 expanded && "rotate-180"
               )}
             />
@@ -281,13 +213,13 @@ function StackRow({
       {expanded && (
         <div
           id={detailsId}
-          className="bg-accent/20 grid grid-cols-1 gap-5 border-t border-dashed px-3 py-4 sm:px-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:px-11"
+          className="bg-muted/30 grid grid-cols-1 gap-6 border-t px-3 py-4 sm:px-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:pr-4 md:pb-5 md:pl-9"
         >
           <div className="min-w-0 space-y-4">
-            <div className="md:hidden">
+            <div className="flex items-center gap-2 md:hidden">
               <StackStateBadge state={info.state} />
               {info.status && (
-                <span className="text-muted-foreground ml-2 font-mono text-[11px]">
+                <span className="text-muted-foreground font-mono text-[11px]">
                   {info.status}
                 </span>
               )}
@@ -307,8 +239,8 @@ function StackRow({
             )}
 
             <div className="space-y-2">
-              <p className="label-mono">{t("stacks.servicesTitle")}</p>
-              <ul className="divide-y rounded-lg border">
+              <p className="section-label">{t("stacks.servicesTitle")}</p>
+              <ul className="bg-card divide-y rounded-lg border">
                 {info.services.map((svc) => (
                   <li
                     key={svc.service}
@@ -332,7 +264,7 @@ function StackRow({
             </div>
 
             {info.repo && (
-              <dl className="text-muted-foreground grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-xs">
+              <dl className="text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2.5 gap-y-1.5 text-xs">
                 <dt className="flex items-center">
                   <GitBranch className="size-3.5" />
                 </dt>
@@ -373,7 +305,7 @@ function StackRow({
 
           <div className="min-w-0 space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="label-mono">{t("stacks.ciTitle")}</p>
+              <p className="section-label">{t("stacks.ciTitle")}</p>
               <Segmented
                 value={curlAction}
                 onChange={setCurlAction}
@@ -387,6 +319,7 @@ function StackRow({
             <CodeBlock
               label={`POST /api/v0/deploy · ${curlAction}`}
               code={buildDeployCurl(appUrl, stack.name, curlAction)}
+              className="bg-card"
             />
             <p className="text-muted-foreground text-[11px]">
               {t("stacks.ciHint")}
@@ -441,17 +374,6 @@ const StacksPanelContent = () => {
       return next
     })
 
-  const pick = (name: string) => {
-    setGroup("all")
-    setSearch("")
-    setExpanded((prev) => new Set(prev).add(name))
-    requestAnimationFrame(() =>
-      document
-        .getElementById(`row-${name}`)
-        ?.scrollIntoView({ behavior: "smooth", block: "start" })
-    )
-  }
-
   const runAction = async (stack: string, action: DeployAction) => {
     const label = t(`deploy.actions.${ACTION_I18N[action]}.label`)
     setPending((p) => ({ ...p, [stack]: action }))
@@ -471,7 +393,10 @@ const StacksPanelContent = () => {
     }
   }
 
-  const hasFilters = search.trim() !== "" || group !== "all"
+  const clearFilters = () => {
+    setSearch("")
+    setGroup("all")
+  }
 
   return (
     <div>
@@ -527,93 +452,86 @@ const StacksPanelContent = () => {
           }
         />
       ) : (
-        <div className="space-y-5">
-          <section className="space-y-3">
-            <StatusStrip stacks={stacks} onPick={pick} />
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
-              <StatTile
-                label={t("stacks.stats.total")}
-                value={counts.all}
-                tone="neutral"
-                active={group === "all"}
-                onClick={() => setGroup("all")}
+        <section className="bg-card overflow-hidden rounded-xl border shadow-xs">
+          <div className="flex flex-col gap-2 border-b p-2 sm:flex-row sm:items-center sm:p-2.5">
+            <div className="relative min-w-0 flex-1">
+              <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
+              <Input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => e.key === "Escape" && setSearch("")}
+                placeholder={t("stacks.search")}
+                aria-label={t("stacks.search")}
+                className="h-8 pr-8 pl-8.5 shadow-none [&::-webkit-search-cancel-button]:hidden"
               />
-              <StatTile
-                label={t("stacks.stats.running")}
-                value={counts.running}
-                tone="success"
-                active={group === "running"}
-                onClick={() => setGroup("running")}
-              />
-              <StatTile
-                label={t("stacks.stats.stopped")}
-                value={counts.stopped}
-                tone="muted"
-                active={group === "stopped"}
-                onClick={() => setGroup("stopped")}
-              />
-              <StatTile
-                label={t("stacks.stats.problems")}
-                value={counts.problems}
-                tone="danger"
-                active={group === "problems"}
-                onClick={() => setGroup("problems")}
-              />
-            </div>
-          </section>
-
-          <section className="bg-card overflow-hidden rounded-xl border shadow-xs">
-            <div className="flex items-center gap-2 border-b p-2 sm:p-2.5">
-              <div className="relative flex-1">
-                <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-                <Input
-                  type="search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder={t("stacks.search")}
-                  aria-label={t("stacks.search")}
-                  className="bg-background/60 h-8 border-transparent pl-9 shadow-none"
-                />
-              </div>
-              <span className="text-muted-foreground tabular hidden font-mono text-[11px] sm:inline">
-                {filtered.length}/{stacks.length}
-              </span>
-              {hasFilters && (
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => {
-                    setSearch("")
-                    setGroup("all")
-                  }}
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  aria-label={t("stacks.clear")}
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/40 absolute top-1/2 right-1.5 flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded outline-none focus-visible:ring-2"
                 >
-                  <X />
-                  <span className="hidden sm:inline">{t("stacks.clear")}</span>
-                </Button>
+                  <X className="size-3.5" />
+                </button>
               )}
             </div>
+            <Segmented
+              value={group}
+              onChange={setGroup}
+              aria-label={t("stacks.title")}
+              className="w-full sm:w-auto [&>label]:flex-1 [&>label]:justify-center [&>label]:px-1.5 sm:[&>label]:flex-none sm:[&>label]:px-2.5"
+              options={[
+                {
+                  value: "all",
+                  label: t("stacks.filterAll"),
+                  count: counts.all,
+                },
+                {
+                  value: "running",
+                  label: t("stacks.stats.running"),
+                  count: counts.running,
+                },
+                {
+                  value: "stopped",
+                  label: t("stacks.stats.stopped"),
+                  count: counts.stopped,
+                },
+                {
+                  value: "problems",
+                  label: t("stacks.stats.problems"),
+                  count: counts.problems,
+                  alert: true,
+                },
+              ]}
+            />
+          </div>
 
-            {filtered.length === 0 ? (
-              <p className="text-muted-foreground px-4 py-10 text-center text-sm">
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center gap-3 px-4 py-12 text-center">
+              <p className="text-muted-foreground text-sm">
                 {t("stacks.noMatch")}
               </p>
-            ) : (
-              <ul className="divide-y">
-                {filtered.map((stack, i) => (
-                  <StackRow
-                    key={stack.id}
-                    stack={stack}
-                    index={i}
-                    expanded={expanded.has(stack.name)}
-                    onToggle={() => toggle(stack.name)}
-                    pendingAction={pending[stack.name] ?? null}
-                    onAction={(action) => runAction(stack.name, action)}
-                  />
-                ))}
-              </ul>
-            )}
-          </section>
-        </div>
+              <Button variant="outline" size="sm" onClick={clearFilters}>
+                <X />
+                {t("stacks.clear")}
+              </Button>
+            </div>
+          ) : (
+            <ul className="divide-y">
+              {filtered.map((stack) => (
+                <StackRow
+                  key={stack.id}
+                  stack={stack}
+                  expanded={expanded.has(stack.name)}
+                  onToggle={() => toggle(stack.name)}
+                  pendingAction={pending[stack.name] ?? null}
+                  onAction={(action) => runAction(stack.name, action)}
+                />
+              ))}
+            </ul>
+          )}
+        </section>
       )}
     </div>
   )
@@ -621,15 +539,13 @@ const StacksPanelContent = () => {
 
 function StacksSkeleton() {
   return (
-    <div className="space-y-5">
-      <Skeleton className="h-2.5 w-full" />
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
-        {[0, 1, 2, 3].map((i) => (
-          <Skeleton key={i} className="h-18.5 rounded-lg" />
-        ))}
+    <div className="bg-card overflow-hidden rounded-xl border">
+      <div className="flex flex-col gap-2 border-b p-2 sm:flex-row sm:p-2.5">
+        <Skeleton className="h-8 flex-1" />
+        <Skeleton className="h-8 w-72 max-w-full" />
       </div>
-      <div className="divide-y rounded-xl border">
-        {[0, 1, 2, 3, 4, 5].map((i) => (
+      <div className="divide-y">
+        {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
           <div key={i} className="flex items-center gap-3 px-4 py-3">
             <Skeleton className="size-2 rounded-full" />
             <div className="flex-1 space-y-1.5">
