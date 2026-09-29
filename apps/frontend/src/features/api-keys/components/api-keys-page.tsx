@@ -131,7 +131,7 @@ const ApiKeysPageContent = () => {
       {showForm && (
         <form
           onSubmit={create}
-          className="bg-card/40 flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-end sm:p-5"
+          className="bg-surface flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-end sm:p-5"
         >
           <FormField
             label={t("apikeys.nameLabel")}

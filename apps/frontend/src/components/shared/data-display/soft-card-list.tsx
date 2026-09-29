@@ -7,13 +7,13 @@ type UlProps = ComponentProps<"ul"> & { as: "ul" }
 type OlProps = ComponentProps<"ol"> & { as: "ol" }
 
 /**
- * Contenedor de filas: un único bloque con trazo fino, `bg-card/40` y
+ * Contenedor de filas: un único bloque con trazo fino, `bg-surface` y
  * `divide-y` entre hijos. Una lista por contenedor, nunca filas como tarjetas.
  */
 export function SoftCardList(props: DivProps | UlProps | OlProps) {
   const { as = "div", className, ...rest } = props
   const classes = cn(
-    "bg-card/40 divide-y overflow-hidden rounded-xl border",
+    "bg-surface divide-y overflow-hidden rounded-xl border shadow-xs dark:shadow-none",
     className
   )
 

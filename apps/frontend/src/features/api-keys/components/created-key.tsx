@@ -19,7 +19,7 @@ export function CreatedKey({
   const { t } = useTranslation()
   const appUrl = useAppUrl()
   return (
-    <section className="bg-card/40 space-y-5 rounded-xl border p-5">
+    <section className="bg-surface space-y-5 rounded-xl border p-5">
       <div className="flex items-start gap-2.5">
         <ShieldCheck
           aria-hidden

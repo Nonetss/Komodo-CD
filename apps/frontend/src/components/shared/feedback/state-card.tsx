@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 
 /**
  * Estado a todo el ancho (carga, vacío, error, éxito): un hueco discontinuo
- * sobre `bg-card/40`, no un contenedor. Icono plano, sin caja de fondo.
+ * sobre `bg-surface`, no un contenedor. Icono plano, sin caja de fondo.
  */
 export function StateCard({
   icon: Icon,
@@ -28,7 +28,7 @@ export function StateCard({
   return (
     <div
       className={cn(
-        "bg-card/40 flex flex-col items-center gap-3 rounded-xl border border-dashed px-6 py-16 text-center",
+        "bg-surface flex flex-col items-center gap-3 rounded-xl border border-dashed px-6 py-16 text-center",
         tone === "celebrate" && "border-solid",
         className
       )}

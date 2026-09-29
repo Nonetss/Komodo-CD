@@ -74,7 +74,7 @@ const DeployPageContent = () => {
         method="post"
         onSubmit={onSubmit}
         noValidate
-        className="bg-card/40 rounded-xl border"
+        className="bg-surface rounded-xl border"
       >
         <div className="space-y-6 p-5">
           <FormField

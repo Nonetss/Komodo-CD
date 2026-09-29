@@ -93,7 +93,7 @@ export function ConnectionForm({
   }
 
   return (
-    <section className="bg-card/40 rounded-xl border">
+    <section className="bg-surface rounded-xl border">
       <header className="space-y-1.5 border-b px-5 py-4">
         <Text as="h2" variant="headline">
           {t("credentials.newTitle")}
