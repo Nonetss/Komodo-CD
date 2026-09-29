@@ -209,7 +209,7 @@ export default {
     invalidUrl: "Invalid URL",
     howTitle: "How to get the key and secret",
     howStep1: "Open your Komodo instance",
-    howStep2: "Go to Settings → API Keys",
+    howStep2: "Go to <ui>Settings → API Keys</ui>",
     howStep3: "Create a new key and copy the key and secret",
     howStep4: "Paste them here along with the instance URL",
   },

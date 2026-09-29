@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AlertTriangle, Loader2, PlugZap } from "lucide-react"
+import { AlertTriangle, Loader2, Save } from "lucide-react"
 import { useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -150,7 +150,7 @@ export function ConnectionForm({
               {saveCredentials.isPending ? (
                 <Loader2 className="animate-spin" />
               ) : (
-                <PlugZap />
+                <Save />
               )}
               {saveCredentials.isPending
                 ? t("credentials.saving")

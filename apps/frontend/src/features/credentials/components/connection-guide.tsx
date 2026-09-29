@@ -1,29 +1,49 @@
-import { useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
 
-/** Guía: de dónde sacar la key y el secret de Komodo, en una franja de pasos */
+const STEPS = [
+  "credentials.howStep1",
+  "credentials.howStep2",
+  "credentials.howStep3",
+  "credentials.howStep4",
+] as const
+
+/**
+ * Guía: de dónde sacar la key y el secret de Komodo. Pasos numerados en una
+ * tarjeta; en escritorio van en fila, unidos por un trazo fino. Las rutas de
+ * la interfaz de Komodo (`<ui>`) se marcan como teclas.
+ */
 export function ConnectionGuide() {
   const { t } = useTranslation()
-  const steps = [
-    t("credentials.howStep1"),
-    t("credentials.howStep2"),
-    t("credentials.howStep3"),
-    t("credentials.howStep4"),
-  ]
   return (
     <section aria-labelledby="connection-guide" className="space-y-3">
       <Text as="h2" id="connection-guide" variant="label" tone="muted">
         {t("credentials.howTitle")}
       </Text>
-      <ol className="grid grid-cols-1 gap-x-8 gap-y-5 border-y py-5 sm:grid-cols-2 lg:grid-cols-4">
-        {steps.map((step, i) => (
-          <li key={step} className="min-w-0">
-            <Text as="span" variant="data" tone="primary" aria-hidden>
-              {i + 1}
-            </Text>
-            <Text as="p" className="mt-1 leading-relaxed text-pretty">
-              {step}
+      <ol className="bg-card/60 grid grid-cols-1 gap-x-6 gap-y-4 rounded-xl border p-5 sm:grid-cols-2 lg:grid-cols-4">
+        {STEPS.map((step, i) => (
+          <li key={step} className="flex min-w-0 gap-3 lg:flex-col">
+            <span className="flex items-center gap-3">
+              <span className="border-primary/40 bg-primary/10 text-primary flex size-7 shrink-0 items-center justify-center rounded-full border font-mono text-xs tabular-nums">
+                {i + 1}
+              </span>
+              {i < STEPS.length - 1 && (
+                <span
+                  aria-hidden
+                  className="bg-border hidden h-px flex-1 lg:block"
+                />
+              )}
+            </span>
+            <Text as="p" className="min-w-0 pt-1 text-pretty lg:pt-0">
+              <Trans
+                i18nKey={step}
+                components={{
+                  ui: (
+                    <kbd className="bg-muted text-foreground rounded-sm border px-1.5 py-0.5 text-xs whitespace-nowrap" />
+                  ),
+                }}
+              />
             </Text>
           </li>
         ))}

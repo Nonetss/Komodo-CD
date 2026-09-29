@@ -211,7 +211,7 @@ export default {
     invalidUrl: "URL inválida",
     howTitle: "Cómo obtener la key y el secret",
     howStep1: "Entra en tu instancia de Komodo",
-    howStep2: "Ve a Settings → API Keys",
+    howStep2: "Ve a <ui>Settings → API Keys</ui>",
     howStep3: "Crea una key nueva y copia la key y el secret",
     howStep4: "Pégalos aquí junto con la URL de la instancia",
   },
