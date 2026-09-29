@@ -71,7 +71,7 @@ function ConnectionStatus() {
   if (stacks.isError) {
     return (
       <span className="text-danger inline-flex min-w-0 items-center gap-2 text-xs">
-        <span className="bg-danger led size-1.5 shrink-0 rounded-full" />
+        <span className="bg-danger size-1.5 shrink-0 rounded-full" />
         <span className="truncate">
           {t("credentials.unreachable")}
           {" · "}
@@ -82,7 +82,7 @@ function ConnectionStatus() {
   }
   return (
     <span className="text-success inline-flex items-center gap-2 text-xs">
-      <span className="bg-success led size-1.5 rounded-full" />
+      <span className="bg-success size-1.5 rounded-full" />
       {t("credentials.connected")}
       <span className="text-muted-foreground tabular">
         · {t("credentials.stacksCount", { count: stacks.data?.length ?? 0 })}
@@ -315,7 +315,7 @@ function HowTo() {
   ]
   return (
     <aside className="reveal" style={{ "--i": 3 } as React.CSSProperties}>
-      <p className="label-mono mb-3">{t("credentials.howTitle")}</p>
+      <p className="section-label mb-3">{t("credentials.howTitle")}</p>
       <ol className="space-y-3">
         {steps.map((step, i) => (
           <li key={step} className="flex gap-3 text-[13px]">

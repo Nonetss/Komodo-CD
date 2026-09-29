@@ -82,7 +82,9 @@ function BrandPanel() {
         </div>
       </div>
 
-      <p className="label-mono relative">pull · redeploy · pull + redeploy</p>
+      <p className="section-label relative">
+        pull · redeploy · pull + redeploy
+      </p>
     </div>
   )
 }

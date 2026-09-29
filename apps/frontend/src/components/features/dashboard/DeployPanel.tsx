@@ -333,7 +333,7 @@ const DeployPanelContent = () => {
                 <XCircle className="text-danger mt-0.5 size-4 shrink-0" />
               )}
               <div className="min-w-0 space-y-0.5">
-                <p className="label-mono">{t("deploy.lastResult")}</p>
+                <p className="section-label">{t("deploy.lastResult")}</p>
                 <p className="wrap-break-word">{result.message}</p>
               </div>
             </div>

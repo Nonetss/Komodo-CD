@@ -13,7 +13,7 @@ const NotFoundContent = () => {
         aria-hidden
       />
       <div className="reveal relative max-w-sm space-y-5 text-center">
-        <p className="label-mono">HTTP 404</p>
+        <p className="section-label">HTTP 404</p>
         <p className="font-display text-7xl font-semibold tracking-tighter">
           404
         </p>

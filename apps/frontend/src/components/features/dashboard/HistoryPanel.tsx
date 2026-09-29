@@ -250,7 +250,7 @@ const HistoryPanelContent = () => {
 
           {groups.map(({ group, items }) => (
             <section key={group}>
-              <h2 className="label-mono mb-1 font-mono">{groupLabel[group]}</h2>
+              <h2 className="section-label mb-1">{groupLabel[group]}</h2>
               <ol className="relative before:bg-border before:absolute before:top-4 before:bottom-4 before:left-3 before:w-px">
                 {items.map((item) => (
                   <HistoryEntry key={item.id} item={item} index={running++} />

@@ -29,15 +29,6 @@ export default defineConfig({
     },
     {
       provider: fontsource,
-      name: "Bricolage Grotesque",
-      cssVariable: "--font-bricolage",
-      weights: ["500 700"],
-      styles: ["normal"],
-      subsets: ["latin"],
-      fallbacks: ["ui-sans-serif", "sans-serif"],
-    },
-    {
-      provider: fontsource,
       name: "JetBrains Mono",
       cssVariable: "--font-jetbrains",
       weights: ["400 600"],
