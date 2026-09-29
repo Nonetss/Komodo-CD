@@ -40,12 +40,21 @@ export function SidebarNav({
   )
 }
 
-/** Barra de pestañas inferior (móvil). Se renderiza en SSR. */
+/**
+ * Barra de pestañas inferior (móvil). Se renderiza en SSR.
+ *
+ * El `view-transition-name` va en la propia `<nav>` fija y no en un envoltorio
+ * del layout: un envoltorio sin caja ocupa el final del documento y la
+ * transición anima esa posición (distinta en cada página) en vez de la barra.
+ */
 export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
   return (
     <nav
       className="bg-background/85 fixed inset-x-0 bottom-0 z-40 border-t backdrop-blur-lg lg:hidden"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      style={{
+        paddingBottom: "env(safe-area-inset-bottom)",
+        viewTransitionName: "bottom-nav",
+      }}
     >
       <div className="mx-auto grid h-16 max-w-lg grid-cols-5">
         {items.map((item) => {

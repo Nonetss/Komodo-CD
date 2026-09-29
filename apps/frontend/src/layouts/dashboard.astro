@@ -102,8 +102,6 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
     </main>
   </div>
 
-  <div transition:name="bottom-nav">
-    <BottomNav items={NAV} path={path} />
-  </div>
+  <BottomNav items={NAV} path={path} />
   <Toaster client:idle />
 </Main>
