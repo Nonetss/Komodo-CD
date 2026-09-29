@@ -1,252 +1,358 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useId, useMemo, useRef, useState } from "react"
 import "@/lib/i18n"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { CheckCircle2, Layers, XCircle } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { useTranslation } from "react-i18next"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+  CheckCircle2,
+  ChevronsUpDown,
+  Download,
+  Loader2,
+  Rocket,
+  RotateCw,
+  XCircle,
+  Zap,
+} from "lucide-react"
+import { useTranslation } from "react-i18next"
+
+import { CodeBlock } from "@/components/app/code-block"
+import { PageHeader } from "@/components/app/page-header"
+import { StackStateDot } from "@/components/app/stack-state"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import type { DeployAction } from "@/lib/api-types"
+import type { DeployAction, Stack } from "@/lib/api-types"
+import { ACTION_I18N, buildDeployCurl, DEPLOY_ACTIONS } from "@/lib/deploy-curl"
 import { getErrorMessage } from "@/lib/orpc"
+import { notifyError, notifySuccess } from "@/lib/toast"
+import { cn } from "@/lib/utils"
 import { withQueryProvider } from "@/providers/query-provider"
 import { useDeployTrigger } from "./hooks/use-deploy"
 import { useStacks } from "./hooks/use-stacks"
 
-type DeployFormValues = {
-  stack: string
-  action: DeployAction
-}
+const ACTION_ICON = {
+  pull: Download,
+  redeploy: RotateCw,
+  "pull-redeploy": Zap,
+} as const
 
-const DeployPanelContent = () => {
-  const { t, i18n } = useTranslation()
-  const [result, setResult] = useState<{
-    success: boolean
-    message: string
-  } | null>(null)
-  const deployTrigger = useDeployTrigger()
-  const loading = deployTrigger.isPending
-  const stacksQuery = useStacks()
-  const stackNames = useMemo(
-    () => (stacksQuery.data ?? []).map((s) => s.name),
-    [stacksQuery.data]
-  )
-  const [suggestions, setSuggestions] = useState<string[]>([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const suggestionsRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+type Result = { success: boolean; message: string; stack: string }
 
-  const ACTIONS = useMemo(
-    () => [
-      {
-        value: "pull" as DeployAction,
-        label: "Pull",
-        description: t("deploy.actions.pull.description"),
-      },
-      {
-        value: "redeploy" as DeployAction,
-        label: "Redeploy",
-        description: t("deploy.actions.redeploy.description"),
-      },
-      {
-        value: "pull-redeploy" as DeployAction,
-        label: "Pull + Redeploy",
-        description: t("deploy.actions.pullRedeploy.description"),
-      },
-    ],
-    [i18n.language]
-  )
+// ── Selector de stack con sugerencias ───────────────────────────────────────
 
-  const deploySchema = useMemo(
-    () =>
-      z.object({
-        stack: z.string().min(1, t("deploy.required")),
-        action: z.enum(["pull", "redeploy", "pull-redeploy"]),
-      }),
-    [i18n.language]
-  )
+function StackCombobox({
+  id,
+  stacks,
+  value,
+  onChange,
+  invalid,
+}: {
+  id: string
+  stacks: Stack[]
+  value: string
+  onChange: (value: string) => void
+  invalid: boolean
+}) {
+  const { t } = useTranslation()
+  const listId = useId()
+  const [open, setOpen] = useState(false)
+  const [highlight, setHighlight] = useState(0)
+  const rootRef = useRef<HTMLDivElement>(null)
 
-  const form = useForm<DeployFormValues>({
-    resolver: zodResolver(deploySchema),
-    defaultValues: { stack: "", action: "redeploy" as const },
-  })
-
-  const watchedStack = form.watch("stack")
+  const matches = useMemo(() => {
+    const q = value.trim().toLowerCase()
+    return [...stacks]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .filter((s) => q === "" || s.name.toLowerCase().includes(q))
+      .slice(0, 50)
+  }, [stacks, value])
 
   useEffect(() => {
-    const query = watchedStack.trim().toLowerCase()
-    setSuggestions(
-      query.length === 0
-        ? stackNames
-        : stackNames.filter((n) => n.toLowerCase().includes(query))
-    )
-  }, [watchedStack, stackNames])
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(e.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(e.target as Node)
-      ) {
-        setShowSuggestions(false)
-      }
+    const close = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false)
     }
-    document.addEventListener("mousedown", handleClick)
-    return () => document.removeEventListener("mousedown", handleClick)
+    document.addEventListener("mousedown", close)
+    return () => document.removeEventListener("mousedown", close)
   }, [])
 
-  const onSubmit = async (data: DeployFormValues) => {
+  const select = (name: string) => {
+    onChange(name)
+    setOpen(false)
+  }
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault()
+      setOpen(true)
+      setHighlight((h) => Math.min(h + 1, matches.length - 1))
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault()
+      setHighlight((h) => Math.max(h - 1, 0))
+    } else if (e.key === "Enter" && open && matches[highlight]) {
+      e.preventDefault()
+      select(matches[highlight].name)
+    } else if (e.key === "Escape") {
+      setOpen(false)
+    }
+  }
+
+  const selected = stacks.find((s) => s.name === value)
+
+  return (
+    <div ref={rootRef} className="relative">
+      <div className="relative">
+        {selected && (
+          <StackStateDot
+            state={selected.info.state}
+            className="absolute top-1/2 left-3 -translate-y-1/2"
+          />
+        )}
+        <Input
+          id={id}
+          role="combobox"
+          aria-expanded={open}
+          aria-controls={listId}
+          aria-autocomplete="list"
+          aria-invalid={invalid || undefined}
+          value={value}
+          onChange={(e) => {
+            onChange(e.target.value)
+            setHighlight(0)
+            setOpen(true)
+          }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={onKeyDown}
+          placeholder={t("deploy.stackPlaceholder")}
+          autoComplete="off"
+          spellCheck={false}
+          className={cn(
+            "pr-9 font-mono text-[13px] placeholder:font-sans",
+            selected && "pl-8"
+          )}
+        />
+        <ChevronsUpDown className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2" />
+      </div>
+
+      {open && (
+        <div
+          id={listId}
+          role="listbox"
+          className="bg-popover animate-in fade-in-0 zoom-in-[0.98] absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-lg border p-1 shadow-lg"
+        >
+          {matches.length === 0 ? (
+            <p className="text-muted-foreground px-2 py-3 text-center text-xs">
+              {t("deploy.noStacks")}
+            </p>
+          ) : (
+            matches.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                role="option"
+                aria-selected={s.name === value}
+                onMouseEnter={() => setHighlight(i)}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => select(s.name)}
+                className={cn(
+                  "flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-left font-mono text-[13px]",
+                  i === highlight && "bg-accent"
+                )}
+              >
+                <StackStateDot state={s.info.state} />
+                <span className="truncate">{s.name}</span>
+                <span className="text-muted-foreground ml-auto font-sans text-[11px]">
+                  {t(`stacks.states.${s.info.state}`, {
+                    defaultValue: s.info.state,
+                  })}
+                </span>
+              </button>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Panel ───────────────────────────────────────────────────────────────────
+
+const DeployPanelContent = () => {
+  const { t } = useTranslation()
+  const stacksQuery = useStacks()
+  const deployTrigger = useDeployTrigger()
+  const stacks = stacksQuery.data ?? []
+
+  const [stack, setStack] = useState("")
+  const [action, setAction] = useState<DeployAction>("redeploy")
+  const [touched, setTouched] = useState(false)
+  const [result, setResult] = useState<Result | null>(null)
+
+  const invalid = touched && stack.trim() === ""
+  const loading = deployTrigger.isPending
+
+  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setTouched(true)
+    const name = stack.trim()
+    if (!name) return
     setResult(null)
+    const label = t(`deploy.actions.${ACTION_I18N[action]}.label`)
     try {
-      const res = await deployTrigger.mutateAsync(data)
-      setResult({ success: res.success, message: res.message })
+      const res = await deployTrigger.mutateAsync({ stack: name, action })
+      setResult({ success: true, message: res.message, stack: name })
+      notifySuccess(t("stacks.actionDone", { action: label, stack: name }))
     } catch (err) {
-      setResult({
-        success: false,
-        message: getErrorMessage(err, t("deploy.error")),
-      })
+      const message = getErrorMessage(err, t("deploy.error"))
+      setResult({ success: false, message, stack: name })
+      notifyError(`${label} · ${name}`, message)
     }
   }
 
   return (
-    <div className="w-full max-w-2xl space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold">{t("deploy.title")}</h2>
-        <p className="text-muted-foreground mt-0.5 text-sm">
-          {t("deploy.description")}
-        </p>
-      </div>
+    <div>
+      <PageHeader
+        title={t("deploy.title")}
+        description={t("deploy.description")}
+      />
 
-      <Card>
-        <CardContent className="space-y-6 pt-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Stack with autocomplete */}
-              <FormField
-                control={form.control}
-                name="stack"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("deploy.stackLabel")}</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          {...field}
-                          ref={inputRef}
-                          placeholder={t("deploy.stackPlaceholder")}
-                          autoComplete="off"
-                          onFocus={() => setShowSuggestions(true)}
-                          onChange={(e) => {
-                            field.onChange(e)
-                            setShowSuggestions(true)
-                          }}
-                        />
-                        {showSuggestions && suggestions.length > 0 && (
-                          <div
-                            ref={suggestionsRef}
-                            className="bg-card border-border absolute top-full right-0 left-0 z-50 mt-1 max-h-52 overflow-y-auto rounded-md border shadow-xl"
-                          >
-                            {suggestions.map((name) => (
-                              <button
-                                key={name}
-                                type="button"
-                                className="hover:bg-accent text-foreground flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors"
-                                onMouseDown={(e) => {
-                                  e.preventDefault()
-                                  field.onChange(name)
-                                  setShowSuggestions(false)
-                                }}
-                              >
-                                <Layers className="text-muted-foreground h-3.5 w-3.5 shrink-0" />
-                                {name}
-                              </button>
-                            ))}
-                          </div>
+      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-6">
+        <Card className="reveal min-w-0">
+          <form onSubmit={onSubmit} noValidate>
+            <CardContent className="space-y-6">
+              <div className="grid gap-1.5">
+                <label
+                  htmlFor="deploy-stack"
+                  className="text-[13px] font-medium"
+                >
+                  {t("deploy.stackLabel")}
+                </label>
+                <StackCombobox
+                  id="deploy-stack"
+                  stacks={stacks}
+                  value={stack}
+                  onChange={(v) => {
+                    setStack(v)
+                    setResult(null)
+                  }}
+                  invalid={invalid}
+                />
+                {invalid && (
+                  <p className="text-destructive text-xs">
+                    {t("deploy.required")}
+                  </p>
+                )}
+              </div>
+
+              <fieldset className="grid gap-1.5">
+                <legend className="mb-1.5 text-[13px] font-medium">
+                  {t("deploy.actionLabel")}
+                </legend>
+                <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                  {DEPLOY_ACTIONS.map((a) => {
+                    const Icon = ACTION_ICON[a]
+                    const checked = action === a
+                    return (
+                      <label
+                        key={a}
+                        className={cn(
+                          "relative flex cursor-pointer gap-3 rounded-lg border p-3 transition-[border-color,background-color,box-shadow] xl:flex-col xl:gap-2",
+                          checked
+                            ? "border-primary/60 bg-primary/[0.05] ring-primary/20 ring-2"
+                            : "hover:border-foreground/15"
                         )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Action cards */}
-              <FormField
-                control={form.control}
-                name="action"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("deploy.actionLabel")}</FormLabel>
-                    <FormControl>
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {ACTIONS.map((a) => (
-                          <button
-                            key={a.value}
-                            type="button"
-                            onClick={() => field.onChange(a.value)}
-                            className={`flex flex-col items-start gap-1.5 rounded-lg border p-4 text-left transition-colors ${
-                              field.value === a.value
-                                ? "border-primary bg-primary/10"
-                                : "border-border bg-muted/40 hover:bg-accent hover:border-border/80"
-                            }`}
-                          >
-                            <span
-                              className={`text-sm font-semibold ${field.value === a.value ? "text-primary" : ""}`}
-                            >
-                              {a.label}
-                            </span>
-                            <span className="text-muted-foreground text-xs leading-snug">
-                              {a.description}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+                      >
+                        <input
+                          type="radio"
+                          name="action"
+                          value={a}
+                          checked={checked}
+                          onChange={() => setAction(a)}
+                          className="sr-only"
+                        />
+                        <span
+                          className={cn(
+                            "flex size-8 shrink-0 items-center justify-center rounded-md border",
+                            checked
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          <Icon className="size-4" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-sm font-medium">
+                            {t(`deploy.actions.${ACTION_I18N[a]}.label`)}
+                          </span>
+                          <span className="text-muted-foreground block text-xs text-pretty">
+                            {t(`deploy.actions.${ACTION_I18N[a]}.description`)}
+                          </span>
+                        </span>
+                      </label>
+                    )
+                  })}
+                </div>
+              </fieldset>
+            </CardContent>
+            <CardFooter className="justify-end">
               <Button
                 type="submit"
-                className="w-full"
-                size="lg"
                 disabled={loading}
+                className="w-full sm:w-auto"
               >
+                {loading ? <Loader2 className="animate-spin" /> : <Rocket />}
                 {loading ? t("deploy.executing") : t("deploy.submit")}
               </Button>
-            </form>
-          </Form>
+            </CardFooter>
+          </form>
+        </Card>
 
+        <div
+          className="reveal min-w-0 space-y-4"
+          style={{ "--i": 2 } as React.CSSProperties}
+        >
           {result && (
             <div
-              className={`flex items-start gap-3 rounded-lg border p-4 text-sm ${
+              role="status"
+              className={cn(
+                "flex items-start gap-3 rounded-lg border p-3.5 text-sm",
                 result.success
-                  ? "border-emerald-800 bg-emerald-950/20 text-emerald-400"
-                  : "text-destructive border-red-900 bg-red-950/20"
-              }`}
+                  ? "bg-success/10 border-success/25"
+                  : "bg-danger/10 border-danger/25"
+              )}
             >
               {result.success ? (
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+                <CheckCircle2 className="text-success mt-0.5 size-4 shrink-0" />
               ) : (
-                <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <XCircle className="text-danger mt-0.5 size-4 shrink-0" />
               )}
-              {result.message}
+              <div className="min-w-0 space-y-0.5">
+                <p className="label-mono">{t("deploy.lastResult")}</p>
+                <p className="break-words">{result.message}</p>
+              </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("deploy.ciTitle")}</CardTitle>
+              <CardDescription>{t("deploy.ciDescription")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <CodeBlock
+                label={`POST /api/v0/deploy · ${action}`}
+                code={buildDeployCurl(stack.trim() || "mi-stack", action)}
+              />
+              <p className="text-muted-foreground text-[11px]">
+                {t("stacks.ciHint")}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   )
 }

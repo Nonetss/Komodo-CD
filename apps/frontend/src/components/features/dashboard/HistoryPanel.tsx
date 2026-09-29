@@ -1,171 +1,267 @@
+import { useMemo, useState } from "react"
 import "@/lib/i18n"
-import { CheckCircle2, RefreshCw, XCircle } from "lucide-react"
+import {
+  Check,
+  History as HistoryIcon,
+  KeyRound,
+  RefreshCw,
+  ServerCrash,
+  User,
+  X,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
+
+import { EmptyState } from "@/components/app/empty-state"
+import { PageHeader } from "@/components/app/page-header"
+import { Segmented } from "@/components/app/segmented"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { HistoryItem } from "@/lib/api-types"
+import { ACTION_I18N } from "@/lib/deploy-curl"
+import { getErrorMessage } from "@/lib/orpc"
+import { cn } from "@/lib/utils"
 import { withQueryProvider } from "@/providers/query-provider"
 import { useHistory } from "./hooks/use-history"
 
-const ACTION_LABELS: Record<string, string> = {
-  pull: "Pull",
-  redeploy: "Redeploy",
-  "pull-redeploy": "Pull + Redeploy",
-}
-
 type TimeGroup = "last-hour" | "today" | "last-week" | "older"
+type Filter = "all" | "success" | "failed"
+
+const GROUP_ORDER: TimeGroup[] = ["last-hour", "today", "last-week", "older"]
 
 function getTimeGroup(date: Date): TimeGroup {
   const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffHours = diffMs / (1000 * 60 * 60)
-  const diffDays = diffMs / (1000 * 60 * 60 * 24)
-
+  const diffHours = (now.getTime() - date.getTime()) / 3_600_000
   if (diffHours < 1) return "last-hour"
   if (date.toDateString() === now.toDateString()) return "today"
-  if (diffDays < 7) return "last-week"
+  if (diffHours < 24 * 7) return "last-week"
   return "older"
 }
 
-function groupHistory(
-  items: HistoryItem[]
-): { group: TimeGroup; items: HistoryItem[] }[] {
-  const groups: Record<TimeGroup, HistoryItem[]> = {
-    "last-hour": [],
-    today: [],
-    "last-week": [],
-    older: [],
-  }
-
-  for (const item of items) {
-    groups[getTimeGroup(new Date(item.createdAt))].push(item)
-  }
-
-  const order: TimeGroup[] = ["last-hour", "today", "last-week", "older"]
-  return order
-    .filter((g) => groups[g].length > 0)
-    .map((g) => ({ group: g, items: groups[g] }))
+function relativeTime(date: Date, lang: string) {
+  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" })
+  const seconds = Math.round((date.getTime() - Date.now()) / 1000)
+  const abs = Math.abs(seconds)
+  if (abs < 60) return rtf.format(seconds, "second")
+  if (abs < 3600) return rtf.format(Math.round(seconds / 60), "minute")
+  if (abs < 86400) return rtf.format(Math.round(seconds / 3600), "hour")
+  if (abs < 86400 * 7) return rtf.format(Math.round(seconds / 86400), "day")
+  return new Intl.DateTimeFormat(lang, { dateStyle: "medium" }).format(date)
 }
 
-function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
+const API_KEY_PREFIX = "API Key"
+
+function Actor({ item }: { item: HistoryItem }) {
+  const name = item.userName ?? item.userEmail ?? item.userId
+  const viaKey = name.startsWith(API_KEY_PREFIX)
+  const Icon = viaKey ? KeyRound : User
+  const label = viaKey ? name.replace(/^API Key:?\s*/, "") || "API Key" : name
+  return (
+    <span className="inline-flex min-w-0 items-center gap-1">
+      <Icon className="size-3 shrink-0" />
+      <span className={cn("truncate", viaKey && "font-mono text-[11px]")}>
+        {label}
+      </span>
+    </span>
+  )
+}
+
+function HistoryEntry({ item, index }: { item: HistoryItem; index: number }) {
+  const { t, i18n } = useTranslation()
+  const date = new Date(item.createdAt)
+  const actionKey = ACTION_I18N[item.action as keyof typeof ACTION_I18N]
+
+  return (
+    <li
+      className="reveal relative flex gap-3.5 py-3 pr-1 pl-0 sm:gap-4"
+      style={{ "--i": index } as React.CSSProperties}
+    >
+      <span
+        className={cn(
+          "relative z-10 mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border",
+          item.success
+            ? "bg-success/12 border-success/30 text-success"
+            : "bg-danger/12 border-danger/30 text-danger"
+        )}
+      >
+        {item.success ? (
+          <Check className="size-3.5" strokeWidth={2.5} />
+        ) : (
+          <X className="size-3.5" strokeWidth={2.5} />
+        )}
+      </span>
+
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="font-mono text-[13px] font-medium">
+            {item.stack}
+          </span>
+          <Badge variant="outline">
+            {actionKey ? t(`deploy.actions.${actionKey}.label`) : item.action}
+          </Badge>
+          <time
+            dateTime={item.createdAt}
+            title={new Intl.DateTimeFormat(i18n.language, {
+              dateStyle: "full",
+              timeStyle: "medium",
+            }).format(date)}
+            className="text-muted-foreground tabular ml-auto text-xs whitespace-nowrap"
+          >
+            {relativeTime(date, i18n.language)}
+          </time>
+        </div>
+        {item.message && (
+          <p
+            className={cn(
+              "mt-1 text-xs break-words",
+              item.success ? "text-muted-foreground" : "text-danger/90"
+            )}
+          >
+            {item.message}
+          </p>
+        )}
+        <p className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
+          <Actor item={item} />
+        </p>
+      </div>
+    </li>
+  )
 }
 
 const HistoryPanelContent = () => {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const historyQuery = useHistory()
   const history = historyQuery.data ?? []
-  const loading = historyQuery.isLoading || historyQuery.isFetching
-  const error = historyQuery.isError ? t("history.error") : null
-  const fetchHistory = () => historyQuery.refetch()
+  const refreshing = historyQuery.isFetching
+  const [filter, setFilter] = useState<Filter>("all")
+
+  const counts = useMemo(
+    () => ({
+      all: history.length,
+      success: history.filter((h) => h.success).length,
+      failed: history.filter((h) => !h.success).length,
+    }),
+    [history]
+  )
+
+  const groups = useMemo(() => {
+    const items = history.filter((h) =>
+      filter === "all" ? true : filter === "success" ? h.success : !h.success
+    )
+    const byGroup = new Map<TimeGroup, HistoryItem[]>()
+    for (const item of items) {
+      const g = getTimeGroup(new Date(item.createdAt))
+      byGroup.set(g, [...(byGroup.get(g) ?? []), item])
+    }
+    return GROUP_ORDER.filter((g) => byGroup.has(g)).map((g) => ({
+      group: g,
+      items: byGroup.get(g) ?? [],
+    }))
+  }, [history, filter])
+
+  const groupLabel: Record<TimeGroup, string> = {
+    "last-hour": t("history.group.lastHour"),
+    today: t("history.group.today"),
+    "last-week": t("history.group.lastWeek"),
+    older: t("history.group.older"),
+  }
+
+  let running = 0
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-3">
-        <CardTitle>{t("history.title")}</CardTitle>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={fetchHistory}
-          disabled={loading}
-          aria-label={t("history.refresh")}
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-        </Button>
-      </CardHeader>
-      <CardContent>
-        {error && <p className="text-destructive text-sm">{error}</p>}
+    <div>
+      <PageHeader
+        title={t("history.title")}
+        description={t("history.description")}
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => historyQuery.refetch()}
+            disabled={refreshing}
+            aria-label={t("history.refresh")}
+          >
+            <RefreshCw className={cn(refreshing && "animate-spin")} />
+            <span className="hidden sm:inline">{t("common.refresh")}</span>
+          </Button>
+        }
+      />
 
-        {/* Skeleton */}
-        {loading && history.length === 0 && (
-          <div className="space-y-0">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="border-border flex items-start gap-4 border-b py-3 last:border-0"
-              >
-                <Skeleton className="mt-0.5 h-4 w-4 shrink-0 rounded-md" />
-                <div className="min-w-0 flex-1 space-y-2">
-                  <div className="flex gap-2">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-4 w-16 rounded-md" />
-                  </div>
-                  <Skeleton className="h-3 w-full" />
-                  <Skeleton className="h-3 w-32" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {!error && !loading && history.length === 0 && (
-          <p className="text-muted-foreground text-sm">{t("history.empty")}</p>
-        )}
-
-        {groupHistory(history).map(({ group, items: groupItems }) => {
-          const groupLabel: Record<TimeGroup, string> = {
-            "last-hour": t("history.group.lastHour"),
-            today: t("history.group.today"),
-            "last-week": t("history.group.lastWeek"),
-            older: t("history.group.older"),
+      {historyQuery.isError ? (
+        <EmptyState
+          tone="danger"
+          icon={ServerCrash}
+          title={t("history.error")}
+          description={getErrorMessage(historyQuery.error, "")}
+          action={
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => historyQuery.refetch()}
+            >
+              {t("common.retry")}
+            </Button>
           }
-
-          return (
-            <div key={group} className="mb-4 last:mb-0">
-              <p className="text-muted-foreground mb-1 text-xs font-medium tracking-wide uppercase">
-                {groupLabel[group]}
-              </p>
-              <div className="space-y-0">
-                {groupItems.map((item, idx) => (
-                  <div
-                    key={item.id}
-                    className={`flex items-start gap-4 py-3 text-sm ${
-                      idx < groupItems.length - 1
-                        ? "border-border border-b"
-                        : ""
-                    }`}
-                  >
-                    <div className="mt-0.5 shrink-0">
-                      {item.success ? (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                      ) : (
-                        <XCircle className="text-destructive h-4 w-4" />
-                      )}
-                    </div>
-
-                    <div className="min-w-0 flex-1 space-y-0.5">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-semibold">{item.stack}</span>
-                        <span className="bg-secondary border-border text-muted-foreground rounded-md border px-2 py-0.5 text-xs">
-                          {ACTION_LABELS[item.action] ?? item.action}
-                        </span>
-                      </div>
-                      {item.message && (
-                        <p className="text-muted-foreground text-xs wrap-break-word">
-                          {item.message}
-                        </p>
-                      )}
-                      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
-                        <span>
-                          {item.userName ?? item.userEmail ?? item.userId}
-                        </span>
-                        <span>·</span>
-                        <span>
-                          {new Intl.DateTimeFormat(i18n.language, {
-                            dateStyle: "short",
-                            timeStyle: "short",
-                          }).format(new Date(item.createdAt))}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+        />
+      ) : historyQuery.isLoading ? (
+        <div className="space-y-4">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex gap-4">
+              <Skeleton className="size-6 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-40" />
+                <Skeleton className="h-3 w-2/3" />
               </div>
             </div>
-          )
-        })}
-      </CardContent>
-    </Card>
+          ))}
+        </div>
+      ) : history.length === 0 ? (
+        <EmptyState
+          icon={HistoryIcon}
+          title={t("history.empty")}
+          description={t("history.emptyDescription")}
+        />
+      ) : (
+        <div className="max-w-3xl space-y-6">
+          <Segmented
+            value={filter}
+            onChange={setFilter}
+            aria-label={t("history.title")}
+            options={[
+              {
+                value: "all",
+                label: `${t("history.filter.all")} · ${counts.all}`,
+              },
+              {
+                value: "success",
+                label: `${t("history.filter.success")} · ${counts.success}`,
+              },
+              {
+                value: "failed",
+                label: `${t("history.filter.failed")} · ${counts.failed}`,
+              },
+            ]}
+          />
+
+          {groups.length === 0 && (
+            <p className="text-muted-foreground py-8 text-center text-sm">
+              {t("history.empty")}
+            </p>
+          )}
+
+          {groups.map(({ group, items }) => (
+            <section key={group}>
+              <h2 className="label-mono mb-1 font-mono">{groupLabel[group]}</h2>
+              <ol className="relative before:bg-border before:absolute before:top-4 before:bottom-4 before:left-3 before:w-px">
+                {items.map((item) => (
+                  <HistoryEntry key={item.id} item={item} index={running++} />
+                ))}
+              </ol>
+            </section>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 

@@ -1,28 +1,90 @@
 import { useState } from "react"
 import "@/lib/i18n"
+import { AlertCircle, ArrowRight, Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
+
+import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
 
-const loginSchema = z.object({
-  email: z.string(),
-  password: z.string(),
-})
+type LoginFormValues = { email: string; password: string }
 
-type LoginFormValues = z.infer<typeof loginSchema>
+// Estados de la regleta decorativa del panel de marca
+const STRIP = "sssnsssdssnsssssnssswsssssnsss".split("")
+const STRIP_COLOR: Record<string, string> = {
+  s: "bg-success/80",
+  n: "bg-muted-foreground/25",
+  d: "bg-danger/80",
+  w: "bg-warning/80",
+}
+
+function BrandPanel() {
+  const { t } = useTranslation()
+  return (
+    <div className="bg-sidebar relative hidden overflow-hidden border-r lg:flex lg:flex-col lg:justify-between lg:p-12">
+      <div
+        className="bg-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_30%_20%,black_20%,transparent_70%)]"
+        aria-hidden
+      />
+      <div className="relative flex items-center gap-2.5">
+        <img src="/logo.svg" alt="" aria-hidden className="h-7 w-auto" />
+        <span className="font-display text-lg font-semibold tracking-tight">
+          Komodo CD
+        </span>
+      </div>
+
+      <div className="relative max-w-md space-y-8">
+        <p className="font-display text-4xl leading-[1.05] font-semibold tracking-tight text-balance xl:text-5xl">
+          {t("login.subtitle")}
+        </p>
+
+        <div className="bg-card/80 overflow-hidden rounded-xl border shadow-2xl backdrop-blur">
+          <div className="flex items-center gap-1.5 border-b px-3 py-2">
+            <span className="bg-danger/60 size-2 rounded-full" />
+            <span className="bg-warning/60 size-2 rounded-full" />
+            <span className="bg-success/60 size-2 rounded-full" />
+            <span className="text-muted-foreground ml-2 font-mono text-[10px]">
+              .github/workflows/deploy.yml
+            </span>
+          </div>
+          <pre className="text-muted-foreground p-4 font-mono text-[11.5px] leading-relaxed">
+            <span className="text-primary">curl</span> -X POST
+            $KOMODO_CD_URL/api/v0/deploy \{"\n"}
+            {"  "}-H{" "}
+            <span className="text-foreground">
+              "x-api-key: $KOMODO_API_KEY"
+            </span>{" "}
+            \{"\n"}
+            {"  "}-d{" "}
+            <span className="text-success">
+              '{"{"}"stack":"web","action":"pull-redeploy"{"}"}'
+            </span>
+          </pre>
+          <div className="flex gap-[3px] border-t px-4 py-3" aria-hidden>
+            {STRIP.map((c, i) => (
+              <span
+                key={i}
+                className={`h-2 flex-1 rounded-[2px] ${STRIP_COLOR[c]}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <p className="label-mono relative">pull · redeploy · pull + redeploy</p>
+    </div>
+  )
+}
 
 export const LoginPage = () => {
   const { t } = useTranslation()
@@ -31,6 +93,7 @@ export const LoginPage = () => {
   const form = useForm<LoginFormValues>({
     defaultValues: { email: "", password: "" },
   })
+  const submitting = form.formState.isSubmitting
 
   const onSubmit = async (data: LoginFormValues) => {
     setLoginError(null)
@@ -46,26 +109,34 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center px-4">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-      <div className="w-full max-w-sm space-y-6">
-        {/* Brand */}
-        <div className="flex flex-col items-center gap-3">
-          <img src="/logo.svg" alt="Komodo CD" className="h-16 w-auto" />
-          <span className="text-lg font-semibold tracking-tight">
-            Komodo CD
-          </span>
+    <div className="grid min-h-dvh lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+      <BrandPanel />
+
+      <div className="relative flex flex-col px-5 py-6 sm:px-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 lg:invisible">
+            <img src="/logo.svg" alt="" aria-hidden className="h-6 w-auto" />
+            <span className="font-display font-semibold tracking-tight">
+              Komodo CD
+            </span>
+          </div>
+          <div className="flex items-center gap-0.5">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base font-medium">
-              {t("login.title")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="flex flex-1 items-center justify-center py-10">
+          <div className="reveal w-full max-w-[360px] space-y-7">
+            <div className="space-y-2">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {t("login.title")}
+              </h1>
+              <p className="text-muted-foreground text-sm text-pretty lg:hidden">
+                {t("login.subtitle")}
+              </p>
+            </div>
+
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -84,9 +155,11 @@ export const LoginPage = () => {
                           placeholder={t("login.emailPlaceholder")}
                           autoComplete="email"
                           spellCheck={false}
+                          autoFocus
+                          required
+                          className="h-10"
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -101,24 +174,40 @@ export const LoginPage = () => {
                           {...field}
                           type="password"
                           autoComplete="current-password"
+                          required
+                          className="h-10"
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
                 {loginError && (
-                  <p className="text-destructive text-sm">{loginError}</p>
+                  <p
+                    role="alert"
+                    className="bg-danger/10 border-danger/25 text-danger flex items-center gap-2 rounded-md border px-3 py-2 text-xs"
+                  >
+                    <AlertCircle className="size-3.5 shrink-0" />
+                    {loginError}
+                  </p>
                 )}
 
-                <Button type="submit" className="w-full">
-                  {t("login.submit")}
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="group w-full"
+                  disabled={submitting}
+                >
+                  {submitting ? <Loader2 className="animate-spin" /> : null}
+                  {submitting ? t("login.submitting") : t("login.submit")}
+                  {!submitting && (
+                    <ArrowRight className="transition-transform group-hover:translate-x-0.5" />
+                  )}
                 </Button>
               </form>
             </Form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   )

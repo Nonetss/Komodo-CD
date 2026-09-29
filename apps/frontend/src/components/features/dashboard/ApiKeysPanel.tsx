@@ -1,10 +1,27 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "@/lib/i18n"
-import { Check, Copy, Plus, RefreshCw, Trash2 } from "lucide-react"
+import {
+  KeyRound,
+  Loader2,
+  Plus,
+  ServerCrash,
+  ShieldCheck,
+  Trash2,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
+
+import { CodeBlock } from "@/components/app/code-block"
+import { CopyButton } from "@/components/app/copy-button"
+import { EmptyState } from "@/components/app/empty-state"
+import { PageHeader } from "@/components/app/page-header"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
+import type { ApiKey } from "@/lib/api-types"
+import { buildDeployCurl } from "@/lib/deploy-curl"
+import { getErrorMessage } from "@/lib/orpc"
+import { notifyError, notifySuccess } from "@/lib/toast"
 import { withQueryProvider } from "@/providers/query-provider"
 import {
   useApiKeyCreate,
@@ -12,223 +29,276 @@ import {
   useApiKeys,
 } from "./hooks/use-api-keys"
 
-const APP_URL =
-  (import.meta.env.PUBLIC_APP_URL as string | undefined)?.replace(/\/$/, "") ??
-  window.location.origin
+// ── Key recién creada (solo se muestra una vez) ─────────────────────────────
 
-function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`bg-muted/60 animate-pulse rounded-md ${className}`} />
+function CreatedKey({
+  value,
+  onDismiss,
+}: {
+  value: string
+  onDismiss: () => void
+}) {
+  const { t } = useTranslation()
+  return (
+    <div className="reveal border-success/30 bg-success/[0.06] mb-6 space-y-4 rounded-xl border p-4 sm:p-5">
+      <div className="flex items-start gap-3">
+        <span className="bg-success/15 text-success flex size-8 shrink-0 items-center justify-center rounded-md">
+          <ShieldCheck className="size-4" />
+        </span>
+        <div>
+          <p className="text-sm font-semibold">{t("apikeys.keyCreated")}</p>
+          <p className="text-muted-foreground text-xs">
+            {t("apikeys.keyCreatedHint")}
+          </p>
+        </div>
+      </div>
+
+      <div className="bg-card flex items-center gap-1 rounded-lg border py-1 pr-1 pl-3">
+        <code className="min-w-0 flex-1 truncate text-[13px]">{value}</code>
+        <CopyButton value={value} withLabel size="sm" />
+      </div>
+
+      <div className="space-y-2">
+        <p className="text-muted-foreground text-xs">
+          {t("apikeys.useInGithubActions")}
+        </p>
+        <CodeBlock
+          label="POST /api/v0/deploy"
+          code={buildDeployCurl("mi-stack", "redeploy", value)}
+        />
+      </div>
+
+      <div className="flex justify-end">
+        <Button variant="outline" size="sm" onClick={onDismiss}>
+          {t("apikeys.dismiss")}
+        </Button>
+      </div>
+    </div>
+  )
 }
 
-const ApiKeysPanelContent = () => {
-  const { t, i18n } = useTranslation()
-  const keysQuery = useApiKeys()
-  const createKey = useApiKeyCreate()
-  const deleteKey = useApiKeyDelete()
-  const keys = keysQuery.data ?? []
-  const loading = keysQuery.isLoading || keysQuery.isFetching
-  const [error, setError] = useState<string | null>(null)
-  const [newKeyName, setNewKeyName] = useState("")
-  const [showForm, setShowForm] = useState(false)
-  const [createdKey, setCreatedKey] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+// ── Fila ────────────────────────────────────────────────────────────────────
 
-  const fetchKeys = () => {
-    setError(null)
-    keysQuery.refetch()
-  }
-  const errorMessage =
-    error ?? (keysQuery.isError ? t("apikeys.errorLoad") : null)
+function ApiKeyRow({ apiKey, index }: { apiKey: ApiKey; index: number }) {
+  const { t, i18n } = useTranslation()
+  const deleteKey = useApiKeyDelete()
+  const [confirming, setConfirming] = useState(false)
 
   useEffect(() => {
-    if (!confirmDelete) return
-    const t = setTimeout(() => setConfirmDelete(null), 3000)
-    return () => clearTimeout(t)
-  }, [confirmDelete])
+    if (!confirming) return
+    const timer = setTimeout(() => setConfirming(false), 3000)
+    return () => clearTimeout(timer)
+  }, [confirming])
 
-  const handleCreate = async () => {
-    if (!newKeyName.trim()) return
-    setError(null)
-    try {
-      const res = await createKey.mutateAsync({ name: newKeyName.trim() })
-      setCreatedKey(res.key)
-      setNewKeyName("")
-      setShowForm(false)
-    } catch {
-      setError(t("apikeys.errorCreate"))
-    }
-  }
-
-  const handleDelete = async (id: string) => {
-    if (confirmDelete !== id) {
-      setConfirmDelete(id)
+  const remove = async () => {
+    if (!confirming) {
+      setConfirming(true)
       return
     }
-    setConfirmDelete(null)
-    setError(null)
+    setConfirming(false)
     try {
-      await deleteKey.mutateAsync({ id })
-    } catch {
-      setError(t("apikeys.errorDelete"))
+      await deleteKey.mutateAsync({ id: apiKey.id })
+      notifySuccess(t("apikeys.deleted"), apiKey.name ?? undefined)
+    } catch (err) {
+      notifyError(t("apikeys.errorDelete"), getErrorMessage(err, ""))
     }
   }
 
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  const created = new Intl.DateTimeFormat(i18n.language, {
+    dateStyle: "medium",
+  }).format(new Date(apiKey.createdAt))
+
+  return (
+    <li
+      className="reveal flex items-center gap-3 px-4 py-3"
+      style={{ "--i": index } as React.CSSProperties}
+    >
+      <span className="bg-muted text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-md border">
+        <KeyRound className="size-4" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">{apiKey.name ?? "—"}</p>
+        <p className="text-muted-foreground flex flex-wrap items-center gap-x-2 text-xs">
+          <code className="text-[11px]">
+            {apiKey.start ? `${apiKey.start}••••••` : apiKey.id}
+          </code>
+          <span className="text-border">/</span>
+          <span>{t("apikeys.created", { date: created })}</span>
+        </p>
+      </div>
+      <Button
+        variant={confirming ? "destructive" : "ghost"}
+        size={confirming ? "xs" : "icon-sm"}
+        onClick={remove}
+        disabled={deleteKey.isPending}
+        aria-label={
+          confirming ? t("common.confirmDelete") : t("apikeys.deleteLabel")
+        }
+        title={t("apikeys.deleteLabel")}
+      >
+        {deleteKey.isPending ? (
+          <Loader2 className="animate-spin" />
+        ) : (
+          <Trash2 />
+        )}
+        {confirming && t("common.confirmDelete")}
+      </Button>
+    </li>
+  )
+}
+
+// ── Panel ───────────────────────────────────────────────────────────────────
+
+const ApiKeysPanelContent = () => {
+  const { t } = useTranslation()
+  const keysQuery = useApiKeys()
+  const createKey = useApiKeyCreate()
+  const keys = keysQuery.data ?? []
+
+  const [showForm, setShowForm] = useState(false)
+  const [name, setName] = useState("")
+  const [createdKey, setCreatedKey] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (showForm) inputRef.current?.focus()
+  }, [showForm])
+
+  const create = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const trimmed = name.trim()
+    if (!trimmed) return
+    try {
+      const res = await createKey.mutateAsync({ name: trimmed })
+      setCreatedKey(res.key)
+      setName("")
+      setShowForm(false)
+    } catch (err) {
+      notifyError(t("apikeys.errorCreate"), getErrorMessage(err, ""))
+    }
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-3">
-        <CardTitle>{t("apikeys.title")}</CardTitle>
-        <div className="flex shrink-0 gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={fetchKeys}
-            disabled={loading}
-            aria-label={t("apikeys.refresh")}
-          >
-            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          </Button>
-          <Button
-            size="sm"
-            onClick={() => {
-              setShowForm((v) => !v)
-              setCreatedKey(null)
-            }}
-          >
-            <Plus className="h-4 w-4" />
-            {showForm ? t("apikeys.cancel") : t("apikeys.new")}
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {errorMessage && (
-          <p className="text-destructive text-sm">{errorMessage}</p>
-        )}
+    <div>
+      <PageHeader
+        title={t("apikeys.title")}
+        description={t("apikeys.description")}
+        actions={
+          !showForm && (
+            <Button
+              size="sm"
+              onClick={() => {
+                setShowForm(true)
+                setCreatedKey(null)
+              }}
+            >
+              <Plus />
+              {t("apikeys.new")}
+            </Button>
+          )
+        }
+      />
 
-        {createdKey && (
-          <div className="space-y-3 rounded-lg border border-emerald-800 bg-emerald-950/20 p-4">
-            <p className="text-sm font-medium text-emerald-400">
-              {t("apikeys.keyCreated")}
-            </p>
-            <div className="flex flex-col gap-2 sm:flex-row">
+      {createdKey && (
+        <CreatedKey value={createdKey} onDismiss={() => setCreatedKey(null)} />
+      )}
+
+      {showForm && (
+        <Card className="reveal mb-6 p-4">
+          <form
+            onSubmit={create}
+            className="flex flex-col gap-3 sm:flex-row sm:items-end"
+          >
+            <div className="grid flex-1 gap-1.5">
+              <label htmlFor="apikey-name" className="text-[13px] font-medium">
+                {t("apikeys.nameLabel")}
+              </label>
               <Input
-                readOnly
-                value={createdKey}
-                className="font-mono text-xs"
+                id="apikey-name"
+                ref={inputRef}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={t("apikeys.namePlaceholder")}
+                className="font-mono text-[13px]"
+                onKeyDown={(e) => e.key === "Escape" && setShowForm(false)}
               />
+            </div>
+            <div className="flex gap-2">
               <Button
-                variant="outline"
-                size="icon"
-                className="shrink-0"
-                onClick={() => handleCopy(createdKey)}
-                aria-label={t("apikeys.copyKey")}
+                type="button"
+                variant="ghost"
+                onClick={() => setShowForm(false)}
+                className="flex-1 sm:flex-none"
               >
-                {copied ? (
-                  <Check className="h-4 w-4 text-emerald-400" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
+                {t("apikeys.cancel")}
+              </Button>
+              <Button
+                type="submit"
+                disabled={!name.trim() || createKey.isPending}
+                className="flex-1 sm:flex-none"
+              >
+                {createKey.isPending && <Loader2 className="animate-spin" />}
+                {createKey.isPending
+                  ? t("apikeys.creating")
+                  : t("apikeys.create")}
               </Button>
             </div>
-            <p className="text-muted-foreground text-xs">
-              {t("apikeys.useInGithubActions")}
-            </p>
-            <pre className="bg-muted overflow-x-auto rounded-md p-3 text-xs break-all whitespace-pre-wrap">
-              {`curl -X POST ${APP_URL}/api/v0/deploy \\
-  -H "x-api-key: ${createdKey}" \\
-  -H "Content-Type: application/json" \\
-  -d '{"stack":"mi-stack","action":"redeploy"}'`}
-            </pre>
-          </div>
-        )}
+          </form>
+        </Card>
+      )}
 
-        {showForm && (
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Input
-              value={newKeyName}
-              onChange={(e) => setNewKeyName(e.target.value)}
-              placeholder={t("apikeys.namePlaceholder")}
-              onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-            />
+      {keysQuery.isError ? (
+        <EmptyState
+          tone="danger"
+          icon={ServerCrash}
+          title={t("apikeys.errorLoad")}
+          description={getErrorMessage(keysQuery.error, "")}
+          action={
             <Button
-              className="w-full shrink-0 sm:w-auto"
-              onClick={handleCreate}
+              size="sm"
+              variant="outline"
+              onClick={() => keysQuery.refetch()}
             >
-              {t("apikeys.create")}
+              {t("common.retry")}
             </Button>
-          </div>
-        )}
-
-        {/* Skeleton */}
-        {loading && keys.length === 0 && (
-          <div className="space-y-2">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="border-border flex items-center justify-between rounded-lg border p-3"
-              >
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-28" />
-                  <Skeleton className="h-3 w-40" />
-                  <Skeleton className="h-3 w-20" />
-                </div>
-                <Skeleton className="h-8 w-8 rounded-md" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {keys.length === 0 && !loading && (
-          <p className="text-muted-foreground text-sm">{t("apikeys.empty")}</p>
-        )}
-
-        <div className="space-y-2">
-          {keys.map((k) => (
-            <div
-              key={k.id}
-              className="border-border bg-card flex flex-wrap items-center justify-between gap-3 rounded-lg border p-3"
-            >
-              <div className="min-w-0">
-                <p className="font-medium">{k.name ?? "—"}</p>
-                <p className="text-muted-foreground font-mono text-xs break-all">
-                  {k.start ? `${k.start}...` : k.id}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  {new Intl.DateTimeFormat(i18n.language, {
-                    dateStyle: "short",
-                  }).format(new Date(k.createdAt))}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                {confirmDelete === k.id && (
-                  <span className="text-destructive text-xs">
-                    {t("apikeys.confirmDelete")}
-                  </span>
-                )}
-                <Button
-                  variant={confirmDelete === k.id ? "destructive" : "outline"}
-                  size="icon"
-                  onClick={() => handleDelete(k.id)}
-                  aria-label={
-                    confirmDelete === k.id
-                      ? t("apikeys.confirmDeleteLabel")
-                      : t("apikeys.deleteLabel")
-                  }
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+          }
+        />
+      ) : keysQuery.isLoading ? (
+        <div className="divide-y rounded-xl border">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex items-center gap-3 px-4 py-3">
+              <Skeleton className="size-8" />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton className="h-3.5 w-32" />
+                <Skeleton className="h-3 w-48" />
               </div>
             </div>
           ))}
         </div>
-      </CardContent>
-    </Card>
+      ) : keys.length === 0 ? (
+        !showForm && (
+          <EmptyState
+            icon={KeyRound}
+            title={t("apikeys.empty")}
+            description={t("apikeys.emptyDescription")}
+            action={
+              <Button size="sm" onClick={() => setShowForm(true)}>
+                <Plus />
+                {t("apikeys.new")}
+              </Button>
+            }
+          />
+        )
+      ) : (
+        <Card className="overflow-hidden">
+          <ul className="divide-y">
+            {keys.map((k, i) => (
+              <ApiKeyRow key={k.id} apiKey={k} index={i} />
+            ))}
+          </ul>
+        </Card>
+      )}
+    </div>
   )
 }
 
