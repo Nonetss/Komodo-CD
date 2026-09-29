@@ -46,7 +46,7 @@ export function StackRow({
   const update = hasUpdate(stack)
   const problem = info.project_missing || info.missing_files.length > 0
   const appUrl = useAppUrl()
-  const [curlAction, setCurlAction] = useState<DeployAction>("redeploy")
+  const [curlAction, setCurlAction] = useState<DeployAction>("pull-redeploy")
   const detailsId = `stack-${stack.id}`
   const hasCommit = !!(info.deployed_hash || info.latest_hash)
 

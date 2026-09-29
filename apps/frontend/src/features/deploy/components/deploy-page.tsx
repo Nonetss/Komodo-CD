@@ -37,7 +37,7 @@ const DeployPageContent = () => {
   const errorId = useId()
 
   const [stack, setStack] = useState("")
-  const [action, setAction] = useState<DeployAction>("redeploy")
+  const [action, setAction] = useState<DeployAction>("pull-redeploy")
   const [touched, setTouched] = useState(false)
   const [result, setResult] = useState<Result | null>(null)
 

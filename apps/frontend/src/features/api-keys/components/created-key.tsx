@@ -47,7 +47,7 @@ export function CreatedKey({
         <CodeBlock
           language="shell"
           label="POST /api/v0/deploy"
-          code={buildDeployCurl(appUrl, "mi-stack", "redeploy", value)}
+          code={buildDeployCurl(appUrl, "mi-stack", "pull-redeploy", value)}
         />
       </div>
 
