@@ -37,7 +37,6 @@ export function StackCombobox({
     return [...stacks]
       .sort((a, b) => a.name.localeCompare(b.name))
       .filter((s) => q === "" || s.name.toLowerCase().includes(q))
-      .slice(0, 50)
   }, [stacks, value])
 
   useEffect(() => {
