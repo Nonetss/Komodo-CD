@@ -134,7 +134,11 @@ class KomodoService {
   async listAllStacks() {
     const client = this.ensureClient()
     try {
-      return (await client.read("ListStacks", {})) as Types.StackListItem[]
+      // Komodo v2 pagina `ListStacks` (`default_pagination_limit`, 30 por
+      // defecto) y `limit: 0` devuelve todos. Komodo v1 no pagina e ignora el
+      // campo; los tipos de komodo_client 1.x aún no lo incluyen.
+      const params = { limit: 0 } as Types.ListStacks
+      return (await client.read("ListStacks", params)) as Types.StackListItem[]
     } catch (err) {
       logger.error({ err }, "❌ Failed to list stacks")
       throw err
