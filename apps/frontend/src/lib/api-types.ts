@@ -7,6 +7,9 @@ type Outputs = InferRouterOutputs<AppRouter>["v0"]
 export type DeployAction = Inputs["deploy"]["trigger"]["action"]
 export type Credential = Outputs["credentials"]["list"]["credentials"][number]
 export type SaveCredentialPayload = Inputs["credentials"]["save"]
+export type NtfyConfig = NonNullable<
+  Outputs["credentials"]["ntfy"]["get"]["config"]
+>
 export type HistoryItem = Outputs["history"]["list"]["history"][number]
 export type ApiKey = Outputs["apiKey"]["list"]["keys"][number]
 

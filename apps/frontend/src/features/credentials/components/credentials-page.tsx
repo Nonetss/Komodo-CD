@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ConnectionForm } from "@/features/credentials/components/connection-form"
 import { ConnectionGuide } from "@/features/credentials/components/connection-guide"
 import { ConnectionSummary } from "@/features/credentials/components/connection-summary"
+import { NtfySection } from "@/features/credentials/components/ntfy-section"
 import { useCredentials } from "@/features/credentials/hooks/use-credentials"
 import { getErrorMessage } from "@/lib/orpc"
 import { withIsland } from "@/providers/island"
@@ -81,6 +82,7 @@ const CredentialsPageContent = () => {
       <div className="flex flex-col gap-10">
         <div className="min-w-0">{main}</div>
         <ConnectionGuide />
+        <NtfySection />
       </div>
     </div>
   )
