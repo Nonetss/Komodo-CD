@@ -11,6 +11,9 @@ same actions from CI with an API key.
   action
 - **History**: every action launched from the dashboard or from CI, with who
   ran it and how it ended
+- **Failure alerts**: optional [ntfy](https://ntfy.sh) notifications
+  (ntfy.sh or self-hosted, with an optional access token) whenever a deploy
+  fails
 - **API keys** for pipelines, a single Komodo connection, English and Spanish
   UI, dark and light themes
 
