@@ -38,4 +38,5 @@ export const relations = defineRelations(schema, (r) => ({
     }),
   },
   komodoTable: {},
+  ntfyTable: {},
 }))
