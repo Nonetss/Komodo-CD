@@ -21,3 +21,26 @@ export const credentialsOutput = {
     message: z.string(),
   }),
 }
+
+const result = z.object({
+  success: z.boolean(),
+  message: z.string(),
+})
+
+export const ntfyOutput = {
+  get: z.object({
+    success: z.boolean(),
+    // El token nunca sale del backend: solo si hay uno guardado
+    config: z
+      .object({
+        url: z.string(),
+        topic: z.string(),
+        hasToken: z.boolean(),
+        enabled: z.boolean(),
+      })
+      .nullable(),
+  }),
+  save: result,
+  remove: result,
+  test: result,
+}
