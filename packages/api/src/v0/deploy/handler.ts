@@ -6,6 +6,7 @@ import type { z } from "zod"
 
 import { errors } from "#errors"
 import { komodoErrorMessage, komodoService } from "#lib/komodo"
+import { ntfyService } from "#lib/ntfy"
 import type { deployInput } from "#v0/deploy/input"
 
 async function saveHistory(
@@ -57,6 +58,12 @@ export const deployHandler = {
       const message = komodoErrorMessage(err)
       logger.error({ err }, `❌ Error en deploy — stack: ${stack}`)
       await saveHistory(user, stack, action, false, message)
+      await ntfyService.notifyDeployFailure({
+        stack,
+        action,
+        message,
+        user: user.name || user.email || user.id,
+      })
 
       throw errors.INTERNAL_SERVER_ERROR({ message, cause: err })
     }
