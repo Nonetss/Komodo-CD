@@ -30,3 +30,8 @@ compose*.yml
 img
 *.md
 scripts
+
+# La web del proyecto (GitHub Pages) no va en ninguna imagen: solo su
+# package.json, que `bun install --frozen-lockfile` necesita como workspace.
+apps/site
+!apps/site/package.json
