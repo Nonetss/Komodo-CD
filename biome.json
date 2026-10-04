@@ -16,6 +16,7 @@
       "!!.github/skills",
       "!!**/modern-screenshot.umd.js",
       "!apps/frontend/public",
+      "!apps/site/public",
       "!**/migrations/**/snapshot.json"
     ]
   },
