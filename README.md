@@ -4,6 +4,8 @@ A small continuous-deployment dashboard on top of [Komodo](https://komo.do):
 see the state of every stack, pull or redeploy them by hand, and trigger the
 same actions from CI with an API key.
 
+**Website and docs:** [nonetss.github.io/Komodo-CD](https://nonetss.github.io/Komodo-CD/)
+
 - **Stacks**: state, services and images of every stack, with search and
   filters (running, stopped, with issues) and one-click Pull, Redeploy or
   Pull + Redeploy
@@ -23,6 +25,7 @@ Monorepo (Turborepo + Bun workspaces), plus the production deployment using imag
 | ------------ | -------------------------------- | ---------------------------------------------- |
 | **Backend**  | [`apps/backend`](apps/backend)   | Bun + Hono (thin server: auth, oRPC, OpenAPI)  |
 | **Frontend** | [`apps/frontend`](apps/frontend) | Astro 7 (SSR) + React + TanStack Query + Caddy |
+| **Site**     | [`apps/site`](apps/site)         | Astro 7 (static), published to GitHub Pages    |
 
 | Package             | Description                                                      |
 | ------------------- | ---------------------------------------------------------------- |
@@ -244,6 +247,7 @@ cp apps/backend/.env.example apps/backend/.env   # SQLite: DATABASE_URL=file:./d
 bun run dev            # backend (:3000) + frontend (:4321) with turbo watch
 bun run dev:backend    # only backend
 bun run dev:frontend   # only frontend
+bun run site           # project website (:4322)
 ```
 
 | Script                  | Description                                       |
