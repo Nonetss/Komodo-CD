@@ -30,6 +30,8 @@
   --terminal-fg: oklch(0.95 0.006 250);
   --terminal-muted: oklch(0.72 0.018 255);
   --terminal-subtle: oklch(0.55 0.016 255);
+  /* El acento sobre superficie terminal: el azul del tema oscuro de la app */
+  --terminal-accent: oklch(0.7 0.14 254);
 
   --header-height: 3.6rem;
   color-scheme: light;
@@ -78,6 +80,7 @@
   --color-terminal-fg: var(--terminal-fg);
   --color-terminal-muted: var(--terminal-muted);
   --color-terminal-subtle: var(--terminal-subtle);
+  --color-terminal-accent: var(--terminal-accent);
 
   /* Variables generadas por la Fonts API de Astro (astro.config.mjs) */
   --font-sans: var(--font-grotesk);
