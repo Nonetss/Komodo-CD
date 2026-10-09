@@ -1,0 +1,483 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-09T14:56:04+00:00",
+  "title": "Design System: Komodo CD",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 100)",
+          "oklch(0.25 0 100)",
+          "oklch(0.35 0 100)",
+          "oklch(0.45 0 100)",
+          "oklch(0.55 0 100)",
+          "oklch(0.65 0 100)",
+          "oklch(0.80 0 100)",
+          "oklch(0.95 0 100)"
+        ]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Ink",
+        "canonical": "oklch(0.17 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 100)",
+          "oklch(0.25 0 100)",
+          "oklch(0.35 0 100)",
+          "oklch(0.45 0 100)",
+          "oklch(0.55 0 100)",
+          "oklch(0.65 0 100)",
+          "oklch(0.80 0 100)",
+          "oklch(0.95 0 100)"
+        ]
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "Wash",
+        "canonical": "oklch(0.965 0.004 100)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 100)",
+          "oklch(0.25 0.004 100)",
+          "oklch(0.35 0.004 100)",
+          "oklch(0.45 0.004 100)",
+          "oklch(0.55 0.004 100)",
+          "oklch(0.65 0.004 100)",
+          "oklch(0.80 0.004 100)",
+          "oklch(0.95 0.004 100)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(0.915 0.005 100)",
+        "tonalRamp": [
+          "oklch(0.15 0.005 100)",
+          "oklch(0.25 0.005 100)",
+          "oklch(0.35 0.005 100)",
+          "oklch(0.45 0.005 100)",
+          "oklch(0.55 0.005 100)",
+          "oklch(0.65 0.005 100)",
+          "oklch(0.80 0.005 100)",
+          "oklch(0.95 0.005 100)"
+        ]
+      },
+      "field-rule": {
+        "role": "neutral",
+        "displayName": "Field Rule",
+        "canonical": "oklch(0.8 0.006 100)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 100)",
+          "oklch(0.25 0.006 100)",
+          "oklch(0.35 0.006 100)",
+          "oklch(0.45 0.006 100)",
+          "oklch(0.55 0.006 100)",
+          "oklch(0.65 0.006 100)",
+          "oklch(0.80 0.006 100)",
+          "oklch(0.95 0.006 100)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "oklch(0.48 0.006 100)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 100)",
+          "oklch(0.25 0.006 100)",
+          "oklch(0.35 0.006 100)",
+          "oklch(0.45 0.006 100)",
+          "oklch(0.55 0.006 100)",
+          "oklch(0.65 0.006 100)",
+          "oklch(0.80 0.006 100)",
+          "oklch(0.95 0.006 100)"
+        ]
+      },
+      "signal": {
+        "role": "secondary",
+        "displayName": "Signal Orange",
+        "canonical": "oklch(0.553 0.195 38.4)",
+        "tonalRamp": [
+          "oklch(0.15 0.195 38.4)",
+          "oklch(0.25 0.195 38.4)",
+          "oklch(0.35 0.195 38.4)",
+          "oklch(0.45 0.195 38.4)",
+          "oklch(0.55 0.195 38.4)",
+          "oklch(0.65 0.195 38.4)",
+          "oklch(0.80 0.195 38.4)",
+          "oklch(0.95 0.195 38.4)"
+        ]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Go Green",
+        "canonical": "oklch(0.527 0.154 150)",
+        "tonalRamp": [
+          "oklch(0.15 0.154 150)",
+          "oklch(0.25 0.154 150)",
+          "oklch(0.35 0.154 150)",
+          "oklch(0.45 0.154 150)",
+          "oklch(0.55 0.154 150)",
+          "oklch(0.65 0.154 150)",
+          "oklch(0.80 0.154 150)",
+          "oklch(0.95 0.154 150)"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Caution Amber",
+        "canonical": "oklch(0.554 0.135 66)",
+        "tonalRamp": [
+          "oklch(0.15 0.135 66)",
+          "oklch(0.25 0.135 66)",
+          "oklch(0.35 0.135 66)",
+          "oklch(0.45 0.135 66)",
+          "oklch(0.55 0.135 66)",
+          "oklch(0.65 0.135 66)",
+          "oklch(0.80 0.135 66)",
+          "oklch(0.95 0.135 66)"
+        ]
+      },
+      "info": {
+        "role": "tertiary",
+        "displayName": "Link Blue",
+        "canonical": "oklch(0.546 0.2 263)",
+        "tonalRamp": [
+          "oklch(0.15 0.2 263)",
+          "oklch(0.25 0.2 263)",
+          "oklch(0.35 0.2 263)",
+          "oklch(0.45 0.2 263)",
+          "oklch(0.55 0.2 263)",
+          "oklch(0.65 0.2 263)",
+          "oklch(0.80 0.2 263)",
+          "oklch(0.95 0.2 263)"
+        ]
+      },
+      "code-slab": {
+        "role": "neutral",
+        "displayName": "Code Slab",
+        "canonical": "oklch(0.17 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 100)",
+          "oklch(0.25 0 100)",
+          "oklch(0.35 0 100)",
+          "oklch(0.45 0 100)",
+          "oklch(0.55 0 100)",
+          "oklch(0.65 0 100)",
+          "oklch(0.80 0 100)",
+          "oklch(0.95 0 100)"
+        ]
+      },
+      "signal-dark": {
+        "role": "secondary",
+        "displayName": "Signal Orange (dark)",
+        "canonical": "oklch(0.75 0.17 52)",
+        "tonalRamp": [
+          "oklch(0.15 0.17 52)",
+          "oklch(0.25 0.17 52)",
+          "oklch(0.35 0.17 52)",
+          "oklch(0.45 0.17 52)",
+          "oklch(0.55 0.17 52)",
+          "oklch(0.65 0.17 52)",
+          "oklch(0.80 0.17 52)",
+          "oklch(0.95 0.17 52)"
+        ]
+      },
+      "ink-dark": {
+        "role": "primary",
+        "displayName": "Ink (dark)",
+        "canonical": "oklch(0.955 0.005 100)",
+        "tonalRamp": [
+          "oklch(0.15 0.005 100)",
+          "oklch(0.25 0.005 100)",
+          "oklch(0.35 0.005 100)",
+          "oklch(0.45 0.005 100)",
+          "oklch(0.55 0.005 100)",
+          "oklch(0.65 0.005 100)",
+          "oklch(0.80 0.005 100)",
+          "oklch(0.95 0.005 100)"
+        ]
+      },
+      "paper-dark": {
+        "role": "neutral",
+        "displayName": "Night Paper",
+        "canonical": "oklch(0.165 0.002 100)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 100)",
+          "oklch(0.25 0.002 100)",
+          "oklch(0.35 0.002 100)",
+          "oklch(0.45 0.002 100)",
+          "oklch(0.55 0.002 100)",
+          "oklch(0.65 0.002 100)",
+          "oklch(0.80 0.002 100)",
+          "oklch(0.95 0.002 100)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page title, one per page, Archivo 900 at width 125."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Numbered section titles."
+      },
+      "stat": {
+        "displayName": "Stat",
+        "purpose": "Figures in the count strip."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Row names and panel titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose and the default for unstyled text."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Descriptions and hints, muted."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Mono caps for labels, nav, counters and status words."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Mono for ids, hashes, URLs and curl snippets."
+      }
+    },
+    "shadows": [
+      {
+        "name": "popover-lift",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "purpose": "Combobox list (1.5px ink border plus shadow-md)."
+      },
+      {
+        "name": "float-lift",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Toasts and the sticky bulk-action bar (shadow-lg), always with a 1.5px ink border. Nothing else casts a shadow."
+      },
+      {
+        "name": "nav-active-underline",
+        "value": "inset 0 -2px 0 var(--signal)",
+        "purpose": "The 2px Signal underline of the active top-nav link, drawn on the bar rule."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 2px var(--background), 0 0 0 4px var(--signal)",
+        "purpose": "Visible keyboard focus on buttons: 2px Signal ring with a 2px paper offset."
+      }
+    ],
+    "motion": [
+      {
+        "name": "colour-transition",
+        "value": "150ms ease (Tailwind transition-colors)",
+        "purpose": "Hover and state colour changes on controls and rows."
+      },
+      {
+        "name": "page-fade",
+        "value": "fade 0.2s (Astro view transitions)",
+        "purpose": "The page content fades between navigations; top and bottom bars switch instantly."
+      },
+      {
+        "name": "theme-reveal",
+        "value": "circular view transition, ease-in-out",
+        "purpose": "Theme toggle reveals the new theme in a circle from the toggle."
+      },
+      {
+        "name": "work-in-progress",
+        "value": "animate-pulse / animate-spin",
+        "purpose": "Only for an action in progress (dot pulse, spinner)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink on paper; the default action.",
+      "html": "<button class=\"ds-btn-primary\">Save changes</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:var(--foreground, oklch(0.17 0 0));color:var(--background, oklch(1 0 0));border:1.5px solid var(--foreground, oklch(0.17 0 0));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-primary:hover{opacity:.85}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(1 0 0)),0 0 0 4px var(--signal, oklch(0.553 0.195 38.4))}"
+    },
+    {
+      "name": "Signal Button",
+      "kind": "button",
+      "refersTo": "button-signal",
+      "description": "The single action that launches a deploy.",
+      "html": "<button class=\"ds-btn-signal\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z\"/><path d=\"m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z\"/></svg>Redeploy</button>",
+      "css": ".ds-btn-signal{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:8px 16px;background:var(--signal, oklch(0.553 0.195 38.4));color:var(--background, oklch(1 0 0));border:1.5px solid var(--signal, oklch(0.553 0.195 38.4));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-signal:hover{opacity:.9}.ds-btn-signal:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(1 0 0)),0 0 0 4px var(--signal, oklch(0.553 0.195 38.4))}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action; inverts to ink on hover.",
+      "html": "<button class=\"ds-btn-outline\">Pull</button>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:transparent;color:var(--foreground, oklch(0.17 0 0));border:1.5px solid var(--foreground, oklch(0.17 0 0));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-btn-outline:hover{background:var(--foreground, oklch(0.17 0 0));color:var(--background, oklch(1 0 0))}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(1 0 0)),0 0 0 4px var(--signal, oklch(0.553 0.195 38.4))}"
+    },
+    {
+      "name": "Underlined Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Only the bottom rule; it turns Signal on focus.",
+      "html": "<input class=\"ds-input\" placeholder=\"Search stacks\" />",
+      "css": ".ds-input{width:100%;height:40px;padding:4px 0;background:transparent;color:var(--foreground, oklch(0.17 0 0));border:0;border-bottom:1.5px solid var(--foreground, oklch(0.17 0 0));border-radius:0;font:400 14px Archivo, ui-sans-serif, system-ui, sans-serif;outline:none;transition:border-color .15s}.ds-input::placeholder{color:var(--muted-foreground, oklch(0.48 0.006 100))}.ds-input:focus-visible{border-bottom-color:var(--signal, oklch(0.553 0.195 38.4))}"
+    },
+    {
+      "name": "Top Nav",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Mono-caps links; the active one gets a 2px Signal underline on the bar rule.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"ds-nav-link ds-active\">Overview</a><a href=\"#\" class=\"ds-nav-link\">Stacks</a><a href=\"#\" class=\"ds-nav-link\">History</a></nav>",
+      "css": ".ds-nav{display:flex;gap:24px;height:56px;border-bottom:1.5px solid var(--foreground, oklch(0.17 0 0))}.ds-nav-link{display:flex;align-items:center;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.48 0.006 100));text-decoration:none;transition:color .15s}.ds-nav-link:hover{color:var(--foreground, oklch(0.17 0 0))}.ds-nav-link.ds-active{color:var(--foreground, oklch(0.17 0 0));box-shadow:inset 0 -2px 0 var(--signal, oklch(0.553 0.195 38.4))}.ds-nav-link:focus-visible{outline:2px solid var(--signal, oklch(0.553 0.195 38.4))}"
+    },
+    {
+      "name": "Filter Tabs",
+      "kind": "chip",
+      "refersTo": "nav-link",
+      "description": "Segmented filter: ink label, Signal underline for the chosen one, a count after.",
+      "html": "<div class=\"ds-seg\"><span class=\"ds-seg-o ds-on\">All <b>12</b></span><span class=\"ds-seg-o\">Running <b>9</b></span><span class=\"ds-seg-o\">Stopped <b>1</b></span><span class=\"ds-seg-o\">Problems <b class=\"ds-alert\">2</b></span></div>",
+      "css": ".ds-seg{display:flex;flex-wrap:wrap;gap:4px 16px}.ds-seg-o{position:relative;display:flex;align-items:center;gap:6px;height:36px;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.48 0.006 100));cursor:pointer}.ds-seg-o b{font-weight:500;font-variant-numeric:tabular-nums}.ds-seg-o b.ds-alert{color:var(--signal, oklch(0.553 0.195 38.4))}.ds-seg-o::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent}.ds-seg-o.ds-on{color:var(--foreground, oklch(0.17 0 0))}.ds-seg-o.ds-on::after{background:var(--signal, oklch(0.553 0.195 38.4))}"
+    },
+    {
+      "name": "Stack List Row",
+      "kind": "custom",
+      "refersTo": "list-row",
+      "description": "Signature row: dot, name, one marker, service count. The open row inverts to ink.",
+      "html": "<ul class=\"ds-rows\"><li class=\"ds-row ds-open\"><span class=\"ds-dot\" style=\"background:var(--success,oklch(0.527 0.154 150))\"></span><span class=\"ds-name\">api-gateway</span><span class=\"ds-n\">4</span></li><li class=\"ds-row\"><span class=\"ds-dot\" style=\"background:var(--success,oklch(0.527 0.154 150))\"></span><span class=\"ds-name\">worker</span><span class=\"ds-mark\">Update</span><span class=\"ds-n\">2</span></li><li class=\"ds-row\"><span class=\"ds-dot ds-ring\"></span><span class=\"ds-name\">staging-db</span><span class=\"ds-n\">1</span></li></ul>",
+      "css": ".ds-rows{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--border, oklch(0.915 0.005 100))}.ds-row{display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;border-top:1px solid var(--border, oklch(0.915 0.005 100));background:var(--background, oklch(1 0 0));color:var(--foreground, oklch(0.17 0 0));font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;transition:background-color .15s}.ds-row:hover{background:var(--muted, oklch(0.965 0.004 100))}.ds-row.ds-open{background:var(--foreground, oklch(0.17 0 0));color:var(--background, oklch(1 0 0))}.ds-dot{width:8px;height:8px;border-radius:9999px;flex:none}.ds-ring{box-shadow:inset 0 0 0 1.5px var(--muted-foreground, oklch(0.48 0.006 100))}.ds-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-mark{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--signal, oklch(0.553 0.195 38.4))}.ds-n{width:20px;text-align:right;font:400 12px 'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums;opacity:.7}"
+    },
+    {
+      "name": "Status Tag",
+      "kind": "chip",
+      "refersTo": "nav-link",
+      "description": "8px dot plus a mono-caps word; colour only on the dot, or on the word when attention is needed.",
+      "html": "<span class=\"ds-tag\"><i class=\"ds-d\" style=\"background:var(--success,oklch(0.527 0.154 150))\"></i>Running</span> <span class=\"ds-tag ds-bad\"><i class=\"ds-d\" style=\"background:var(--signal,oklch(0.553 0.195 38.4))\"></i>Unhealthy</span>",
+      "css": ".ds-tag{display:inline-flex;align-items:center;gap:8px;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.48 0.006 100));white-space:nowrap}.ds-tag.ds-bad{color:var(--signal, oklch(0.553 0.195 38.4))}.ds-d{width:8px;height:8px;border-radius:9999px}"
+    },
+    {
+      "name": "Count Strip",
+      "kind": "custom",
+      "refersTo": "list-row",
+      "description": "Rule on the left, hairline-separated cells: mono label above, stat figure below.",
+      "html": "<dl class=\"ds-strip\"><div><dt>Running</dt><dd>9</dd></div><div><dt class=\"ds-s\">Problems</dt><dd class=\"ds-s\">2</dd></div><div><dt>Total</dt><dd class=\"ds-m\">12</dd></div></dl>",
+      "css": ".ds-strip{display:flex;margin:0;border-left:1.5px solid var(--foreground, oklch(0.17 0 0))}.ds-strip>div{display:flex;flex-direction:column;gap:8px;padding:0 20px;border-right:1px solid var(--border, oklch(0.915 0.005 100))}.ds-strip>div:last-child{border-right:0}.ds-strip dt{font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.48 0.006 100))}.ds-strip dd{margin:0;font:800 36px/1 Archivo, ui-sans-serif, system-ui, sans-serif;font-variation-settings:'wdth' 112;font-variant-numeric:tabular-nums}.ds-strip .ds-s{color:var(--signal, oklch(0.553 0.195 38.4))}.ds-strip .ds-m{color:var(--muted-foreground, oklch(0.48 0.006 100))}"
+    },
+    {
+      "name": "Section Header",
+      "kind": "custom",
+      "refersTo": "nav-link",
+      "description": "Numbered section title resting on the 1.5px ink rule.",
+      "html": "<div class=\"ds-sec\"><span class=\"ds-num\">01</span><h2>Services</h2><span class=\"ds-note\">4 services</span></div>",
+      "css": ".ds-sec{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;padding-bottom:12px;border-bottom:1.5px solid var(--foreground, oklch(0.17 0 0))}.ds-sec h2{flex:1;margin:0;font:800 24px/1.15 Archivo, ui-sans-serif, system-ui, sans-serif;font-variation-settings:'wdth' 112;letter-spacing:-.02em}.ds-num{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;color:var(--signal, oklch(0.553 0.195 38.4))}.ds-note{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.48 0.006 100))}"
+    },
+    {
+      "name": "Code Block",
+      "kind": "custom",
+      "refersTo": "code-block",
+      "description": "Always-dark slab under a rule bar with a Copy button.",
+      "html": "<div class=\"ds-code\"><div class=\"ds-bar\"><span>POST /api/v0/deploy · redeploy</span><button>Copy</button></div><pre><code>curl -X POST https://cd.example.com/api/v0/deploy \\\n  -H \"x-api-key: $KEY\"</code></pre></div>",
+      "css": ".ds-code .ds-bar{display:flex;align-items:center;justify-content:space-between;min-height:36px;border-bottom:1.5px solid var(--foreground, oklch(0.17 0 0));font:400 12px 'JetBrains Mono', ui-monospace, monospace;color:var(--muted-foreground, oklch(0.48 0.006 100))}.ds-code button{background:transparent;border:0;color:var(--muted-foreground, oklch(0.48 0.006 100));font:600 12px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;height:24px;padding:0 8px}.ds-code button:hover{background:var(--muted, oklch(0.965 0.004 100));color:var(--foreground, oklch(0.17 0 0))}.ds-code pre{margin:0;padding:16px 20px;overflow-x:auto;background:oklch(0.17 0 0);color:oklch(0.95 0.004 100);font:400 12px/24px 'JetBrains Mono', ui-monospace, monospace}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Operations Bulletin",
+    "overview": "Komodo CD looks like a printed operations bulletin: a sheet of paper, black ink, and heavy rules that open each page and each section the way a bulletin's mastheads do. Nothing is boxed. Hairlines separate rows, a thick ink rule closes every header, and the page reads top to bottom like a report handed over at the end of a shift. It is built for someone who arrives after a push, a failed deploy or an ntfy alert, often on a phone, and wants to know in one glance what is wrong and what to press.\n\nColour is rationed. The whole interface is ink on paper (paper on ink in the dark theme), and a single orange, Signal Orange, marks what needs action or orientation: a problem, an available update, the action that deploys something new, the active item. Because it appears so rarely, it is read at once. State never floods a surface; it lives in an 8px dot and in the word beside it.\n\nType does the composing. Archivo in a wide, heavy cut gives titles the weight of a masthead, while JetBrains Mono in small caps carries labels, counters and every technical value, so facts feel like entries in a log. Corners are square everywhere, there are no shadows at rest, and no card has a background; structure comes from lines and from the rhythm of the type scale.",
+    "keyCharacteristics": [
+      "Paper and ink with one accent, Signal Orange, used only for what needs action or marks the current place.",
+      "Rules instead of containers: a 1.5px ink rule opens and closes blocks, 1px hairlines divide what is inside them.",
+      "Square corners (radius 0) on every control, panel and badge; only status dots are round.",
+      "Archivo (wide and heavy for titles) paired with JetBrains Mono caps for labels and data.",
+      "Both themes are first-class; secondary text passes 4.5:1 on its background in each.",
+      "Dense but calm: 44px rows, short scannable lines, and the primary action always one click away."
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "Signal Orange only appears where the reader needs to act or know where they are: a problem, an update, the deploy action, the current page. If two things on a screen are orange and neither needs action, one of them is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dot-and-Word Rule",
+        "body": "State colour (green, amber, blue, orange) lives only in the 8px dot and in the status word beside it. Never fill a row, badge or panel with a state colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Inversion Rule",
+        "body": "Dark theme swaps ink and paper; it does not add a new palette. Accent and state tones lighten, they do not change hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Role-Not-Size Rule",
+        "body": "Type is chosen by role (display, section, stat, headline, body, meta, label, data), through the shared `Text` component, never by composing size, weight and tracking locally. A new text is one of the existing roles or the scale gets a new role.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono-for-Facts Rule",
+        "body": "Anything that is a value rather than a sentence (counts, ids, hashes, URLs, status words) is JetBrains Mono, tabular, with ligatures off. Prose never is.",
+        "section": "typography"
+      },
+      {
+        "name": "The Rule-Not-Box Rule",
+        "body": "Group with a 1.5px ink rule on top and a hairline underneath. Do not add a background, border or shadow to make a block look like a card.",
+        "section": "layout"
+      },
+      {
+        "name": "The Thumb Rule",
+        "body": "Every control that matters in an incident must be reachable and tappable on a phone: 44px minimum targets, primary navigation at the bottom, no hover-only affordances.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces are flat at rest and have no shadow. A shadow is allowed only for something that floats above the page (a popover list, a toast, the sticky bulk bar), always with the 1.5px ink border, never to make a panel look raised.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Invert-To-Select Rule",
+        "body": "The selected row inverts to ink background with paper text (and a Signal checkbox); selection is shown by inversion and by `aria-current`, not by a tint or border.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** build every block with a 1.5px ink top rule and 1px hairlines inside; let rules, not boxes, carry the structure.",
+      "**Do** spend Signal Orange only on what needs action, marks the current place, or launches a deploy; keep it to a few marks per screen.",
+      "**Do** choose type through the `Text` roles (display, section, stat, headline, body, meta, label, data) and set every value, id, count and status word in JetBrains Mono.",
+      "**Do** keep radius at 0 and strokes at 1.5px (rules and outlines) or 1px (hairlines).",
+      "**Do** give state as an 8px dot plus a word; show a failure or missing Komodo connection as an explicit state card with the next step.",
+      "**Do** keep both themes and both languages at parity, with secondary text at 4.5:1 or better.",
+      "**Do** keep 44px touch targets and put primary navigation at the bottom on phones.",
+      "**Do** compose the shared pieces (`PageHero`, `SectionHeader`, `StatStrip`, `Panel`, `StateCard`, `Segmented`, `CodeBlock`, `Button` with `icon` and `loading`) before writing a new one."
+    ],
+    "donts": [
+      "**Don't** wrap content in rounded, shadowed or tinted cards; a panel is a rule, not a container.",
+      "**Don't** fill rows, badges or alerts with state colours; no green, amber or red backgrounds.",
+      "**Don't** introduce another accent colour, a gradient, or a hard-coded colour, radius or font; use the tokens in `global.css`.",
+      "**Don't** use a generic SaaS metrics dashboard pattern: a grid of identical tiles with decorative KPIs.",
+      "**Don't** set text under 11px or hide meaning in colour alone; a state always has a word or an accessible name.",
+      "**Don't** use hover as the only way to reveal an action, and don't ship a layout that needs horizontal scrolling on a phone.",
+      "**Don't** add decorative motion; use the 0.2s page fade, colour transitions on controls and the circular theme reveal, and a pulse or spinner only for work in progress."
+    ]
+  }
+}
