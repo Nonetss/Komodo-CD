@@ -5,7 +5,9 @@ import { cn } from "@/lib/utils"
 
 /**
  * Cabecera de toda página: el título en rol `display`, la descripción y, a la
- * derecha, recuentos, estado y una única acción. Cierra con el trazo grueso.
+ * derecha, recuentos, estado y una única acción. Con `toolbar` (buscador,
+ * filtros), los recuentos bajan a una fila propia y la toolbar ocupa su
+ * izquierda en vez de dejar el hueco vacío. Cierra con el trazo grueso.
  */
 export function PageHero({
   title,
@@ -13,6 +15,7 @@ export function PageHero({
   meta,
   status,
   action,
+  toolbar,
   className,
 }: {
   title: ReactNode
@@ -20,9 +23,18 @@ export function PageHero({
   meta?: ReactNode
   status?: ReactNode
   action?: ReactNode
+  toolbar?: ReactNode
   className?: string
 }) {
   const rightItemCount = [meta, status, action].filter(Boolean).length
+  const right =
+    rightItemCount > 0 ? (
+      <div className="flex min-w-0 flex-wrap items-end gap-x-6 gap-y-4 sm:ml-auto sm:justify-end">
+        {meta}
+        {status}
+        {action}
+      </div>
+    ) : null
 
   return (
     <header
@@ -46,13 +58,14 @@ export function PageHero({
           </Text>
         ) : null}
       </div>
-      {rightItemCount > 0 ? (
-        <div className="flex min-w-0 flex-wrap items-end gap-x-6 gap-y-4 sm:ml-auto sm:justify-end">
-          {meta}
-          {status}
-          {action}
+      {toolbar ? (
+        <div className="flex w-full flex-wrap items-end gap-x-6 gap-y-5 sm:basis-full">
+          <div className="min-w-0 flex-1 basis-60">{toolbar}</div>
+          {right}
         </div>
-      ) : null}
+      ) : (
+        right
+      )}
     </header>
   )
 }
