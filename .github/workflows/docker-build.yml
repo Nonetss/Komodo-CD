@@ -102,7 +102,7 @@ jobs:
       # son los nombres que publicaban los repos separados.
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository_owner }}/komodo-cd-${{ matrix.name }}
           # main -> latest, main, main-<sha>; tag v1.2.3 -> 1.2.3, 1.2.
@@ -116,7 +116,7 @@ jobs:
 
       # El contexto es la raíz del monorepo (bun.lock y workspaces viven ahí).
       - name: Build and push ${{ matrix.name }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ${{ matrix.dockerfile }}
