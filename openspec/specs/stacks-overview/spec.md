@@ -79,7 +79,8 @@ The detail pane SHALL show the stack named in the URL:
 - the problem message (missing project, or the list of missing files) when there is one;
 - for a stack backed by a git repository, the deployed commit and the latest commit, the latter marked when it differs (Komodo gives no commits for other stacks, so they are omitted);
 - a table with every service: its name, its image reference (registry dimmed, name, tag or a shortened digest; the full reference in the tooltip) and whether a newer image is available;
-- the CI `curl` snippet with a selector for the action.
+- the CI `curl` snippet with a selector for the action;
+- a last section to delete the stack from Komodo (see "Delete a stack").
 
 When the name in the URL matches no stack of `v0.stacks.list`, the detail pane SHALL show a not-found state with a link to `/stacks`.
 
@@ -198,3 +199,19 @@ The outcome of an action started from this page SHALL be reported with a success
 - **WHEN** `/stacks/web` is open and a pipeline triggers a redeploy of `web`
 - **THEN** the redeploy button of `web` SHALL show a spinner, its action buttons SHALL be disabled and its list item SHALL show the running indicator until the deploy finishes, and then the stacks list SHALL be refreshed without a toast
 
+
+### Requirement: Delete a stack
+
+The system SHALL expose `v0.stacks.remove` as a `sessionProcedure` (`DELETE /api/v0/stacks/{stack}`, tag `Stacks`) that calls Komodo's `DeleteStack` with the stack name and returns `{ success, stack, message }`. Komodo errors SHALL become `502` and a missing connection `503` (`toKomodoError`).
+
+The detail pane SHALL end with a section to delete the open stack from Komodo, explaining that Komodo takes the containers down first when the stack is running and that it cannot be undone. Its button SHALL ask for confirmation with a second click and SHALL be disabled while an action runs on the stack. On success the page SHALL navigate to `/stacks`, refresh the stacks query and show a success toast; on failure it SHALL stay on the stack and show an error toast with the backend message.
+
+#### Scenario: Delete from the detail pane
+
+- **WHEN** the user opens `/stacks/web`, clicks delete and clicks again to confirm
+- **THEN** the page SHALL call `v0.stacks.remove` with `{ stack: "web" }`, navigate to `/stacks` and `web` SHALL no longer be listed
+
+#### Scenario: CI cannot delete a stack
+
+- **WHEN** a request authenticated with `x-api-key` calls `DELETE /api/v0/stacks/web`
+- **THEN** the system SHALL answer `403` without calling Komodo

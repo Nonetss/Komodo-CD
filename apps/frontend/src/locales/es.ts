@@ -99,6 +99,12 @@ export default {
     updateTag: "update",
     deployed: "Desplegado",
     latestCommit: "Último commit",
+    deleteTitle: "Eliminar de Komodo",
+    deleteHint:
+      "Borra el stack en Komodo; si está en marcha, Komodo baja antes sus contenedores. No se puede deshacer.",
+    deleteLabel: "Eliminar {{name}} de Komodo",
+    deleted: "{{name}} eliminado de Komodo",
+    errorDelete: "No se pudo eliminar el stack",
     count: {
       running: "running",
       total: "total",

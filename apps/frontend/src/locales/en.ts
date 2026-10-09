@@ -101,6 +101,12 @@ export default {
     updateTag: "update",
     deployed: "Deployed",
     latestCommit: "Latest commit",
+    deleteTitle: "Delete from Komodo",
+    deleteHint:
+      "Deletes the stack in Komodo; if it is running, Komodo takes its containers down first. This cannot be undone.",
+    deleteLabel: "Delete {{name}} from Komodo",
+    deleted: "{{name}} deleted from Komodo",
+    errorDelete: "Couldn't delete the stack",
     count: {
       running: "running",
       total: "total",
