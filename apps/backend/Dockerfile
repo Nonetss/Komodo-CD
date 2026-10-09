@@ -1,6 +1,9 @@
 # Build context: raíz del monorepo
 #   docker build -f apps/backend/Dockerfile .
-FROM oven/bun:1 AS base
+# Igual que `packageManager` en el package.json raíz: mantenlos sincronizados
+ARG BUN_VERSION=1.4.0
+
+FROM oven/bun:${BUN_VERSION} AS base
 WORKDIR /app
 
 # ── Dependencias ────────────────────────────────────────────────────────────
@@ -24,7 +27,8 @@ RUN --mount=type=cache,target=/root/.bun/install/cache \
 # ── Imagen final ─────────────────────────────────────────────────────────────
 # Bun ejecuta TypeScript directamente: se copian las fuentes del backend y de
 # los paquetes del workspace (incluidas las migraciones de packages/db).
-FROM base AS release
+FROM oven/bun:${BUN_VERSION}-slim AS release
+WORKDIR /app
 # Con el linker "isolated", los node_modules de cada workspace son symlinks a
 # /app/node_modules/.bun, así que se copia todo manteniendo el layout.
 COPY --from=install /app/node_modules node_modules

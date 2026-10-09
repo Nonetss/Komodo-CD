@@ -1,6 +1,9 @@
 # Build context: raíz del monorepo
 #   docker build -f apps/frontend/Dockerfile .
-FROM oven/bun:1 AS builder
+# Igual que `packageManager` en el package.json raíz: mantenlos sincronizados
+ARG BUN_VERSION=1.4.0
+
+FROM oven/bun:${BUN_VERSION} AS builder
 WORKDIR /app
 
 # Solo manifests: la capa de install queda cacheada hasta que cambie un
@@ -27,7 +30,7 @@ ENV NODE_ENV=production
 RUN cd apps/frontend && bun run build
 
 # ── Imagen final ─────────────────────────────────────────────────────────────
-FROM oven/bun:1-slim
+FROM oven/bun:${BUN_VERSION}-slim
 WORKDIR /app
 ENV NODE_ENV=production
 
