@@ -1,5 +1,5 @@
 import { Layers, RefreshCw, Search, ServerCrash, X } from "lucide-react"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { SoftCardList } from "@/components/shared/data-display/soft-card-list"
@@ -11,7 +11,9 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ACTION_I18N, useDeployTrigger } from "@/features/deploy"
 import { StackRow } from "@/features/stacks/components/stack-row"
+import { StacksBulkBar } from "@/features/stacks/components/stacks-bulk-bar"
 import { useStacks } from "@/features/stacks/hooks/use-stacks"
+import { BULK_CONCURRENCY, runPool } from "@/features/stacks/model/run-pool"
 import { inGroup, type StackGroup } from "@/features/stacks/model/stack-groups"
 import type { DeployAction, Stack } from "@/lib/api-types"
 import { getErrorMessage } from "@/lib/orpc"
@@ -34,9 +36,21 @@ const StacksPageContent = () => {
   const [search, setSearch] = useState("")
   const [group, setGroup] = useState<StackGroup>("all")
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
+  const [selected, setSelected] = useState<Set<string>>(new Set())
   const [pending, setPending] = useState<Record<string, DeployAction | null>>(
     {}
   )
+  const [bulkAction, setBulkAction] = useState<DeployAction | null>(null)
+
+  // Un stack que ya no existe en Komodo sale de la selección
+  useEffect(() => {
+    if (!stacksQuery.isSuccess) return
+    const names = new Set(stacks.map((s) => s.name))
+    setSelected((prev) => {
+      const next = new Set([...prev].filter((n) => names.has(n)))
+      return next.size === prev.size ? prev : next
+    })
+  }, [stacks, stacksQuery.isSuccess])
 
   const counts = useMemo(
     () => ({
@@ -64,16 +78,51 @@ const StacksPageContent = () => {
       return next
     })
 
-  const runAction = async (stack: string, action: DeployAction) => {
-    const label = t(`deploy.actions.${ACTION_I18N[action]}.label`)
+  const toggleSelected = (name: string) =>
+    setSelected((prev) => {
+      const next = new Set(prev)
+      if (next.has(name)) next.delete(name)
+      else next.add(name)
+      return next
+    })
+
+  const shownSelected = filtered.filter((s) => selected.has(s.name)).length
+  const allShownSelected =
+    filtered.length > 0 && shownSelected === filtered.length
+  const hiddenSelected = selected.size - shownSelected
+
+  // Marca o desmarca solo lo visible; lo que ocultan los filtros no se toca
+  const toggleAllShown = () =>
+    setSelected((prev) => {
+      const next = new Set(prev)
+      for (const s of filtered) {
+        if (allShownSelected) next.delete(s.name)
+        else next.add(s.name)
+      }
+      return next
+    })
+
+  const actionLabel = (action: DeployAction) =>
+    t(`deploy.actions.${ACTION_I18N[action]}.label`)
+
+  // En modo `silent` no hay toast: el error se relanza para quien llama
+  const runAction = async (
+    stack: string,
+    action: DeployAction,
+    { silent = false } = {}
+  ) => {
+    const label = actionLabel(action)
     setPending((p) => ({ ...p, [stack]: action }))
     try {
       const res = await deployTrigger.mutateAsync({ stack, action })
-      notifySuccess(
-        t("stacks.actionDone", { action: label, stack }),
-        res.message
-      )
+      if (!silent) {
+        notifySuccess(
+          t("stacks.actionDone", { action: label, stack }),
+          res.message
+        )
+      }
     } catch (err) {
+      if (silent) throw err
       notifyError(
         `${label} · ${stack}`,
         getErrorMessage(err, t("stacks.errorAction"))
@@ -82,6 +131,43 @@ const StacksPageContent = () => {
       setPending((p) => ({ ...p, [stack]: null }))
     }
   }
+
+  const runBulk = async (action: DeployAction) => {
+    const label = actionLabel(action)
+    const names = [...selected].sort((a, b) => a.localeCompare(b))
+    setBulkAction(action)
+    const results = await runPool(names, BULK_CONCURRENCY, (name) =>
+      runAction(name, action, { silent: true })
+    )
+    setBulkAction(null)
+
+    const failed = results.filter((r) => !r.ok)
+    if (failed.length === 0) {
+      notifySuccess(
+        t("stacks.bulk.done", { action: label, count: names.length })
+      )
+    } else {
+      notifyError(
+        t("stacks.bulk.failed", {
+          action: label,
+          count: failed.length,
+          total: names.length,
+        }),
+        failed
+          .map(
+            (r) =>
+              `${r.item}: ${getErrorMessage(r.error, t("stacks.errorAction"))}`
+          )
+          .join(" · ")
+      )
+    }
+    // Los que fallan siguen seleccionados para poder reintentarlos
+    const succeeded = new Set(results.filter((r) => r.ok).map((r) => r.item))
+    setSelected((prev) => new Set([...prev].filter((n) => !succeeded.has(n))))
+  }
+
+  const bulkDisabled =
+    bulkAction !== null || [...selected].some((n) => pending[n])
 
   const clearFilters = () => {
     setSearch("")
@@ -188,18 +274,46 @@ const StacksPageContent = () => {
             }
           />
         ) : (
-          <SoftCardList as="ul">
-            {filtered.map((stack) => (
-              <StackRow
-                key={stack.id}
-                stack={stack}
-                expanded={expanded.has(stack.name)}
-                onToggle={() => toggle(stack.name)}
-                pendingAction={pending[stack.name] ?? null}
-                onAction={(action) => runAction(stack.name, action)}
+          <div className="flex flex-col gap-2">
+            <label className="text-muted-foreground text-meta flex w-fit cursor-pointer items-center gap-3 px-4">
+              <input
+                type="checkbox"
+                checked={allShownSelected}
+                ref={(el) => {
+                  if (el)
+                    el.indeterminate = shownSelected > 0 && !allShownSelected
+                }}
+                onChange={toggleAllShown}
+                className="accent-primary size-4 shrink-0 cursor-pointer"
               />
-            ))}
-          </SoftCardList>
+              {t("stacks.selectAll", { count: filtered.length })}
+            </label>
+            <SoftCardList as="ul">
+              {filtered.map((stack) => (
+                <StackRow
+                  key={stack.id}
+                  stack={stack}
+                  expanded={expanded.has(stack.name)}
+                  onToggle={() => toggle(stack.name)}
+                  selected={selected.has(stack.name)}
+                  onSelect={() => toggleSelected(stack.name)}
+                  pendingAction={pending[stack.name] ?? null}
+                  onAction={(action) => runAction(stack.name, action)}
+                />
+              ))}
+            </SoftCardList>
+          </div>
+        )}
+
+        {selected.size > 0 && (
+          <StacksBulkBar
+            count={selected.size}
+            hidden={hiddenSelected}
+            runningAction={bulkAction}
+            disabled={bulkDisabled}
+            onRun={runBulk}
+            onClear={() => setSelected(new Set())}
+          />
         )}
       </div>
     )

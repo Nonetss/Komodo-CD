@@ -32,12 +32,16 @@ export function StackRow({
   stack,
   expanded,
   onToggle,
+  selected,
+  onSelect,
   pendingAction,
   onAction,
 }: {
   stack: Stack
   expanded: boolean
   onToggle: () => void
+  selected: boolean
+  onSelect: () => void
   pendingAction: DeployAction | null
   onAction: (action: DeployAction) => void
 }) {
@@ -58,6 +62,13 @@ export function StackRow({
           expanded ? "bg-primary/6" : "hover:bg-muted/40"
         )}
       >
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={onSelect}
+          aria-label={t("stacks.selectStack", { stack: stack.name })}
+          className="accent-primary size-4 shrink-0 cursor-pointer"
+        />
         <button
           type="button"
           onClick={onToggle}
