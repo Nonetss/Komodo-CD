@@ -31,12 +31,13 @@ same actions from CI with an API key.
 
 Monorepo (Turborepo + Bun workspaces), plus the production deployment using images published on GHCR.
 
-|              | Path                             | Stack                                          |
-| ------------ | -------------------------------- | ---------------------------------------------- |
-| **Backend**  | [`apps/backend`](apps/backend)   | Bun + Hono (thin server: auth, oRPC, OpenAPI)  |
-| **Frontend** | [`apps/frontend`](apps/frontend) | Astro 7 (SSR) + React + TanStack Query         |
-| **Gateway**  | [`apps/gateway`](apps/gateway)   | Caddy: the only published port, routes to both |
-| **Site**     | [`apps/site`](apps/site)         | Astro 7 (static), published to GitHub Pages    |
+|              | Path                             | Stack                                                              |
+| ------------ | -------------------------------- | ------------------------------------------------------------------ |
+| **Backend**  | [`apps/backend`](apps/backend)   | Bun + Hono (thin server: auth, oRPC, OpenAPI)                      |
+| **Frontend** | [`apps/frontend`](apps/frontend) | Astro 7 (SSR) + React + TanStack Query                             |
+| **Gateway**  | [`apps/gateway`](apps/gateway)   | Caddy: the only published port, routes to both                     |
+| **Site**     | [`apps/site`](apps/site)         | Astro 7 (static), published to GitHub Pages                        |
+| **Trivy**    | `trivy` service in `compose.yml` | Upstream `aquasec/trivy` server for the image scans (no workspace) |
 
 | Package             | Description                                                      |
 | ------------------- | ---------------------------------------------------------------- |
@@ -53,13 +54,15 @@ Monorepo (Turborepo + Bun workspaces), plus the production deployment using imag
 | ------------------------- | ------------------------- |
 | ![Stacks](img/stacks.png) | ![Deploy](img/deploy.png) |
 
-| History                     | Connection                        |
-| --------------------------- | --------------------------------- |
-| ![History](img/history.png) | ![Connection](img/connection.png) |
+| History                     | Security                      |
+| --------------------------- | ----------------------------- |
+| ![History](img/history.png) | ![Security](img/security.png) |
 
-| API keys                      | Light theme                                  |
-| ----------------------------- | -------------------------------------------- |
-| ![API keys](img/api-keys.png) | ![Stacks, light theme](img/stacks-light.png) |
+| Connection                        | API keys                      |
+| --------------------------------- | ----------------------------- |
+| ![Connection](img/connection.png) | ![API keys](img/api-keys.png) |
+
+![Stacks, light theme](img/stacks-light.png)
 
 The screenshots use made-up stacks and URLs.
 
@@ -366,14 +369,17 @@ The Dockerfiles live in `apps/*/Dockerfile` but the build context is always the 
 ```bash
 docker build -f apps/backend/Dockerfile -t komodo-cd-backend .
 docker build -f apps/frontend/Dockerfile -t komodo-cd-frontend .
+docker build -f apps/gateway/Dockerfile -t komodo-cd-gateway .
 ```
 
-`.github/workflows/docker-build.yml` builds and pushes both images to `ghcr.io/nonetss/komodo-cd-backend` and `ghcr.io/nonetss/komodo-cd-frontend`:
+`.github/workflows/docker-build.yml` builds and pushes the three images to `ghcr.io/nonetss/komodo-cd-backend`, `ghcr.io/nonetss/komodo-cd-frontend` and `ghcr.io/nonetss/komodo-cd-gateway`, rebuilding only the ones whose files changed:
 
 | Trigger           | Tags                                   |
 | ----------------- | -------------------------------------- |
 | Push to `main`    | `latest`, `main`, `main-<sha>`         |
 | Tag `vX.Y.Z`      | `X.Y.Z`, `X.Y`                         |
+
+The `trivy` service is not built here: it runs the upstream `aquasec/trivy` image, at the same version as `TRIVY_VERSION` in `apps/backend/Dockerfile`.
 
 To publish a release, tag the commit and create the GitHub release:
 
