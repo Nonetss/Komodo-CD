@@ -28,10 +28,10 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "turbo watch dev",
+    "dev": "turbo watch dev --filter=!site",
     "dev:backend": "turbo watch -F backend dev",
     "dev:frontend": "turbo watch -F frontend dev",
-    "site": "turbo watch -F site dev",
+    "dev:site": "turbo watch -F site dev",
     "build": "turbo build",
     "start": "turbo start",
     "check-types": "turbo check-types",

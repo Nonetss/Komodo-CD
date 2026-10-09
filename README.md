@@ -244,10 +244,10 @@ bun install
 
 cp apps/backend/.env.example apps/backend/.env   # SQLite: DATABASE_URL=file:./dev.db
 
-bun run dev            # backend (:3000) + frontend (:4321) with turbo watch
+bun run dev            # backend (:3000) + frontend (:4321) with turbo watch, without the site
 bun run dev:backend    # only backend
 bun run dev:frontend   # only frontend
-bun run site           # project website (:4322)
+bun run dev:site       # only the project website (:4322)
 ```
 
 | Script                  | Description                                       |

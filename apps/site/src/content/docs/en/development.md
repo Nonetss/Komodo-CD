@@ -28,7 +28,7 @@ Requires [Bun](https://bun.sh) 1.4 or newer.
 bun install
 cp apps/backend/.env.example apps/backend/.env   # SQLite: DATABASE_URL=file:./dev.db
 
-bun run dev            # backend (:3000) + frontend (:4321) with turbo watch
+bun run dev            # backend (:3000) + frontend (:4321) with turbo watch, without the site
 bun run dev:backend    # only the backend
 bun run dev:frontend   # only the frontend
 ```
@@ -73,7 +73,7 @@ gh release create v1.0.0 --generate-notes
 ## This site
 
 ```bash
-bun run site   # http://localhost:4322/Komodo-CD/
+bun run dev:site   # http://localhost:4322/Komodo-CD/
 ```
 
 The pages are Markdown in `apps/site/src/content/docs/<lang>/`, one file per language, and the landing copy is in `apps/site/src/i18n/ui.ts`. The screenshots are the ones in the root `img/` directory, shared with the README. `.github/workflows/pages.yml` publishes the site to GitHub Pages on every push to `main` that touches it.
