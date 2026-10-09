@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 
 import { Text, textVariants } from "@/components/shared/brand/typography"
 import { CodeBlock } from "@/components/shared/data-display/code-block"
+import { ColumnHeader } from "@/components/shared/data-display/column-header"
 import { Segmented } from "@/components/shared/form/segmented"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { StatStrip } from "@/components/shared/layout/stat-strip"
@@ -166,21 +167,11 @@ export function StackDetail({
           <table className="w-full min-w-136 border-collapse">
             <thead>
               <tr className="text-left">
-                <th scope="col" className="py-3 pr-4 font-normal">
-                  <Text variant="label" tone="muted">
-                    {t("stacks.serviceColumn")}
-                  </Text>
-                </th>
-                <th scope="col" className="py-3 pr-4 font-normal">
-                  <Text variant="label" tone="muted">
-                    {t("stacks.imageColumn")}
-                  </Text>
-                </th>
-                <th scope="col" className="py-3 text-right font-normal">
-                  <Text variant="label" tone="muted">
-                    {t("stacks.statusColumn")}
-                  </Text>
-                </th>
+                <ColumnHeader>{t("stacks.serviceColumn")}</ColumnHeader>
+                <ColumnHeader>{t("stacks.imageColumn")}</ColumnHeader>
+                <ColumnHeader align="right">
+                  {t("stacks.statusColumn")}
+                </ColumnHeader>
               </tr>
             </thead>
             <tbody>

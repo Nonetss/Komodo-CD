@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
+import { ColumnHeader } from "@/components/shared/data-display/column-header"
 import { InlineConfirm } from "@/components/shared/feedback/inline-confirm"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { Button } from "@/components/ui/button"
@@ -10,7 +11,7 @@ import {
   ACTION_ICON,
   DEPLOY_ACTIONS,
 } from "@/entities/deploy-action"
-import { commitChanged, ImageRef, stackHref } from "@/entities/stack"
+import { commitChanged, ImageRef, StackLink } from "@/entities/stack"
 import type { DeployAction, Stack } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
 
@@ -96,21 +97,13 @@ export function UpdatesSection({
             <thead>
               <tr className="text-left">
                 {COLUMNS.map(({ key, width }) => (
-                  <th
-                    key={key}
-                    scope="col"
-                    className={cn("py-3 pr-4 font-normal", width)}
-                  >
-                    <Text variant="label" tone="muted">
-                      {t(`overview.updates.columns.${key}`)}
-                    </Text>
-                  </th>
+                  <ColumnHeader key={key} className={width}>
+                    {t(`overview.updates.columns.${key}`)}
+                  </ColumnHeader>
                 ))}
-                <th scope="col" className="w-36 py-3 text-right font-normal">
-                  <Text variant="label" tone="muted">
-                    {t("overview.updates.columns.actions")}
-                  </Text>
-                </th>
+                <ColumnHeader align="right" className="w-36">
+                  {t("overview.updates.columns.actions")}
+                </ColumnHeader>
               </tr>
             </thead>
             <tbody>
@@ -123,12 +116,7 @@ export function UpdatesSection({
                   <tr key={stack.id} className="border-t align-top">
                     <th scope="row" className="py-4 pr-4 text-left">
                       <Text variant="headline">
-                        <a
-                          href={stackHref(stack.name)}
-                          className="hover:text-signal underline-offset-4 hover:underline"
-                        >
-                          {stack.name}
-                        </a>
+                        <StackLink name={stack.name} />
                       </Text>
                     </th>
                     <td className="max-w-0 py-4 pr-4">

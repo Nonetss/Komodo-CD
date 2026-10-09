@@ -1,4 +1,5 @@
 export { ImageRef } from "@/entities/stack/components/image-ref"
+export { StackLink } from "@/entities/stack/components/stack-link"
 export {
   StackStateDot,
   StackStateTag,

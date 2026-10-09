@@ -4,7 +4,12 @@ import { Text } from "@/components/shared/brand/typography"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { Button } from "@/components/ui/button"
 import { ACTION_ICON } from "@/entities/deploy-action"
-import { problemKind, StackStateTag, stackHref } from "@/entities/stack"
+import {
+  problemKind,
+  StackLink,
+  StackStateTag,
+  stackHref,
+} from "@/entities/stack"
 import type { DeployAction, Stack } from "@/lib/api-types"
 
 /**
@@ -51,12 +56,7 @@ export function AttentionSection({
                 <div className="flex min-w-0 flex-1 basis-96 flex-col gap-1.5">
                   <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                     <Text as="h3" variant="headline" className="text-xl">
-                      <a
-                        href={stackHref(stack.name)}
-                        className="hover:text-signal underline-offset-4 hover:underline"
-                      >
-                        {stack.name}
-                      </a>
+                      <StackLink name={stack.name} />
                     </Text>
                     <StackStateTag state={info.state} />
                   </div>
