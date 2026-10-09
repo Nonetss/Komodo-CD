@@ -46,6 +46,7 @@ temp
 # Claude
 .claude/*
 !.claude/settings.json
+!.claude/commands/
 !.claude/skills/
 
 # Binarios de la skill impeccable (16 MB por copia, x3). Se reinstalan con
