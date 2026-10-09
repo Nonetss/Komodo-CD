@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
-import { SEVERITY_INK, severityKey } from "@/features/security/model/severity"
+import { SEVERITY_INK, severityKey } from "@/entities/image-scan/model/severity"
 import type { VulnerabilitySeverity } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
 

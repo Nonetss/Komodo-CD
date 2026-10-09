@@ -8,11 +8,11 @@ import { ColumnHeader } from "@/components/shared/data-display/column-header"
 import { StatusTag } from "@/components/shared/data-display/status-dot"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { SeverityCount } from "@/entities/image-scan/components/severity"
+import { VulnerabilityTable } from "@/entities/image-scan/components/vulnerability-table"
+import { useImageDetail } from "@/entities/image-scan/hooks/use-security"
+import { isScanPending } from "@/entities/image-scan/model/images"
 import { ImageRef, StackLink } from "@/entities/stack"
-import { SeverityCount } from "@/features/security/components/severity"
-import { VulnerabilityTable } from "@/features/security/components/vulnerability-table"
-import { useImageDetail } from "@/features/security/hooks/use-security"
-import { isScanPending } from "@/features/security/model/images"
 import type { ImageSummary, VulnerabilitySeverity } from "@/lib/api-types"
 import { getErrorMessage, orpc } from "@/lib/orpc"
 import { relativeTime } from "@/lib/relative-time"
@@ -162,6 +162,7 @@ function ImageRows({
   canScan,
   scanning,
   onScan,
+  stack,
 }: {
   image: ImageSummary
   open: boolean
@@ -169,15 +170,21 @@ function ImageRows({
   canScan: boolean
   scanning: boolean
   onScan: () => void
+  stack?: string
 }) {
   const { t } = useTranslation()
   const panelId = useId()
   // Sin un escaneo correcto no hay cifras que enseñar
   const hasData = !!image.scannedAt
+  const stacks = image.stacks.filter((name) => name !== stack)
   // Abierta, la fila se queda pegada bajo la barra superior (h-14) mientras
   // se recorren sus vulnerabilidades, para saber siempre de qué imagen son
   const cell = (padding: string) =>
-    cn(padding, open && "bg-muted border-rule sticky top-14 z-10 rule-b")
+    cn(
+      padding,
+      open && "bg-muted border-rule rule-b",
+      open && !stack && "sticky top-14 z-10"
+    )
 
   return (
     <tbody className="border-t">
@@ -214,15 +221,18 @@ function ImageRows({
               >
                 <ImageRef image={image.image} className="text-sm" />
               </button>
-              <Text
-                variant="meta-sm"
-                tone="muted"
-                className="flex flex-wrap gap-x-2"
-              >
-                {image.stacks.map((name) => (
-                  <StackLink key={name} name={name} />
-                ))}
-              </Text>
+              {stacks.length > 0 ? (
+                <Text
+                  variant="meta-sm"
+                  tone="muted"
+                  className="flex flex-wrap gap-x-2"
+                >
+                  {stack ? <span>{t("security.alsoIn")}</span> : null}
+                  {stacks.map((name) => (
+                    <StackLink key={name} name={name} />
+                  ))}
+                </Text>
+              ) : null}
             </div>
           </div>
         </th>
@@ -285,7 +295,9 @@ function ImageRows({
 /**
  * Tabla de imágenes: referencia y stacks, una columna por severidad (CVEs
  * distintas), cuántas tienen fix, el estado del escaneo y reescanear. Cada
- * fila se despliega en el sitio con sus vulnerabilidades.
+ * fila se despliega en el sitio con sus vulnerabilidades. Con `stack`, la
+ * tabla va dentro de la ficha de ese stack: no lo repite en cada fila y no
+ * fija la fila abierta, porque ahí la tabla tiene su propio scroll.
  */
 export function ImageTable({
   images,
@@ -294,6 +306,7 @@ export function ImageTable({
   canScan,
   scanning,
   onScan,
+  stack,
 }: {
   images: ImageSummary[]
   open: Set<string>
@@ -302,12 +315,14 @@ export function ImageTable({
   /** Petición de escaneo en vuelo: `"all"`, una imagen o `null` */
   scanning: string | null
   onScan: (image: string) => void
+  /** Stack en cuya ficha va la tabla */
+  stack?: string
 }) {
   const { t } = useTranslation()
   return (
     // Sin `overflow` en pantallas grandes: rompería la fila fija de la
     // imagen abierta (y ahí la tabla ya cabe)
-    <div className="overflow-x-auto lg:overflow-visible">
+    <div className={cn("overflow-x-auto", !stack && "lg:overflow-visible")}>
       <table className="w-full min-w-208 border-collapse">
         <thead>
           <tr className="text-left">
@@ -337,6 +352,7 @@ export function ImageTable({
             canScan={canScan}
             scanning={scanning === image.image}
             onScan={() => onScan(image.image)}
+            stack={stack}
           />
         ))}
       </table>

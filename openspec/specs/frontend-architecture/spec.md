@@ -22,7 +22,7 @@ The frontend SHALL be an Astro server-rendered app (Node standalone adapter) who
 
 Domain code SHALL live in `src/features/<domain>/`: `api-keys`, `app-shell`, `auth`, `credentials`, `deploy`, `history`, `not-found`, `overview` and `stacks`. Each feature SHALL have only the technical subfolders it actually uses (`components/`, `hooks/`, `model/`) and an `index.ts` that is the feature's public entry point.
 
-Domain pieces used by more than one feature SHALL live in `src/entities/<entity>/` (`stack`, `deploy-action`), with the same subfolder rules and an `index.ts`. This includes the stack grouping rules and the bulk deploy runner, which both the overview and the Stacks page use.
+Domain pieces used by more than one feature SHALL live in `src/entities/<entity>/` (`stack`, `deploy-action`, `image-scan`), with the same subfolder rules and an `index.ts`. This includes the stack grouping rules and the bulk deploy runner, which both the overview and the Stacks page use, and the image scan table with its vulnerabilities, which both the Security page and the stack detail use.
 
 Imports SHALL follow these rules:
 

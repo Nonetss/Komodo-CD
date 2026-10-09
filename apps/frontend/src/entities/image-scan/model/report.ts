@@ -3,8 +3,8 @@ import type { TFunction } from "i18next"
 import {
   type GroupedVulnerability,
   groupPackages,
-} from "@/features/security/model/images"
-import { SEVERITIES, severityKey } from "@/features/security/model/severity"
+} from "@/entities/image-scan/model/images"
+import { SEVERITIES, severityKey } from "@/entities/image-scan/model/severity"
 
 // Un `|` dentro de una celda rompería la tabla Markdown
 const cell = (text: string) => text.replace(/\|/g, "\\|").replace(/\n/g, " ")

@@ -10,14 +10,15 @@ import { StatStrip } from "@/components/shared/layout/stat-strip"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ImageTable } from "@/features/security/components/image-table"
-import { useImages, useScan } from "@/features/security/hooks/use-security"
 import {
   type ImageFilter,
+  ImageTable,
   isScanPending,
   isUrgent,
   matchesImage,
-} from "@/features/security/model/images"
+  useImages,
+  useScan,
+} from "@/entities/image-scan"
 import type { ImageSummary } from "@/lib/api-types"
 import { withIsland } from "@/providers/island"
 

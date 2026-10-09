@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { isScanPending } from "@/features/security/model/images"
+import { isScanPending } from "@/entities/image-scan/model/images"
 import { useHydratedQuery } from "@/hooks/use-hydrated-query"
 import { client, orpc } from "@/lib/orpc"
 import { toastMutation } from "@/lib/toast"
