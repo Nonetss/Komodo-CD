@@ -95,14 +95,17 @@
 /*
  * Paleta editorial: papel cálido y tinta con tinte, líneas finas entre
  * elementos y trazo grueso bajo las cabeceras, y un único acento naranja
- * para lo que pide acción. El texto secundario pasa 4.5:1 sobre el fondo
- * en los dos temas.
+ * para lo que pide acción. Los neutros y el naranja son los de garabato
+ * (oklch con matiz ~95-107); los roles son los de esta app (primario =
+ * tinta, naranja solo como `signal`). El texto secundario pasa 4.5:1 sobre
+ * el fondo en los dos temas; el naranja de marca en claro (3:1) queda para
+ * rellenos, trazos y texto grande o en negrita.
  */
 :root {
   --radius: 0;
 
-  --background: oklch(0.985 0.006 85);
-  --foreground: oklch(0.19 0.01 70);
+  --background: oklch(0.9818 0.0054 95.0986);
+  --foreground: oklch(0.1908 0.002 106.5859);
   --card: var(--background);
   --card-foreground: var(--foreground);
   --surface: var(--background);
@@ -110,18 +113,18 @@
   --popover-foreground: var(--foreground);
   --primary: var(--foreground);
   --primary-foreground: var(--background);
-  --secondary: oklch(0.955 0.008 85);
+  --secondary: oklch(0.9245 0.0138 92.9892);
   --secondary-foreground: var(--foreground);
-  --muted: oklch(0.955 0.008 85);
-  --muted-foreground: oklch(0.46 0.012 75);
-  --accent: oklch(0.955 0.008 85);
+  --muted: oklch(0.9341 0.0153 90.239);
+  --muted-foreground: oklch(0.5341 0.0078 97.4503);
+  --accent: oklch(0.9245 0.0138 92.9892);
   --accent-foreground: var(--foreground);
-  --border: oklch(0.91 0.01 85);
-  --input: oklch(0.78 0.012 80);
+  --border: oklch(0.94 0.003 97.3627);
+  --input: oklch(0.78 0.008 98.3528);
   --rule: var(--foreground);
   --sidebar: var(--background);
 
-  --signal: oklch(0.553 0.195 38.4);
+  --signal: oklch(0.6724 0.1308 38.7559);
   --signal-foreground: var(--background);
   --ring: var(--signal);
   --destructive: var(--signal);
@@ -141,19 +144,19 @@
 .dark {
   color-scheme: dark;
 
-  --background: oklch(0.17 0.006 70);
-  --foreground: oklch(0.95 0.008 85);
-  --popover: oklch(0.215 0.007 70);
+  --background: oklch(0.2679 0.0036 106.6427);
+  --foreground: oklch(0.9576 0.0027 106.4494);
+  --popover: oklch(0.3085 0.0035 106.6039);
   --primary: var(--foreground);
   --primary-foreground: var(--background);
-  --secondary: oklch(0.235 0.007 70);
-  --muted: oklch(0.235 0.007 70);
-  --muted-foreground: oklch(0.72 0.012 80);
-  --accent: oklch(0.255 0.007 70);
-  --border: oklch(0.3 0.007 70);
-  --input: oklch(0.42 0.008 70);
+  --secondary: oklch(0.2928 0.0018 106.5092);
+  --muted: oklch(0.2928 0.0018 106.5092);
+  --muted-foreground: oklch(0.7713 0.0169 99.0657);
+  --accent: oklch(0.34 0.005 100.2195);
+  --border: oklch(0.31 0.004 106.8928);
+  --input: oklch(0.42 0.006 100.2195);
 
-  --signal: oklch(0.75 0.17 52);
+  --signal: oklch(0.6724 0.1308 38.7559);
   --signal-foreground: var(--background);
 
   --success: oklch(0.78 0.17 152);
