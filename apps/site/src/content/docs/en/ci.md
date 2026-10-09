@@ -93,6 +93,28 @@ It expects these repository secrets and variables:
 | `KOMODO_API_KEY` | Secret | The API key created above. |
 | `STACK_NAME` | Variable | The stack name in Komodo. |
 
+## Fail on vulnerabilities
+
+Every successful deploy queues a [Trivy](https://trivy.dev) scan of the stack's images, and the same API key reads the results. The scan runs in the background, so a pipeline that wants to block on the result waits until none of the stack's images is `queued` or `scanning`, then checks the counts:
+
+```yaml
+      - name: Fail on critical vulnerabilities
+        env:
+          URL: ${{ secrets.KOMODO_CD_URL }}
+          KEY: ${{ secrets.KOMODO_API_KEY }}
+          STACK: ${{ vars.STACK_NAME }}
+        run: |
+          for i in $(seq 1 60); do
+            images=$(curl -sf "$URL/api/v0/security/images" -H "x-api-key: $KEY" \
+              | jq --arg s "$STACK" '[.images[] | select(.stacks | index($s))]')
+            echo "$images" | jq -e 'all(.status != "queued" and .status != "scanning")' > /dev/null && break
+            sleep 10
+          done
+          echo "$images" | jq -e 'map(.counts.critical) | add == 0'
+```
+
+A scan that could not pull the image (a private registry, for example) ends as `failed` with `errorKind: "unauthorized"` and keeps zero counts, so decide in the `jq` filter whether that should fail the job.
+
 ## Gitea Actions
 
 Gitea Actions runs the same workflow syntax: put the file in `.gitea/workflows/` and define the same secrets and variables in the repository settings. The deploy step does not change.

@@ -15,7 +15,7 @@ Cada endpoint necesita una de estas dos cosas:
 
 Sin ninguna de las dos la respuesta es `401`. Una key actúa en nombre del usuario que la creó y queda en el historial como `API Key: <nombre>`.
 
-Una key puede listar los stacks, desplegar, seguir los deploys en vivo y leer el historial. La conexión con Komodo, los ajustes de ntfy y las propias API keys necesitan una sesión iniciada: con una key responden `403`, así que una key del CI filtrada no puede cambiarlos.
+Una key puede listar los stacks, desplegar, seguir los deploys en vivo, leer el historial y consultar o pedir escaneos de imágenes. La conexión con Komodo, los ajustes de ntfy y las propias API keys necesitan una sesión iniciada: con una key responden `403`, así que una key del CI filtrada no puede cambiarlos.
 
 ## Referencia
 
@@ -29,6 +29,9 @@ El backend sirve una referencia OpenAPI interactiva, generada con Scalar, en `/s
 | `POST` | `/api/v0/deploy` | Ejecuta `pull`, `redeploy` o `pull-redeploy` sobre un stack. Ver [Desplegar desde CI](../ci/). |
 | `GET` | `/api/v0/deploy/events` | Stream en vivo (SSE) de los deploys según empiezan y terminan. Ver [Seguir los deploys en vivo](#seguir-los-deploys-en-vivo). |
 | `GET` | `/api/v0/history` | Las últimas 100 acciones, de la más reciente a la más antigua. |
+| `GET` | `/api/v0/security/images` | Cada imagen que usa algún stack, con sus stacks y su último escaneo de Trivy (estado y recuentos por severidad). Encola las que nunca se escanearon. |
+| `GET` | `/api/v0/security/image?image=<ref>` | Las vulnerabilidades de una imagen: id, severidad, paquete, versión instalada y corregida, título y enlace. |
+| `POST` | `/api/v0/security/scan` | Encola el escaneo de `images`, o de todas las imágenes con el cuerpo vacío. Solo acepta imágenes que use algún stack. |
 | `GET` | `/api/v0/deploy/credentials` | La conexión con Komodo: id, nombre y URL, nunca la key ni el secret. |
 | `POST` | `/api/v0/deploy/credentials` | Guarda la conexión (`name`, `url`, `key`, `secret`) y sustituye la actual. |
 | `DELETE` | `/api/v0/deploy/credentials` | Elimina la conexión (`name`). |
@@ -50,6 +53,14 @@ Listar los stacks que tienen actualización:
 curl -s https://deploy.example.com/api/v0/stacks \
   -H "x-api-key: $KOMODO_API_KEY" \
   | jq -r '.stacks[] | select(any(.info.services[]; .update_available)) | .name'
+```
+
+Listar las imágenes con vulnerabilidades críticas y los stacks que las usan:
+
+```bash
+curl -s https://deploy.example.com/api/v0/security/images \
+  -H "x-api-key: $KOMODO_API_KEY" \
+  | jq -r '.images[] | select(.counts.critical > 0) | "\(.image)\t\(.stacks | join(","))"'
 ```
 
 Ver las últimas acciones fallidas:

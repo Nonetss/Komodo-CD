@@ -27,9 +27,13 @@ docker compose pull
 docker compose up -d --remove-orphans
 ```
 
+### Coming from a version without image scanning
+
+The **Security** page needs the new `trivy` service. Download the new `compose.yml` before pulling, as above; on its first start the Trivy server downloads its vulnerability database, so the first scans may fail for a minute and can be retried from the page.
+
 ## What to back up
 
-Everything Komodo CD stores is in one SQLite file, `/data/db.sqlite`, on the `db_data` volume: users, API keys, the Komodo connection, the ntfy settings and the history. Keep a copy of `.env` too, since it holds `BETTER_AUTH_SECRET` and the admin settings.
+Everything Komodo CD stores is in one SQLite file, `/data/db.sqlite`, on the `db_data` volume: users, API keys, the Komodo connection, the ntfy settings, the history and the latest image scans. Keep a copy of `.env` too, since it holds `BETTER_AUTH_SECRET` and the admin settings.
 
 Data survives restarts, `docker compose down` and image upgrades. **`docker compose down -v` deletes the volume** and with it every user, key and setting.
 

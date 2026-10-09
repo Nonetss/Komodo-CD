@@ -16,6 +16,7 @@ Komodo CD se configura con un fichero `.env` junto a `compose.yml`. Docker Compo
 | `PORT` | No | Puerto del host que publica el frontend. Por defecto `80`. |
 | `SEED_ADMIN_EMAIL` | No | Email del administrador. Por defecto `admin@example.com`. |
 | `SEED_ADMIN_NAME` | No | Nombre del administrador. Por defecto `Admin`. |
+| `TRIVY_SERVER_URL` | No | Servidor de Trivy con el que el backend escanea las imágenes. Por defecto `http://trivy:4954`, el servicio `trivy` de `compose.yml`. Ponla solo para usar otro servidor. |
 
 ## La cuenta de administrador
 
@@ -33,6 +34,12 @@ Están fijas en el fichero de Compose y rara vez hay que cambiarlas:
 | --- | --- | --- |
 | `DATABASE_URL` | backend | `file:/data/db.sqlite`, dentro del volumen `db_data`. |
 | `BACKEND_URL` | frontend | `http://backend:3000`, por donde el renderizado en servidor llega al backend para comprobar la sesión. |
+
+## Escaneo de imágenes
+
+El servicio `trivy` de `compose.yml` corre un servidor de Trivy fijado a la misma versión que el cliente que lleva la imagen del backend. En el primer arranque descarga de Internet su base de datos de vulnerabilidades en el volumen `trivy_cache` y la mantiene al día. El backend, por su parte, descarga cada imagen que escanea directamente de su registry, así que los dos necesitan salida a Internet. Hasta que la base de datos está lista, los escaneos fallan y se pueden reintentar desde la página **Seguridad**.
+
+Las imágenes de registries privados también se intentan; cuando el backend no puede descargar una, el escaneo aparece como "sin acceso al registry" y el resto sigue.
 
 El backend también lee `LOG_LEVEL` (`fatal`, `error`, `warn`, `info`, `debug` o `trace`; por defecto `info`). Para usarla, añádela al `environment` del backend en `compose.yml`.
 

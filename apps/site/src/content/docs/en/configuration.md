@@ -16,6 +16,7 @@ Komodo CD is configured with a `.env` file next to `compose.yml`. Docker Compose
 | `PORT` | No | Host port published by the frontend. Default `80`. |
 | `SEED_ADMIN_EMAIL` | No | Email of the admin. Default `admin@example.com`. |
 | `SEED_ADMIN_NAME` | No | Name of the admin. Default `Admin`. |
+| `TRIVY_SERVER_URL` | No | Trivy server the backend scans images with. Default `http://trivy:4954`, the `trivy` service of `compose.yml`. Set it only to use another server. |
 
 ## The admin account
 
@@ -33,6 +34,12 @@ These are fixed in the compose file and rarely need to change:
 | --- | --- | --- |
 | `DATABASE_URL` | backend | `file:/data/db.sqlite`, inside the `db_data` volume. |
 | `BACKEND_URL` | frontend | `http://backend:3000`, where the server-side rendering reaches the backend to check the session. |
+
+## Image scanning
+
+The `trivy` service in `compose.yml` runs a Trivy server pinned to the same version as the client inside the backend image. On first start it downloads its vulnerability database from the Internet into the `trivy_cache` volume, and keeps it updated. The backend, in turn, pulls each image to scan straight from its registry, so both need outbound access. Until the database is ready, scans fail and can be retried from the **Security** page.
+
+Images from private registries are tried as well; when the backend cannot pull one, the scan is shown as "no registry access" and the other images carry on.
 
 The backend also reads `LOG_LEVEL` (`fatal`, `error`, `warn`, `info`, `debug` or `trace`; default `info`). To use it, add it to the backend's `environment` in `compose.yml`.
 

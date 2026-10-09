@@ -17,6 +17,11 @@ same actions from CI with an API key.
   action
 - **History**: every action launched from the dashboard or from CI, with who
   ran it and how it ended
+- **Security**: every image used by a stack scanned with
+  [Trivy](https://trivy.dev): vulnerabilities by severity, which ones have a
+  fix, and which stacks use each image. Images are scanned when they first
+  show up, after every deploy and on demand; private registries are tried and
+  reported as "no access" when the scan cannot pull them
 - **Failure alerts**: optional [ntfy](https://ntfy.sh) notifications
   (ntfy.sh or self-hosted, with an optional access token) whenever a deploy
   fails
@@ -34,7 +39,7 @@ Monorepo (Turborepo + Bun workspaces), plus the production deployment using imag
 
 | Package             | Description                                                      |
 | ------------------- | ---------------------------------------------------------------- |
-| `@komodo-cd/api`    | oRPC routers (`v0`), Komodo client service                       |
+| `@komodo-cd/api`    | oRPC routers (`v0`), Komodo, ntfy and Trivy services             |
 | `@komodo-cd/auth`   | Better Auth config + session resolver (cookie or `x-api-key`)    |
 | `@komodo-cd/db`     | Drizzle v1 (SQLite/libsql): schema, relations, migrations, seed  |
 | `@komodo-cd/env`    | Validated server env (t3-env + zod)                              |
@@ -146,6 +151,7 @@ services:
       SEED_ADMIN_EMAIL: "${SEED_ADMIN_EMAIL:-admin@example.com}"
       SEED_ADMIN_NAME: "${SEED_ADMIN_NAME:-Admin}"
       SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD is required}"
+      TRIVY_SERVER_URL: "${TRIVY_SERVER_URL:-http://trivy:4954}"
     healthcheck:
       test: ["CMD", "bun", "-e", "fetch('http://localhost:3000/health-check').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 10s
@@ -193,11 +199,32 @@ services:
     networks:
       - komodo_net
 
+  # Trivy server for the Security page: keeps the vulnerability database and
+  # receives the scans the backend sends with its `trivy` client (same
+  # version as TRIVY_VERSION in apps/backend/Dockerfile).
+  trivy:
+    image: aquasec/trivy:0.75.0
+    init: true
+    restart: unless-stopped
+    command: ["server", "--listen", "0.0.0.0:4954", "--cache-dir", "/var/lib/trivy"]
+    volumes:
+      - trivy_cache:/var/lib/trivy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:4954/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # The first start downloads the database before listening
+      start_period: 120s
+    networks:
+      - komodo_net
+
 networks:
   komodo_net:
 
 volumes:
   db_data:
+  trivy_cache:
 ```
 
 ---
@@ -212,6 +239,12 @@ volumes:
 | `PORT`                | —        | Host exposed port. Default `80`                         |
 | `SEED_ADMIN_EMAIL`    | —        | Admin email. Default `admin@example.com`                |
 | `SEED_ADMIN_NAME`     | —        | Admin name. Default `Admin`                             |
+| `TRIVY_SERVER_URL`    | —        | Trivy server for image scanning. Default the `trivy` service (`http://trivy:4954`) |
+
+The `trivy` service downloads its vulnerability database from the Internet on
+first start (and keeps it updated), and the backend pulls the images to scan
+straight from their registries, so both need outbound access. Until the
+database is ready, scans fail and can be retried from the Security page.
 
 ## GitHub Actions integration
 
@@ -276,6 +309,27 @@ jobs:
 | `KOMODO_CD_URL`  | Secret   | URL of your Komodo CD instance (example: `https://komodo-cd.example.com`) |
 | `KOMODO_API_KEY` | Secret   | API key generated from the dashboard                                      |
 | `STACK_NAME`     | Variable | Stack name in Komodo                                                      |
+
+### Vulnerability results from CI
+
+The same API key reads the Trivy results. `GET /api/v0/security/images`
+returns every image with its stacks and its counts per severity (images never
+scanned are queued by that same call), `GET /api/v0/security/image?image=<ref>`
+returns the vulnerabilities of one image, and `POST /api/v0/security/scan`
+queues a rescan (`{"images": [...]}`, or every image with an empty body).
+Every successful deploy already queues a scan of that stack's images, in the
+background. To fail a job while the stack's images have critical
+vulnerabilities, wait until none is `queued` or `scanning`, then check:
+
+```bash
+for i in $(seq 1 60); do
+  images=$(curl -sf "$KOMODO_CD_URL/api/v0/security/images" -H "x-api-key: $KOMODO_API_KEY" \
+    | jq --arg s "$STACK_NAME" '[.images[] | select(.stacks | index($s))]')
+  echo "$images" | jq -e 'all(.status != "queued" and .status != "scanning")' > /dev/null && break
+  sleep 10
+done
+echo "$images" | jq -e 'map(.counts.critical) | add == 0'
+```
 
 ---
 
@@ -357,7 +411,7 @@ docker compose down -v
 
 ## Persistent data
 
-SQLite DB is stored in Docker volume `db_data`, mounted at `/data` inside the backend container. Data survives restarts and image updates.
+SQLite DB is stored in Docker volume `db_data`, mounted at `/data` inside the backend container. Data survives restarts and image updates. The Trivy vulnerability database lives in the `trivy_cache` volume; it can be deleted at any time and is downloaded again.
 
 To make a manual backup:
 

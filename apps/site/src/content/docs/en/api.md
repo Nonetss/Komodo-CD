@@ -15,7 +15,7 @@ Every endpoint requires one of:
 
 A request without either answers `401`. A key acts on behalf of the user who created it and is recorded in the history as `API Key: <name>`.
 
-A key can list stacks, deploy, follow deploys live and read the history. The Komodo connection, the ntfy settings and the API keys themselves need a signed-in session: with a key they answer `403`, so a leaked CI key cannot change them.
+A key can list stacks, deploy, follow deploys live, read the history and read or request image scans. The Komodo connection, the ntfy settings and the API keys themselves need a signed-in session: with a key they answer `403`, so a leaked CI key cannot change them.
 
 ## Reference
 
@@ -29,6 +29,9 @@ The backend serves an interactive OpenAPI reference, rendered by Scalar, at `/sc
 | `POST` | `/api/v0/deploy` | Runs `pull`, `redeploy` or `pull-redeploy` on a stack. See [Deploy from CI](../ci/). |
 | `GET` | `/api/v0/deploy/events` | Live stream (SSE) of deploys as they start and finish. See [Follow deploys live](#follow-deploys-live). |
 | `GET` | `/api/v0/history` | The last 100 actions, newest first. |
+| `GET` | `/api/v0/security/images` | Every image used by a stack, with its stacks and its latest Trivy scan (status and counts per severity). Queues the images never scanned. |
+| `GET` | `/api/v0/security/image?image=<ref>` | The vulnerabilities of one image: id, severity, package, installed and fixed version, title and link. |
+| `POST` | `/api/v0/security/scan` | Queues a scan of `images`, or of every image with an empty body. Only images used by a stack are accepted. |
 | `GET` | `/api/v0/deploy/credentials` | The Komodo connection: id, name and URL, never the key or secret. |
 | `POST` | `/api/v0/deploy/credentials` | Saves the connection (`name`, `url`, `key`, `secret`), replacing the current one. |
 | `DELETE` | `/api/v0/deploy/credentials` | Removes the connection (`name`). |
@@ -50,6 +53,14 @@ List the stacks that have an update:
 curl -s https://deploy.example.com/api/v0/stacks \
   -H "x-api-key: $KOMODO_API_KEY" \
   | jq -r '.stacks[] | select(any(.info.services[]; .update_available)) | .name'
+```
+
+List the images with critical vulnerabilities and the stacks that use them:
+
+```bash
+curl -s https://deploy.example.com/api/v0/security/images \
+  -H "x-api-key: $KOMODO_API_KEY" \
+  | jq -r '.images[] | select(.counts.critical > 0) | "\(.image)\t\(.stacks | join(","))"'
 ```
 
 Show the last failed actions:

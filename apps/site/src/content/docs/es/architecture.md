@@ -1,6 +1,6 @@
 ---
 title: Arquitectura
-description: Los tres contenedores, el recorrido de una petición por ellos y lo que guarda Komodo CD.
+description: Los cuatro contenedores, el recorrido de una petición por ellos y lo que guarda Komodo CD.
 order: 7
 ---
 
@@ -12,7 +12,8 @@ Komodo CD es una capa fina entre personas, pipelines y una instancia de Komodo. 
 | --- | --- | --- |
 | `gateway` | `ghcr.io/nonetss/komodo-cd-gateway` | Caddy en el puerto `80`, el único publicado. Enruta cada petición y añade unas cabeceras de seguridad básicas. |
 | `frontend` | `ghcr.io/nonetss/komodo-cd-frontend` | Astro SSR (islas de React) en el puerto `4321`, accesible solo dentro de la red de Compose. |
-| `backend` | `ghcr.io/nonetss/komodo-cd-backend` | Bun + Hono en el puerto `3000`: Better Auth, la API oRPC, su versión REST y la referencia OpenAPI. |
+| `backend` | `ghcr.io/nonetss/komodo-cd-backend` | Bun + Hono en el puerto `3000`: Better Auth, la API oRPC, su versión REST y la referencia OpenAPI. También lleva el cliente `trivy`. |
+| `trivy` | `aquasec/trivy` | Servidor de Trivy en el puerto `4954`, accesible solo dentro de la red de Compose. Guarda la base de datos de vulnerabilidades en el volumen `trivy_cache`. |
 
 El backend guarda sus datos en un fichero SQLite, `/data/db.sqlite`, en el volumen `db_data`. No hay servidor de base de datos.
 
@@ -50,6 +51,16 @@ Komodo hace entonces el trabajo en tus servidores a través de sus agentes Perip
 
 Cada acción, haya ido bien o no, se escribe en el historial con el usuario, el stack, la acción y el mensaje. Cuando una falla y los avisos de ntfy están activos, el backend publica un aviso en el topic configurado. Un servidor ntfy lento o caído nunca retrasa el deploy: el aviso se abandona a los cinco segundos y el fallo solo se registra en el log.
 
+## Escaneo de imágenes
+
+Las imágenes que se escanean son las que Komodo da para los servicios de los stacks. El backend mantiene una cola pequeña (dos escaneos a la vez, nunca la misma imagen dos veces) y para cada una ejecuta `trivy image` en modo cliente contra el servidor `trivy`, leyendo la imagen directamente de su registry. Una imagen se encola:
+
+- la primera vez que aparece, o cuando un reinicio cortó su escaneo: la página **Seguridad** (o `GET /api/v0/security/images`) la encola al listar las imágenes;
+- después de cada deploy correcto, las imágenes de ese stack;
+- a petición, desde la página o con `POST /api/v0/security/scan`.
+
+Solo se guarda el último resultado de cada imagen. Un reescaneo que falla conserva el resultado anterior y marca el fallo.
+
 ## Qué se guarda
 
 | Dato | Dónde |
@@ -58,5 +69,6 @@ Cada acción, haya ido bien o no, se escribe en el historial con el usuario, el 
 | La conexión con Komodo (nombre, URL, key y secret) | Tabla `komodo`. La API nunca devuelve la key ni el secret. |
 | Ajustes de ntfy (servidor, topic, token, activo o no) | Tabla `ntfy`. El token tampoco se devuelve nunca. |
 | Historial de acciones | Tabla `action_history`. |
+| Último resultado de Trivy por imagen (recuentos, vulnerabilidades, errores) | Tabla `image_scan`. |
 
 Todo está en el volumen `db_data`: ver [Actualizaciones y copias](../upgrading/).

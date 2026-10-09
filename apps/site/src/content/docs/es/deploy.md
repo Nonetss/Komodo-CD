@@ -61,6 +61,7 @@ services:
       SEED_ADMIN_EMAIL: "${SEED_ADMIN_EMAIL:-admin@example.com}"
       SEED_ADMIN_NAME: "${SEED_ADMIN_NAME:-Admin}"
       SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD is required}"
+      TRIVY_SERVER_URL: "${TRIVY_SERVER_URL:-http://trivy:4954}"
     healthcheck:
       test: ["CMD", "bun", "-e", "fetch('http://localhost:3000/health-check').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 10s
@@ -108,14 +109,35 @@ services:
     networks:
       - komodo_net
 
+  # Servidor de Trivy para la página Seguridad: guarda la base de datos de
+  # vulnerabilidades y recibe los escaneos que el backend lanza con su cliente
+  # `trivy` (misma versión que TRIVY_VERSION en apps/backend/Dockerfile).
+  trivy:
+    image: aquasec/trivy:0.75.0
+    init: true
+    restart: unless-stopped
+    command: ["server", "--listen", "0.0.0.0:4954", "--cache-dir", "/var/lib/trivy"]
+    volumes:
+      - trivy_cache:/var/lib/trivy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:4954/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # La primera vez descarga la base de datos antes de escuchar
+      start_period: 120s
+    networks:
+      - komodo_net
+
 networks:
   komodo_net:
 
 volumes:
   db_data:
+  trivy_cache:
 ```
 
-Solo el gateway publica un puerto. Manda la API a `backend:3000` y cada página a `frontend:4321` por la red de Compose, así que ninguna de las dos apps necesita exponerse.
+Solo el gateway publica un puerto. Manda la API a `backend:3000` y cada página a `frontend:4321` por la red de Compose, así que ninguna de las dos apps necesita exponerse. Al servicio `trivy` solo llega el backend, para escanear las imágenes de la página **Seguridad** (ver [Configuración](../configuration/#escaneo-de-imágenes)).
 
 ## Detrás de HTTPS
 

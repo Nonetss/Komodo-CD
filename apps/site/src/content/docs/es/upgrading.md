@@ -27,9 +27,13 @@ docker compose pull
 docker compose up -d --remove-orphans
 ```
 
+### Desde una versión sin escaneo de imágenes
+
+La página **Seguridad** necesita el nuevo servicio `trivy`. Descarga el nuevo `compose.yml` antes del pull, como arriba; en su primer arranque el servidor de Trivy descarga su base de datos de vulnerabilidades, así que los primeros escaneos pueden fallar durante un minuto y se pueden reintentar desde la página.
+
 ## Qué copiar
 
-Todo lo que guarda Komodo CD está en un único fichero SQLite, `/data/db.sqlite`, en el volumen `db_data`: usuarios, API keys, la conexión con Komodo, los ajustes de ntfy y el historial. Guarda también una copia de `.env`, que tiene `BETTER_AUTH_SECRET` y los datos del administrador.
+Todo lo que guarda Komodo CD está en un único fichero SQLite, `/data/db.sqlite`, en el volumen `db_data`: usuarios, API keys, la conexión con Komodo, los ajustes de ntfy, el historial y los últimos escaneos de imágenes. Guarda también una copia de `.env`, que tiene `BETTER_AUTH_SECRET` y los datos del administrador.
 
 Los datos sobreviven a reinicios, a `docker compose down` y a las actualizaciones de imagen. **`docker compose down -v` borra el volumen** y con él cada usuario, key y ajuste.
 
