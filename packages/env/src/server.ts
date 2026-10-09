@@ -35,6 +35,10 @@ export const env = createEnv({
     SEED_ADMIN_EMAIL: z.email().optional(),
     SEED_ADMIN_NAME: z.string().default("Admin"),
     SEED_ADMIN_PASSWORD: z.string().min(8).optional(),
+    // Servidor de Trivy para escanear las imágenes de los stacks. En Docker:
+    // http://trivy:4954 (el servicio `trivy` de compose). Sin él, el escaneo
+    // queda desactivado.
+    TRIVY_SERVER_URL: z.url().optional(),
   },
   runtimeEnv: {
     ...process.env,
