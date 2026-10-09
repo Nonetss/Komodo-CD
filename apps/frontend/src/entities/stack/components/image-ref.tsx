@@ -61,7 +61,11 @@ export function ImageRef({
           {prefix}
         </span>
       )}
-      {name && <span className="shrink-0">{name}</span>}
+      {name && (
+        <span className={cn("shrink-0", nameOnly && "min-w-0 shrink truncate")}>
+          {name}
+        </span>
+      )}
       {ref && (
         <span className={cn("shrink-0", name && "text-muted-foreground")}>
           {ref}

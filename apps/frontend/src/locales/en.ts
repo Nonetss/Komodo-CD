@@ -151,6 +151,8 @@ export default {
     stacksAside_one: "{{count}} stack",
     stacksAside_other: "{{count}} stacks",
     servicesShort: "{{count}} svc",
+    more_one: "and {{count}} more",
+    more_other: "and {{count}} more",
     deploying: "deploying…",
     stacks: {
       title: "Stacks",
@@ -170,8 +172,10 @@ export default {
       imagesShort_one: "{{count}} image",
       imagesShort_other: "{{count}} images",
       commitShort: "commit",
-      more_one: "and {{count}} more",
-      more_other: "and {{count}} more",
+      problem: {
+        "project-missing": "No project",
+        "missing-files": "Missing files",
+      },
     },
     security: {
       title: "Security",
@@ -182,9 +186,10 @@ export default {
       critical: "With critical",
       fixable: "Fixable",
       failed: "Failed",
-      bySeverity: "CVEs by severity",
       exposed: "Most exposed images",
       noneExposed: "No image has critical or high vulnerabilities.",
+      failedTitle: "Failed scans",
+      noneFailed: "Every image was scanned successfully.",
     },
     activity: {
       title: "Deployments",

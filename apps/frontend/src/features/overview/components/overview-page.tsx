@@ -8,7 +8,6 @@ import { RefreshButton } from "@/components/shared/form/refresh-button"
 import { PageHero } from "@/components/shared/layout/page-hero"
 import { StatStrip } from "@/components/shared/layout/stat-strip"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import { useImages } from "@/entities/image-scan"
 import {
   hasProblem,
@@ -19,6 +18,12 @@ import {
 } from "@/entities/stack"
 import { ActivityBlock } from "@/features/overview/components/activity-block"
 import { CompactSection } from "@/features/overview/components/compact-section"
+import {
+  ActivitySkeleton,
+  BlockRowsSkeleton,
+  HeaderSkeleton,
+  StripSkeleton,
+} from "@/features/overview/components/overview-skeletons"
 import { SecurityBlock } from "@/features/overview/components/security-block"
 import { StacksBlock } from "@/features/overview/components/stacks-block"
 import {
@@ -30,6 +35,13 @@ import type { Stack } from "@/lib/api-types"
 import { withIsland } from "@/providers/island"
 
 const EMPTY_STACKS: Stack[] = []
+
+// En dos columnas, los bloques de stacks y seguridad comparten sus cuatro
+// filas (subgrid): cabecera, barra, cifras y listas quedan a la misma altura
+// y los dos bloques miden lo mismo
+const BLOCKS_GRID = "grid gap-x-12 gap-y-14 xl:grid-cols-2 xl:gap-y-6"
+const BLOCK_ROWS =
+  "flex flex-col gap-6 xl:row-span-4 xl:grid xl:grid-rows-subgrid"
 
 /**
  * Resumen (`/`): las cifras de la instancia en tres bloques numerados
@@ -99,6 +111,8 @@ const OverviewPageContent = () => {
               },
             ]}
           />
+        ) : stacksQuery.isPending ? (
+          <StripSkeleton cells={4} />
         ) : null
       }
       action={<RefreshButton query={refresh} label={t("overview.refresh")} />}
@@ -134,9 +148,9 @@ const OverviewPageContent = () => {
   } else {
     content = (
       <>
-        <div className="grid gap-x-12 gap-y-14 xl:grid-cols-2">
-          <StacksBlock stacks={sorted} />
-          <SecurityBlock />
+        <div className={BLOCKS_GRID}>
+          <StacksBlock stacks={sorted} className={BLOCK_ROWS} />
+          <SecurityBlock className={BLOCK_ROWS} />
         </div>
         <ActivityBlock query={activityQuery} />
         <div className="flex flex-wrap gap-x-12 gap-y-14">
@@ -167,25 +181,22 @@ const OverviewPageContent = () => {
   )
 }
 
+/** La página mientras llegan los stacks, con la forma de los bloques. */
 function OverviewSkeleton() {
   return (
     <>
-      {[0, 1].map((section) => (
-        <div key={section} className="flex flex-col">
-          <div className="border-rule flex gap-5 rule-b pb-3">
-            <Skeleton className="h-3 w-5" />
-            <Skeleton className="h-6 w-56" />
+      <div className={BLOCKS_GRID}>
+        {[3, 4].map((cells) => (
+          <div key={cells} className={BLOCK_ROWS}>
+            <HeaderSkeleton />
+            <BlockRowsSkeleton cells={cells} />
           </div>
-          <div className="divide-y border-b">
-            {[0, 1].map((row) => (
-              <div key={row} className="space-y-2 py-5">
-                <Skeleton className="h-5 w-40" />
-                <Skeleton className="h-4 w-80 max-w-full" />
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
+      <div className="flex flex-col gap-6">
+        <HeaderSkeleton />
+        <ActivitySkeleton />
+      </div>
     </>
   )
 }

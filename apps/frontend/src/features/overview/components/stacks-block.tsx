@@ -9,129 +9,55 @@ import {
   hasProblem,
   hasUpdate,
   isRunning,
+  problemKind,
   StackLink,
   StackStateTag,
 } from "@/entities/stack"
+import { ShortList } from "@/features/overview/components/short-list"
+import { StackedBar } from "@/features/overview/components/stacked-bar"
 import type { Stack } from "@/lib/api-types"
-import { cn } from "@/lib/utils"
-
-// Nombres a la vista en cada lista; el resto, tras "y N más"
-const NAMES_SHOWN = 6
 
 /**
- * Reparto en una barra apilada: en marcha, con problemas y el resto (parados
- * o de paso). Cada tramo lleva su tono de estado y la leyenda, las cifras.
+ * Motivo corto de un stack con problemas: el estado cuando el problema es el
+ * estado (caído, desconocido…) y, si no, qué le falta.
  */
-function StateBar({ stacks }: { stacks: Stack[] }) {
+function ProblemTag({ stack }: { stack: Stack }) {
   const { t } = useTranslation()
-  const problems = stacks.filter(hasProblem).length
-  const running = stacks.filter((s) => !hasProblem(s) && isRunning(s)).length
-  const segments = [
-    { key: "running", value: running, fill: "bg-success" },
-    { key: "problems", value: problems, fill: "bg-danger" },
-    {
-      key: "stopped",
-      value: stacks.length - running - problems,
-      fill: "bg-muted-foreground/40",
-    },
-  ] as const
-
-  return (
-    <figure className="flex flex-col gap-3">
-      <div aria-hidden className="flex h-3 gap-0.5">
-        {segments.map((s) =>
-          s.value > 0 ? (
-            <span
-              key={s.key}
-              className={cn("min-w-1 last:rounded-r-sm", s.fill)}
-              style={{ flexGrow: s.value }}
-              title={`${t(`overview.stacks.states.${s.key}`)}: ${s.value}`}
-            />
-          ) : null
-        )}
-      </div>
-      <figcaption>
-        <ul className="flex flex-wrap gap-x-5 gap-y-1">
-          {segments.map((s) => (
-            <li key={s.key} className="inline-flex items-center gap-1.5">
-              <span aria-hidden className={cn("size-2 rounded-xs", s.fill)} />
-              <Text variant="meta-sm" tone="muted">
-                {t(`overview.stacks.states.${s.key}`)}
-              </Text>
-              <Text variant="data">{s.value}</Text>
-            </li>
-          ))}
-        </ul>
-      </figcaption>
-    </figure>
-  )
-}
-
-/** Lista corta de stacks enlazados con un detalle a la derecha. */
-function StackNames({
-  title,
-  stacks,
-  empty,
-  detail,
-}: {
-  title: string
-  stacks: Stack[]
-  empty: string
-  detail: (stack: Stack) => React.ReactNode
-}) {
-  const { t } = useTranslation()
-  const hidden = stacks.length - NAMES_SHOWN
-  return (
-    <div className="flex min-w-0 flex-col gap-2">
-      <Text as="h3" variant="caption">
-        {title}
+  const kind = problemKind(stack)
+  if (kind === "project-missing" || kind === "missing-files") {
+    return (
+      <Text variant="status" tone="destructive" className="shrink-0">
+        {t(`overview.stacks.problem.${kind}`)}
       </Text>
-      {stacks.length === 0 ? (
-        <Text as="p" variant="meta" tone="muted">
-          {empty}
-        </Text>
-      ) : (
-        <ul className="divide-y border-y">
-          {stacks.slice(0, NAMES_SHOWN).map((stack) => (
-            <li
-              key={stack.id}
-              className="flex min-w-0 items-center justify-between gap-3 py-2"
-            >
-              <StackLink
-                name={stack.name}
-                className="min-w-0 truncate font-semibold"
-              />
-              {detail(stack)}
-            </li>
-          ))}
-          {hidden > 0 ? (
-            <li className="py-2">
-              <Text variant="meta-sm" tone="muted">
-                {t("overview.stacks.more", { count: hidden })}
-              </Text>
-            </li>
-          ) : null}
-        </ul>
-      )}
-    </div>
-  )
+    )
+  }
+  return <StackStateTag state={stack.info.state} className="shrink-0" />
 }
 
 /**
  * 01 · Stacks: el reparto por estado, las cifras de servicios y novedades y
- * qué stacks piden atención o tienen algo nuevo que desplegar.
+ * qué stacks piden atención o tienen algo nuevo que desplegar. Sus cuatro
+ * hijos son las filas que comparte con el bloque de seguridad (ver
+ * `overview-page`).
  */
-export function StacksBlock({ stacks }: { stacks: Stack[] }) {
+export function StacksBlock({
+  stacks,
+  className,
+}: {
+  /** Ordenados por nombre */
+  stacks: Stack[]
+  className?: string
+}) {
   const { t } = useTranslation()
-  const sorted = [...stacks].sort((a, b) => a.name.localeCompare(b.name))
-  const attention = sorted.filter(hasProblem)
-  const updates = sorted.filter((s) => !hasProblem(s) && hasUpdate(s))
+  const attention = stacks.filter(hasProblem)
+  const updates = stacks.filter((s) => !hasProblem(s) && hasUpdate(s))
+  const running = stacks.filter((s) => !hasProblem(s) && isRunning(s)).length
   const services = stacks.flatMap((s) => s.info.services)
   const newImages = services.filter((svc) => svc.update_available).length
   const pendingCommits = stacks.filter(commitChanged).length
 
   return (
-    <section aria-labelledby="overview-stacks" className="flex flex-col gap-6">
+    <section aria-labelledby="overview-stacks" className={className}>
       <SectionHeader
         number={1}
         id="overview-stacks"
@@ -139,7 +65,28 @@ export function StacksBlock({ stacks }: { stacks: Stack[] }) {
         aside={t("overview.stacksAside", { count: stacks.length })}
         action={<BlockLink href="/stacks" label={t("overview.stacks.link")} />}
       />
-      <StateBar stacks={stacks} />
+      <StackedBar
+        segments={[
+          {
+            key: "running",
+            label: t("overview.stacks.states.running"),
+            value: running,
+            fill: "bg-success",
+          },
+          {
+            key: "problems",
+            label: t("overview.stacks.states.problems"),
+            value: attention.length,
+            fill: "bg-danger",
+          },
+          {
+            key: "stopped",
+            label: t("overview.stacks.states.stopped"),
+            value: stacks.length - running - attention.length,
+            fill: "bg-muted-foreground/40",
+          },
+        ]}
+      />
       <StatStrip
         items={[
           { label: t("overview.stacks.services"), value: services.length },
@@ -156,31 +103,47 @@ export function StacksBlock({ stacks }: { stacks: Stack[] }) {
         ]}
       />
       <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-        <StackNames
+        <ShortList
           title={t("overview.stacks.attention")}
-          stacks={attention}
+          items={attention}
           empty={t("overview.stacks.noAttention")}
-          detail={(s) => <StackStateTag state={s.info.state} />}
+          itemKey={(s) => s.id}
+          renderItem={(s) => (
+            <>
+              <StackLink
+                name={s.name}
+                className="min-w-0 truncate font-semibold"
+              />
+              <ProblemTag stack={s} />
+            </>
+          )}
         />
-        <StackNames
+        <ShortList
           title={t("overview.stacks.updates")}
-          stacks={updates}
+          items={updates}
           empty={t("overview.stacks.noUpdates")}
-          detail={(s) => {
+          itemKey={(s) => s.id}
+          renderItem={(s) => {
             const images = s.info.services.filter(
               (svc) => svc.update_available
             ).length
             return (
-              <Text variant="data" tone="muted" className="shrink-0">
-                {[
-                  images > 0
-                    ? t("overview.stacks.imagesShort", { count: images })
-                    : null,
-                  commitChanged(s) ? t("overview.stacks.commitShort") : null,
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
-              </Text>
+              <>
+                <StackLink
+                  name={s.name}
+                  className="min-w-0 truncate font-semibold"
+                />
+                <Text variant="data" tone="muted" className="shrink-0">
+                  {[
+                    images > 0
+                      ? t("overview.stacks.imagesShort", { count: images })
+                      : null,
+                    commitChanged(s) ? t("overview.stacks.commitShort") : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </Text>
+              </>
             )
           }}
         />

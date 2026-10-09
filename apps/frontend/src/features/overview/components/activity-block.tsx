@@ -5,11 +5,11 @@ import { Text } from "@/components/shared/brand/typography"
 import { BlockLink } from "@/components/shared/layout/block-link"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { StatStrip } from "@/components/shared/layout/stat-strip"
-import { Skeleton } from "@/components/ui/skeleton"
 import { ACTION_I18N } from "@/entities/deploy-action"
 import { StackLink } from "@/entities/stack"
 import { BarList } from "@/features/overview/components/bar-list"
 import { DailyChart } from "@/features/overview/components/daily-chart"
+import { ActivitySkeleton } from "@/features/overview/components/overview-skeletons"
 import { ACTIVITY_DAYS } from "@/features/overview/hooks/use-activity"
 import {
   bucketByDay,
@@ -69,12 +69,7 @@ export function ActivityBlock({
       </Text>
     )
   } else if (!view) {
-    content = (
-      <div className="space-y-3">
-        <Skeleton className="h-14 w-full" />
-        <Skeleton className="h-40 w-full" />
-      </div>
-    )
+    content = <ActivitySkeleton />
   } else if (view.summary.total === 0) {
     content = (
       <Text as="p" variant="meta" tone="muted">
