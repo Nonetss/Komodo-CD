@@ -31,16 +31,23 @@ function parseImage(image: string): ParsedImage {
 /**
  * Imagen de un servicio con jerarquía: el nombre en tinta, el registro
  * atenuado (y lo primero que se recorta) y el tag o digest corto al final.
- * La referencia completa queda en el `title`.
+ * La referencia completa queda en el `title`. Con `nameOnly`, solo el nombre
+ * (para listas estrechas donde basta con reconocer la imagen).
  */
 export function ImageRef({
   image,
+  nameOnly = false,
   className,
 }: {
   image: string
+  nameOnly?: boolean
   className?: string
 }) {
-  const { prefix, name, ref } = parseImage(image)
+  const parsed = parseImage(image)
+  const { name } = parsed
+  const prefix = nameOnly ? "" : parsed.prefix
+  // Una imagen solo por digest no tiene nombre: entonces queda el digest
+  const ref = nameOnly && name ? "" : parsed.ref
   return (
     <span
       title={image}

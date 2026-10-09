@@ -133,6 +133,7 @@ export function SecurityBlock() {
                   >
                     <ImageRef
                       image={image.image}
+                      nameOnly
                       className="min-w-0 flex-1 text-sm"
                     />
                     <span
