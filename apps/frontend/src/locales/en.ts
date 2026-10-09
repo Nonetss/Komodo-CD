@@ -387,6 +387,8 @@ export default {
   apikeys: {
     title: "API Keys",
     description: "Keys to trigger deploys from CI with the x-api-key header.",
+    docs: "Browse the API endpoints, parameters and responses at <docs>/scalar</docs>.",
+    openDocs: "Open the API documentation",
     refresh: "Refresh API keys",
     new: "New key",
     nameLabel: "Name",

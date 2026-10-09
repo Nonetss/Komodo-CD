@@ -1,7 +1,7 @@
-import { KeyRound, Plus } from "lucide-react"
+import { ExternalLink, KeyRound, Plus } from "lucide-react"
 import { useState } from "react"
-import { useTranslation } from "react-i18next"
-
+import { Trans, useTranslation } from "react-i18next"
+import { Text } from "@/components/shared/brand/typography"
 import { SoftCardList } from "@/components/shared/data-display/soft-card-list"
 import { QueryErrorCard } from "@/components/shared/feedback/query-error-card"
 import { StateCard } from "@/components/shared/feedback/state-card"
@@ -88,6 +88,39 @@ const ApiKeysPageContent = () => {
           )
         }
       />
+
+      <div className="flex items-center justify-between gap-3 border-b pb-3">
+        <Text
+          as="p"
+          variant="meta"
+          tone="muted"
+          className="min-w-0 text-pretty"
+        >
+          <Trans
+            i18nKey="apikeys.docs"
+            components={{
+              docs: (
+                // biome-ignore lint/a11y/useAnchorContent: Trans inyecta el texto
+                <a
+                  href="/scalar"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-foreground hover:text-signal-ink decoration-signal font-mono underline underline-offset-4"
+                />
+              ),
+            }}
+          />
+        </Text>
+        <a
+          href="/scalar"
+          target="_blank"
+          rel="noreferrer"
+          aria-label={t("apikeys.openDocs")}
+          className="text-muted-foreground hover:text-signal-ink shrink-0 transition-colors"
+        >
+          <ExternalLink aria-hidden className="size-3.5" />
+        </a>
+      </div>
 
       {createdKey && (
         <CreatedKey value={createdKey} onDismiss={() => setCreatedKey(null)} />
