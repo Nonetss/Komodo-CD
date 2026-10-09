@@ -56,6 +56,7 @@ The dashboard SHALL show one sticky top bar on every screen size, closed by a he
 
 - the `KOMODO/CD` wordmark, linking to `/` and read by screen readers as "Komodo CD";
 - on large screens, the navigation as a row of uppercase links;
+- on large screens, a stack search field (see "Stack search in the top bar");
 - the language, theme and log-out controls, rendered as a single island.
 
 On smaller screens, the top bar SHALL keep only the wordmark and the controls, and a fixed bottom tab bar SHALL show the six surfaces, respecting the device's safe-area inset.
@@ -76,6 +77,20 @@ The active item SHALL be the one whose path equals the current path or, for ever
 
 - **WHEN** a dashboard page is rendered
 - **THEN** the top bar SHALL contain exactly one island with the language, theme and log-out controls
+
+### Requirement: Stack search in the top bar
+
+On large screens, the top bar SHALL hold a stack search field, rendered as its own island. It SHALL load `v0.stacks.list` only once the field gets focus. While the user types, it SHALL suggest up to eight stacks whose name contains the text (case-insensitive), sorted by name, each with its state dot. The arrow keys SHALL move through the suggestions, `Enter` or a click SHALL open `/stacks/<name>` and clear the field, and `Escape` SHALL clear it. When nothing matches, it SHALL say so. The field SHALL follow the ARIA combobox pattern, with focus kept in the field.
+
+#### Scenario: Jump to a stack
+
+- **WHEN** the user types "git" in the top bar search and presses `Enter`
+- **THEN** the first suggestion (for example `gitea`) SHALL open at `/stacks/gitea`
+
+#### Scenario: No match
+
+- **WHEN** the user types a text that no stack name contains
+- **THEN** the search SHALL show that no stack matches
 
 ### Requirement: Fast page changes
 
