@@ -1,16 +1,14 @@
 import type { ReactNode } from "react"
 
 import { Text } from "@/components/shared/brand/typography"
-import { getAppSurface, type SurfaceId } from "@/lib/app-surfaces"
 import { cn } from "@/lib/utils"
 
 /**
- * Cabecera de toda página: el icono de la superficie en el acento como marca,
- * el título en rol `display` (ancho expandido), la descripción y, a la
- * derecha, recuentos, estado y una única acción. Cierra con el trazo grueso.
+ * Cabecera de toda página: el título en rol `display` (ancho expandido), la
+ * descripción y, a la derecha, recuentos, estado y una única acción. Cierra
+ * con el trazo grueso.
  */
 export function PageHero({
-  surface,
   title,
   description,
   meta,
@@ -18,7 +16,6 @@ export function PageHero({
   action,
   className,
 }: {
-  surface: SurfaceId
   title: ReactNode
   description?: ReactNode
   meta?: ReactNode
@@ -26,7 +23,6 @@ export function PageHero({
   action?: ReactNode
   className?: string
 }) {
-  const Icon = getAppSurface(surface).icon
   const rightItemCount = [meta, status, action].filter(Boolean).length
 
   return (
@@ -37,8 +33,7 @@ export function PageHero({
       )}
     >
       <div className="min-w-0">
-        <Icon aria-hidden className="text-signal mb-4 size-5" />
-        <Text as="h1" variant="display" className="text-balance">
+        <Text as="h1" variant="display" className="text-balance lg:text-7xl">
           {title}
         </Text>
         {description ? (

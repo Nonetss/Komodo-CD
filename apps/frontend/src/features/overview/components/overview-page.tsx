@@ -45,7 +45,6 @@ const OverviewPageContent = () => {
 
   const hero = (
     <PageHero
-      surface="overview"
       title={t("overview.title")}
       description={t("overview.description")}
       meta={

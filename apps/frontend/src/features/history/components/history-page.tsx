@@ -153,7 +153,6 @@ const HistoryPageContent = () => {
   return (
     <div className="flex flex-col gap-6">
       <PageHero
-        surface="history"
         title={t("history.title")}
         description={t("history.description")}
         action={

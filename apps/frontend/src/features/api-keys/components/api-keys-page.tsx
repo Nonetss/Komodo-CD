@@ -65,7 +65,6 @@ const ApiKeysPageContent = () => {
   return (
     <div className="flex flex-col gap-6">
       <PageHero
-        surface="apikeys"
         title={t("apikeys.title")}
         description={t("apikeys.description")}
         meta={

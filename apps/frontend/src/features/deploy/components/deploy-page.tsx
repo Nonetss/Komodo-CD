@@ -85,7 +85,6 @@ const DeployPageContent = () => {
   return (
     <div className="flex flex-col gap-6">
       <PageHero
-        surface="deploy"
         title={t("deploy.title")}
         description={t("deploy.description")}
       />

@@ -117,7 +117,6 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
     return (
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-12 sm:px-6 lg:px-10 lg:pt-10">
         <PageHero
-          surface="stacks"
           title={t("stacks.title")}
           description={t("stacks.description")}
         />
