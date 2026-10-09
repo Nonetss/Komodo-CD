@@ -6,9 +6,13 @@ same actions from CI with an API key.
 
 **Website and docs:** [nonetss.github.io/Komodo-CD](https://nonetss.github.io/Komodo-CD/)
 
-- **Stacks**: state, services and images of every stack, with search and
-  filters (running, stopped, with issues) and one-click Pull, Redeploy or
-  Pull + Redeploy
+- **Overview**: every stack sorted by urgency (needs attention, something new
+  to deploy, running, stopped), with the reason a stack needs attention and a
+  single Pull + Redeploy for everything that has an update
+- **Stacks**: a searchable, filterable list (running, stopped, with issues)
+  next to the page of each stack: services, images with a new version, deployed
+  and latest commit, and one-click Pull, Redeploy or Pull + Redeploy, also on
+  several stacks at once
 - **CI snippets**: a ready-to-paste, syntax-highlighted `curl` per stack and
   action
 - **History**: every action launched from the dashboard or from CI, with who
@@ -37,15 +41,21 @@ Monorepo (Turborepo + Bun workspaces), plus the production deployment using imag
 | `@komodo-cd/logger` | Shared pino logger                                               |
 | `@komodo-cd/config` | Shared `tsconfig`                                                |
 
-![Stacks](img/stacks.png)
+![Overview](img/overview.png)
 
-| Deploy                    | History                       |
-| ------------------------- | ----------------------------- |
-| ![Deploy](img/deploy.png) | ![History](img/historial.png) |
+| Stacks                    | Deploy                    |
+| ------------------------- | ------------------------- |
+| ![Stacks](img/stacks.png) | ![Deploy](img/deploy.png) |
 
-| Connection                          | Light theme                                |
-| ----------------------------------- | ------------------------------------------ |
-| ![Connection](img/credenciales.png) | ![Stacks, light theme](img/stacks-light.png) |
+| History                     | Connection                        |
+| --------------------------- | --------------------------------- |
+| ![History](img/history.png) | ![Connection](img/connection.png) |
+
+| API keys                      | Light theme                                  |
+| ----------------------------- | -------------------------------------------- |
+| ![API keys](img/api-keys.png) | ![Stacks, light theme](img/stacks-light.png) |
+
+The screenshots use made-up stacks and URLs.
 
 ## Requirements
 

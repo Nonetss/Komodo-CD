@@ -5,7 +5,12 @@ export const defaultLang: Lang = "en"
 export const INSTALL_COMMAND =
   "curl -fsSL https://raw.githubusercontent.com/Nonetss/Komodo-CD/main/scripts/bootstrap.sh | bash"
 
-export type TourStopId = "deploy" | "history" | "connection" | "theme"
+export type TourStopId =
+  | "stacks"
+  | "deploy"
+  | "history"
+  | "connection"
+  | "theme"
 
 const en = {
   meta: {
@@ -50,6 +55,11 @@ const en = {
   tour: {
     heading: "What you get",
     stops: {
+      stacks: {
+        title: "Every stack, one page each.",
+        body: "The stacks list stays on the left, with search and filters for running, stopped or with issues. Open one to see its services and images, which of them has a new image, the deployed commit against the latest one, the three actions and the curl that runs each of them from CI. Tick several to run the same action on all of them.",
+        alt: "Stacks page: the list of stacks on the left and, on the right, a stack with two new images, a newer commit, its action buttons and its curl for CI",
+      },
       deploy: {
         title: "Pull, redeploy, or both.",
         body: "Pick a stack and an action. Pull updates the images without restarting, Redeploy brings the whole stack down and up again, Pull + Redeploy does both. Under the form, the same action as a curl ready for a GitHub or Gitea Actions workflow.",
@@ -75,17 +85,17 @@ const en = {
       { title: string; body: string; alt: string }
     >,
     overviewAlt:
-      "Stacks page with running, stopped and failing counts, filters and an expanded stack showing its curl for CI",
+      "Overview page with counters for attention, updates, running and total, the stacks that need attention and the stacks with something new to deploy",
     rest: {
       heading: "And the rest",
       items: [
         {
           term: "Status at a glance",
-          text: "Search and filter stacks by running, stopped or with issues: failed states, a missing project or missing files on the host.",
+          text: "The overview sorts stacks by urgency: what needs attention, what has something new to deploy, what is running and what is stopped, each with the reason or the action it needs.",
         },
         {
           term: "Update hints",
-          text: "A stack is flagged when one of its images has an update or the deployed commit is behind the latest one.",
+          text: "A stack is flagged when one of its images has an update or the deployed commit is behind the latest one, and a single Pull + Redeploy from the overview brings them all up to date.",
         },
         {
           term: "API keys",
@@ -243,6 +253,11 @@ const es: Dictionary = {
   tour: {
     heading: "Qué incluye",
     stops: {
+      stacks: {
+        title: "Cada stack, en su página.",
+        body: "La lista de stacks se queda a la izquierda, con búsqueda y filtros por activos, parados o con problemas. Abre uno para ver sus servicios e imágenes, cuál tiene una imagen nueva, el commit desplegado frente al último, las tres acciones y el curl que lanza cada una desde CI. Marca varios para lanzar la misma acción en todos.",
+        alt: "Página de stacks: la lista de stacks a la izquierda y, a la derecha, un stack con dos imágenes nuevas, un commit más reciente, sus botones de acción y su curl para CI",
+      },
       deploy: {
         title: "Pull, Redeploy o los dos.",
         body: "Elige un stack y una acción. Pull actualiza las imágenes sin reiniciar, Redeploy baja y vuelve a levantar todo el stack, Pull + Redeploy hace las dos cosas. Debajo del formulario, la misma acción como un curl listo para un workflow de GitHub o Gitea Actions.",
@@ -265,17 +280,17 @@ const es: Dictionary = {
       },
     },
     overviewAlt:
-      "Página de stacks con los contadores de activos, parados y con problemas, los filtros y un stack desplegado con su curl para CI",
+      "Página de resumen con los contadores de atención, actualizaciones, activos y total, los stacks que requieren atención y los que tienen algo nuevo que desplegar",
     rest: {
       heading: "Y el resto",
       items: [
         {
           term: "El estado de un vistazo",
-          text: "Busca y filtra stacks por activos, parados o con problemas: estados de error, un proyecto que falta o ficheros que no están en el host.",
+          text: "El resumen ordena los stacks por urgencia: lo que requiere atención, lo que tiene algo nuevo que desplegar, lo que está en marcha y lo que está parado, cada uno con el motivo o la acción que necesita.",
         },
         {
           term: "Avisos de actualización",
-          text: "Un stack se marca cuando una de sus imágenes tiene actualización o el commit desplegado va por detrás del último.",
+          text: "Un stack se marca cuando una de sus imágenes tiene actualización o el commit desplegado va por detrás del último, y un solo Pull + Redeploy desde el resumen los pone todos al día.",
         },
         {
           term: "API keys",
