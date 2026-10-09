@@ -34,7 +34,7 @@ export function Toaster() {
       toastOptions={{
         classNames: {
           toast:
-            "!bg-popover !text-popover-foreground !border-rule !rounded-lg !font-sans !shadow-lg",
+            "!bg-popover !text-popover-foreground !border-border !rounded-lg !font-sans !shadow-lg",
           description: "!text-muted-foreground",
           success: "[&_[data-icon]]:!text-success",
           error: "[&_[data-icon]]:!text-destructive",
