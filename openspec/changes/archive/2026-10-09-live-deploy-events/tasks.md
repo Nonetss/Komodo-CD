@@ -39,4 +39,4 @@
 
 - [x] 7.1 Run `bun run test`, `bun run check-types` and `bunx biome check .`
 - [x] 7.2 Run `openspec validate --all --strict`
-- [ ] 7.3 Ask the user to confirm at runtime (screenshot or pasted output): a `curl -N` to `/api/v0/deploy/events` through the gateway streams events uncompressed, and a CI deploy shows its spinner on the Stacks page and appears in History without refresh
+- [x] 7.3 Ask the user to confirm at runtime (screenshot or pasted output): a `curl -N` to `/api/v0/deploy/events` through the gateway streams events uncompressed, and a CI deploy shows its spinner on the Stacks page and appears in History without refresh
