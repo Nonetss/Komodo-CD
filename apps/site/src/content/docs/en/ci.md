@@ -39,7 +39,7 @@ The request returns once Komodo has accepted the action; the deploy itself runs 
 
 A missing or invalid key answers `401`. If Komodo rejects the action (an unknown stack, a key without permission, Komodo unreachable), the answer is `502` with Komodo's message in `message` (`503` if Komodo CD has no Komodo connection yet), and the failure is recorded in the history like any other action. `--fail-with-body` makes curl exit with an error on those, so the CI step fails too.
 
-Every stack row in **Stacks** and the **Deploy** page show this same command with the stack and action filled in, ready to copy.
+The page of each stack in **Stacks** and the **Deploy** page show this same command with the stack and action filled in, ready to copy.
 
 ## GitHub Actions
 

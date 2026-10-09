@@ -39,7 +39,7 @@ La petición vuelve en cuanto Komodo acepta la acción; el despliegue en sí cor
 
 Sin key o con una key no válida responde `401`. Si Komodo rechaza la acción (un stack que no existe, una key sin permiso, Komodo inaccesible), la respuesta es `502` con el mensaje de Komodo en `message` (`503` si Komodo CD aún no tiene conexión con Komodo), y el fallo queda en el historial como cualquier otra acción. Con `--fail-with-body` curl sale con error en esos casos, así que el paso del CI también falla.
 
-Cada fila de **Stacks** y la página **Deploy** muestran este mismo comando con el stack y la acción ya puestos, listo para copiar.
+La página de cada stack en **Stacks** y la página **Deploy** muestran este mismo comando con el stack y la acción ya puestos, listo para copiar.
 
 ## GitHub Actions
 

@@ -26,23 +26,25 @@ Once it is saved, the page shows the status of the connection and how many stack
 
 ## 3. Check your stacks
 
-Open **Stacks**. Every stack of the instance appears with its state and the number of its services. The counters at the top and the filters split them into:
+The **Overview** (`/`, where you land after signing in) sorts every stack of the instance by urgency, and each stack appears in a single section:
 
-- **Running**: running or deploying.
-- **Stopped**: stopped, down, paused or created.
-- **With issues**: a failed state, an unknown one, a project that is missing on the host or missing files.
+- **Needs attention**: a failed state, an unknown one, a project that is missing on the host or missing files, with the reason and, when it usually helps, a Redeploy button.
+- **Something new to deploy**: one of its images has an update available or the deployed commit is behind the latest one. The table shows what changes, and **Pull + Redeploy all** updates every stack in the section at once.
+- **Running** and **Stopped**: the rest.
 
-A stack is also flagged when one of its images has an update available or the deployed commit is behind the latest one. Expand a row to see its services and images, and the curl that runs each action from CI.
+**Stacks** (`/stacks`) is the full list, with search and the filters **Running** (running or deploying), **Stopped** (stopped, down, paused or created) and **Issues**. Click a stack to open its page at `/stacks/<name>`: its services and images, which ones have a new image, the deployed and latest commits, and the curl that runs each action from CI.
 
 ## 4. Run an action
 
-Each row has three buttons, and **Deploy** (`/deploy`) does the same from a form where you pick the stack:
+A stack's page has three buttons, and **Deploy** (`/deploy`) does the same from a form where you pick the stack:
 
 | Action | What Komodo does |
 | --- | --- |
 | **Pull** | Pulls the stack's images without restarting it (`PullStack`). |
 | **Redeploy** | Brings the whole stack down and up again (`DeployStack`). |
 | **Pull + Redeploy** | Both, in that order. The usual choice after pushing a new image. |
+
+To run one action on several stacks, tick them in the **Stacks** list and pick it in the bar that appears; Komodo CD launches at most three at a time and reports them in a single message.
 
 ## 5. Read the history
 

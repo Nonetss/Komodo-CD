@@ -26,23 +26,25 @@ Una vez guardada, la página muestra el estado de la conexión y cuántos stacks
 
 ## 3. Revisa tus stacks
 
-Abre **Stacks**. Cada stack de la instancia aparece con su estado y el número de servicios. Los contadores de arriba y los filtros los separan en:
+El **Resumen** (`/`, donde aterrizas al iniciar sesión) ordena los stacks de la instancia por urgencia, y cada stack aparece en una sola sección:
 
-- **Running**: en marcha o desplegándose.
-- **Parados**: parados, caídos, en pausa o creados.
-- **Con problemas**: un estado de error o desconocido, un proyecto que falta en el host o ficheros que no están.
+- **Requiere atención**: un estado de error o desconocido, un proyecto que falta en el host o ficheros que no están, con el motivo y, cuando suele arreglarlo, un botón de Redeploy.
+- **Hay algo nuevo que desplegar**: una de sus imágenes tiene actualización o el commit desplegado va por detrás del último. La tabla muestra qué cambia, y **Pull + Redeploy en los N** actualiza de una vez todos los stacks de la sección.
+- **En marcha** y **Parados**: el resto.
 
-Un stack también se marca cuando una de sus imágenes tiene actualización o el commit desplegado va por detrás del último. Despliega una fila para ver sus servicios e imágenes, y el curl que lanza cada acción desde CI.
+**Stacks** (`/stacks`) es la lista completa, con búsqueda y los filtros **Running** (en marcha o desplegándose), **Parados** (parados, caídos, en pausa o creados) y **Problemas**. Pulsa un stack para abrir su página en `/stacks/<nombre>`: sus servicios e imágenes, cuáles tienen imagen nueva, el commit desplegado y el último, y el curl que lanza cada acción desde CI.
 
 ## 4. Lanza una acción
 
-Cada fila tiene tres botones, y **Deploy** (`/deploy`) hace lo mismo desde un formulario donde eliges el stack:
+La página de un stack tiene tres botones, y **Deploy** (`/deploy`) hace lo mismo desde un formulario donde eliges el stack:
 
 | Acción | Qué hace Komodo |
 | --- | --- |
 | **Pull** | Descarga las imágenes del stack sin reiniciarlo (`PullStack`). |
 | **Redeploy** | Baja y vuelve a levantar todo el stack (`DeployStack`). |
 | **Pull + Redeploy** | Las dos, en ese orden. Lo habitual después de publicar una imagen nueva. |
+
+Para lanzar una acción en varios stacks, márcalos en la lista de **Stacks** y elígela en la barra que aparece; Komodo CD lanza como mucho tres a la vez y avisa del resultado en un solo mensaje.
 
 ## 5. Consulta el historial
 
