@@ -15,12 +15,6 @@ type SegmentedProps<T extends string> = {
   value: T
   onChange: (value: T) => void
   options: SegmentedOption<T>[]
-  /**
-   * `pill` (por defecto): pestañas sueltas para filtros. `tabs`: pestañas con
-   * relleno lateral para la barra de un bloque (p. ej. `CodeBlock`), donde el
-   * subrayado se apoya en su trazo.
-   */
-  variant?: "pill" | "tabs"
   className?: string
   "aria-label"?: string
 }
@@ -34,7 +28,6 @@ export function Segmented<T extends string>({
   value,
   onChange,
   options,
-  variant = "pill",
   className,
   ...props
 }: SegmentedProps<T>) {
@@ -43,10 +36,7 @@ export function Segmented<T extends string>({
     <fieldset
       aria-label={props["aria-label"]}
       className={cn(
-        "flex max-w-full min-w-0",
-        variant === "pill"
-          ? "flex-wrap gap-x-4 gap-y-1"
-          : "self-stretch overflow-x-auto",
+        "flex max-w-full min-w-0 flex-wrap gap-x-4 gap-y-1",
         className
       )}
     >
@@ -58,9 +48,7 @@ export function Segmented<T extends string>({
             key={o.value}
             className={cn(
               "has-focus-visible:ring-ring text-label relative flex cursor-pointer items-center justify-center gap-1.5 font-mono font-medium tracking-widest whitespace-nowrap uppercase transition-colors has-focus-visible:ring-2",
-              "after:absolute after:bottom-0 after:h-0.5 after:transition-colors",
-              variant === "pill" && "h-9 after:inset-x-0",
-              variant === "tabs" && "h-full min-h-9 px-2.5 after:inset-x-2.5",
+              "h-9 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:transition-colors",
               active
                 ? "text-foreground after:bg-signal"
                 : "text-muted-foreground hover:text-foreground after:bg-transparent"

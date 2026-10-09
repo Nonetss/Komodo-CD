@@ -217,23 +217,21 @@ export function StackDetail({
           as="h3"
           id="stack-ci"
           title={t("stacks.ciTitle")}
-        />
-        <CodeBlock
-          language="shell"
-          code={buildDeployCurl(appUrl, stack.name, curlAction)}
-          header={
+          action={
             <Segmented
-              variant="tabs"
               value={curlAction}
               onChange={setCurlAction}
               aria-label={t("stacks.ciTitle")}
-              className="-ml-2.5"
               options={DEPLOY_ACTIONS.map((a) => ({
                 value: a,
                 label: actionLabel(a),
               }))}
             />
           }
+        />
+        <CodeBlock
+          language="shell"
+          code={buildDeployCurl(appUrl, stack.name, curlAction)}
         />
         <DeployCurlHint />
       </section>
