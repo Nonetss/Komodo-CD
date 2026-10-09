@@ -11,7 +11,11 @@ import { HeroCount, PageHero } from "@/components/shared/layout/page-hero"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ACTION_I18N, useDeployTrigger } from "@/entities/deploy-action"
+import {
+  ACTION_I18N,
+  useDeployEvents,
+  useDeployTrigger,
+} from "@/entities/deploy-action"
 import { useStacks } from "@/entities/stack"
 import { StackRow } from "@/features/stacks/components/stack-row"
 import { StacksBulkBar } from "@/features/stacks/components/stacks-bulk-bar"
@@ -30,6 +34,8 @@ const StacksPageContent = () => {
   const { t } = useTranslation()
   const stacksQuery = useStacks()
   const deployTrigger = useDeployTrigger()
+  // Deploys en curso lanzados desde cualquier sitio (otra pestaña, el CI…)
+  const liveRunning = useDeployEvents()
   const stacks = stacksQuery.data ?? EMPTY_STACKS
   const loading = stacksQuery.isLoading
 
@@ -163,8 +169,12 @@ const StacksPageContent = () => {
     setSelected((prev) => new Set([...prev].filter((n) => !succeeded.has(n))))
   }
 
+  // Lo lanzado desde esta página manda; si no, lo que diga el stream
+  const pendingFor = (name: string) =>
+    pending[name] ?? liveRunning[name] ?? null
+
   const bulkDisabled =
-    bulkAction !== null || [...selected].some((n) => pending[n])
+    bulkAction !== null || [...selected].some((n) => pendingFor(n))
 
   const clearFilters = () => {
     setSearch("")
@@ -286,7 +296,7 @@ const StacksPageContent = () => {
                   onToggle={() => toggle(stack.name)}
                   selected={selected.has(stack.name)}
                   onSelect={() => toggleSelected(stack.name)}
-                  pendingAction={pending[stack.name] ?? null}
+                  pendingAction={pendingFor(stack.name)}
                   onAction={(action) => runAction(stack.name, action)}
                 />
               ))}

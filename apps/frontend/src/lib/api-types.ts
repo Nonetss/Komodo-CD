@@ -37,3 +37,8 @@ export type Stack = StackOutput & {
   info: StackOutput["info"] & { state: StackState }
 }
 export type StackService = StackOutput["info"]["services"][number]
+
+/** Evento de `v0.deploy.watch` (el stream SSE de la actividad de deploys) */
+export type DeployEvent =
+  Outputs["deploy"]["watch"] extends AsyncIterable<infer E> ? E : never
+export type DeployRun = Extract<DeployEvent, { type: "started" }>["run"]

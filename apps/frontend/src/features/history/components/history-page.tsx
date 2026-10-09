@@ -8,7 +8,7 @@ import { RefreshButton } from "@/components/shared/form/refresh-button"
 import { Segmented } from "@/components/shared/form/segmented"
 import { PageHero } from "@/components/shared/layout/page-hero"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ACTION_I18N } from "@/entities/deploy-action"
+import { ACTION_I18N, useDeployEvents } from "@/entities/deploy-action"
 import { useHistory } from "@/features/history/hooks/use-history"
 import type { HistoryItem } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
@@ -114,6 +114,8 @@ function HistoryEntry({ item }: { item: HistoryItem }) {
 const HistoryPageContent = () => {
   const { t } = useTranslation()
   const historyQuery = useHistory()
+  // Refresca el historial cuando termina cualquier deploy (también los del CI)
+  useDeployEvents()
   const history = historyQuery.data ?? []
   const [filter, setFilter] = useState<Filter>("all")
 
