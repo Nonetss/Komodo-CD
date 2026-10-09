@@ -75,6 +75,13 @@ Don't hit the running app with `curl`, browser automation or ad-hoc scripts unle
 - Tailwind classes: `bun run tailwind:check`.
 - Biome (root `biome.json`): 2-space indent, double quotes, no semicolons, 80 columns, organized imports. No ESLint, no Prettier.
 
+## OpenSpec workflow
+
+- The current behavior is specified in `openspec/specs/<capability>/spec.md` (English). List the capabilities with `openspec list --specs` rather than relying on a hard-coded list.
+- A change goes `proposal → specs + design → tasks → apply`, then its delta specs are synced and the change archived: `/opsx:propose`, `/opsx:explore`, `/opsx:apply`, `/opsx:sync`, `/opsx:archive` (`.claude/commands/opsx/`). Check them with `openspec validate --all --strict`.
+- `openspec/config.yaml` carries the project context and per-artifact rules for those artifacts; keep its wording consistent with this file.
+- A change that alters behavior described in a spec updates that spec (through a change's delta, or directly for small fixes) in the same change.
+
 <!-- BEGIN:turborepo-agent-rules -->
 
 # This is NOT the Turborepo you know
