@@ -1,14 +1,13 @@
-import { ArrowRight } from "lucide-react"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { Text, textVariants } from "@/components/shared/brand/typography"
+import { Text } from "@/components/shared/brand/typography"
+import { BlockLink } from "@/components/shared/layout/block-link"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ImageTable, useImages, useScan } from "@/entities/image-scan"
 import type { Stack } from "@/lib/api-types"
 import { getErrorMessage } from "@/lib/orpc"
-import { cn } from "@/lib/utils"
 
 /**
  * Sección de seguridad de la ficha: las imágenes del stack con sus recuentos
@@ -81,18 +80,7 @@ export function StackSecurity({ stack }: { stack: Stack }) {
         id="stack-security"
         title={t("stacks.securityTitle")}
         aside={imagesQuery.isSuccess ? images.length : null}
-        action={
-          <a
-            href="/security"
-            className={cn(
-              textVariants({ role: "label", tone: "muted" }),
-              "hover:text-foreground inline-flex items-center gap-1.5"
-            )}
-          >
-            {t("stacks.securityAll")}
-            <ArrowRight aria-hidden className="size-3.5" />
-          </a>
-        }
+        action={<BlockLink href="/security" label={t("stacks.securityAll")} />}
       />
       {content}
     </section>

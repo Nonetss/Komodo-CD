@@ -49,8 +49,8 @@ export function BackToList() {
 
 /**
  * Ficha de un stack: cabecera con el nombre y las acciones (borrar incluido),
- * el problema si lo hay, los commits, los servicios con su imagen, sus
- * vulnerabilidades y el `curl` para CI.
+ * el problema si lo hay, los commits, el `curl` para CI, los servicios con su
+ * imagen y sus vulnerabilidades.
  */
 export function StackDetail({
   stack,
@@ -163,6 +163,30 @@ export function StackDetail({
         />
       ) : null}
 
+      <section aria-labelledby="stack-ci" className="flex flex-col gap-4">
+        <SectionHeader
+          as="h3"
+          id="stack-ci"
+          title={t("stacks.ciTitle")}
+          action={
+            <Segmented
+              value={curlAction}
+              onChange={setCurlAction}
+              aria-label={t("stacks.ciTitle")}
+              options={DEPLOY_ACTIONS.map((a) => ({
+                value: a,
+                label: actionLabel(a),
+              }))}
+            />
+          }
+        />
+        <CodeBlock
+          language="shell"
+          code={buildDeployCurl(appUrl, stack.name, curlAction)}
+        />
+        <DeployCurlHint />
+      </section>
+
       <section aria-labelledby="stack-services" className="flex flex-col">
         <SectionHeader
           as="h3"
@@ -211,30 +235,6 @@ export function StackDetail({
       </section>
 
       <StackSecurity stack={stack} />
-
-      <section aria-labelledby="stack-ci" className="flex flex-col gap-4">
-        <SectionHeader
-          as="h3"
-          id="stack-ci"
-          title={t("stacks.ciTitle")}
-          action={
-            <Segmented
-              value={curlAction}
-              onChange={setCurlAction}
-              aria-label={t("stacks.ciTitle")}
-              options={DEPLOY_ACTIONS.map((a) => ({
-                value: a,
-                label: actionLabel(a),
-              }))}
-            />
-          }
-        />
-        <CodeBlock
-          language="shell"
-          code={buildDeployCurl(appUrl, stack.name, curlAction)}
-        />
-        <DeployCurlHint />
-      </section>
     </article>
   )
 }
