@@ -2,26 +2,26 @@
 name: Komodo CD
 description: An operations bulletin for deploys — paper and ink, ruled lines instead of boxes, and one orange signal for whatever needs action.
 colors:
-  paper: "oklch(0.985 0.006 85)"
-  ink: "oklch(0.19 0.01 70)"
-  wash: "oklch(0.955 0.008 85)"
-  hairline: "oklch(0.91 0.01 85)"
-  field-rule: "oklch(0.78 0.012 80)"
-  graphite: "oklch(0.46 0.012 75)"
-  signal: "oklch(0.553 0.195 38.4)"
+  paper: "oklch(0.9818 0.0054 95.0986)"
+  ink: "oklch(0.1908 0.002 106.5859)"
+  wash: "oklch(0.9341 0.0153 90.239)"
+  hairline: "oklch(0.94 0.003 97.3627)"
+  field-rule: "oklch(0.78 0.008 98.3528)"
+  graphite: "oklch(0.5341 0.0078 97.4503)"
+  signal: "oklch(0.6724 0.1308 38.7559)"
   success: "oklch(0.51 0.154 150)"
   warning: "oklch(0.535 0.135 66)"
   info: "oklch(0.546 0.2 263)"
   code-slab: "oklch(0.17 0 0)"
   code-text: "oklch(0.95 0.004 100)"
-  paper-dark: "oklch(0.17 0.006 70)"
-  ink-dark: "oklch(0.95 0.008 85)"
-  wash-dark: "oklch(0.235 0.007 70)"
-  hairline-dark: "oklch(0.3 0.007 70)"
-  field-rule-dark: "oklch(0.42 0.008 70)"
-  graphite-dark: "oklch(0.72 0.012 80)"
-  popover-dark: "oklch(0.215 0.007 70)"
-  signal-dark: "oklch(0.75 0.17 52)"
+  paper-dark: "oklch(0.2679 0.0036 106.6427)"
+  ink-dark: "oklch(0.9576 0.0027 106.4494)"
+  wash-dark: "oklch(0.2928 0.0018 106.5092)"
+  hairline-dark: "oklch(0.31 0.004 106.8928)"
+  field-rule-dark: "oklch(0.42 0.006 100.2195)"
+  graphite-dark: "oklch(0.7713 0.0169 99.0657)"
+  popover-dark: "oklch(0.3085 0.0035 106.6039)"
+  signal-dark: "oklch(0.6724 0.1308 38.7559)"
   success-dark: "oklch(0.78 0.17 152)"
   warning-dark: "oklch(0.82 0.15 85)"
   info-dark: "oklch(0.72 0.15 255)"
@@ -161,13 +161,13 @@ Type does the composing. Only the page title takes Archivo's wide, heavy cut, so
 
 ## Colors
 
-A near-monochrome editorial palette: warm off-white paper and ink with a warm tint (hue 70–85) in the greys of both themes, and a single orange accent. Light is the default theme; dark inverts ink and paper rather than inventing a second palette.
+A near-monochrome editorial palette: warm off-white paper and ink with a warm tint (hue 95–107, the greys of garabato) in the greys of both themes, and a single orange accent. Light is the default theme; dark inverts ink and paper rather than inventing a second palette.
 
 ### Primary
-- **Ink** (oklch(0.17 0 0); dark: Ink Light, oklch(0.955 0.005 100)): the text colour, the thick rules, the default button fill, selection highlight and the inverted "open" row. It is the primary colour; the interface is mostly ink on paper.
+- **Ink** (oklch(0.1908 0.002 106.5859); dark: Ink Light, oklch(0.9576 0.0027 106.4494)): the text colour, the thick rules, the default button fill, selection highlight and the inverted "open" row. It is the primary colour; the interface is mostly ink on paper.
 
 ### Secondary
-- **Signal Orange** (oklch(0.553 0.195 38.4); dark: oklch(0.75 0.17 52)): the only accent. It marks problems (also the danger and destructive colour), available updates, the signal button that launches a deploy, the active nav underline, link underlines and the focus ring. In dark it lightens to stay legible on ink.
+- **Signal Orange** (oklch(0.6724 0.1308 38.7559), the same in dark): the only accent. It marks problems (also the danger and destructive colour), available updates, the signal button that launches a deploy, the active nav underline, link underlines and the focus ring.
 
 ### Tertiary
 - **Go Green** (oklch(0.527 0.154 150); dark oklch(0.78 0.17 152)): running state and success, as a dot and as the word beside it.
@@ -175,11 +175,11 @@ A near-monochrome editorial palette: warm off-white paper and ink with a warm ti
 - **Link Blue** (oklch(0.546 0.2 263); dark oklch(0.72 0.15 255)): informational state, such as an action in progress.
 
 ### Neutral
-- **Paper** (oklch(0.985 0.006 85); dark: Night Paper, oklch(0.17 0.006 70)): the page, panels, cards and popovers share it; there is no surface step between them in light.
-- **Wash** (oklch(0.965 0.004 100); dark oklch(0.23 0.003 100)): the only tint behind a control: hover on rows and ghost buttons, secondary and muted fills.
-- **Hairline** (oklch(0.915 0.005 100); dark oklch(0.29 0.003 100)): the 1px dividers between rows and the dotted guest-screen texture.
-- **Field Rule** (oklch(0.8 0.006 100); dark oklch(0.4 0.004 100)): the underline of unfocused inputs.
-- **Graphite** (oklch(0.48 0.006 100); dark oklch(0.72 0.008 100)): secondary text, placeholders, inactive nav, empty status rings.
+- **Paper** (oklch(0.9818 0.0054 95.0986); dark: Night Paper, oklch(0.2679 0.0036 106.6427)): the page, panels, cards and popovers share it; there is no surface step between them in light.
+- **Wash** (oklch(0.9341 0.0153 90.239); dark oklch(0.2928 0.0018 106.5092)): the only tint behind a control: hover on rows and ghost buttons, secondary and muted fills.
+- **Hairline** (oklch(0.94 0.003 97.3627); dark oklch(0.31 0.004 106.8928)): the 1px dividers between rows and the dotted guest-screen texture.
+- **Field Rule** (oklch(0.78 0.008 98.3528); dark oklch(0.42 0.006 100.2195)): the underline of unfocused inputs.
+- **Graphite** (oklch(0.5341 0.0078 97.4503); dark oklch(0.7713 0.0169 99.0657)): secondary text, placeholders, inactive nav, empty status rings.
 - **Code Slab** (oklch(0.17 0 0); dark oklch(0.12 0 0)): the code block is always dark in both themes, with code text oklch(0.95 0.004 100) and syntax tones for flags (oklch(0.78 0.08 300)), keywords (oklch(0.82 0.09 70)), URLs (oklch(0.8 0.07 220)), strings (oklch(0.8 0.09 160)), properties (oklch(0.78 0.08 254)) and placeholders (oklch(0.78 0.15 52)).
 
 ### Named Rules
@@ -228,7 +228,7 @@ Responsive behaviour is anchored at the `lg` breakpoint (1024px). Below it, the 
 
 ## Elevation & Depth
 
-Flat. Hierarchy comes from the thick/thin rule vocabulary and from the type scale, not from shadows or layered surfaces: paper, card and page share one background. Exceptions are limited to things that float over the page, each with a 1.5px ink border plus a shadow: the combobox list (`shadow-md`), toasts and the sticky bulk-action bar (both `shadow-lg`). One more is the active nav link, whose 2px orange underline is drawn as an inset shadow to sit on the bar's rule. In the dark theme popovers step up one tone (oklch(0.21 0.002 100)). The only filled slab is the always-dark code block.
+Flat. Hierarchy comes from the thick/thin rule vocabulary and from the type scale, not from shadows or layered surfaces: paper, card and page share one background. Exceptions are limited to things that float over the page, each with a 1.5px ink border plus a shadow: the combobox list (`shadow-md`), toasts and the sticky bulk-action bar (both `shadow-lg`). One more is the active nav link, whose 2px orange underline is drawn as an inset shadow to sit on the bar's rule. In the dark theme popovers step up one tone (oklch(0.3085 0.0035 106.6039)). The only filled slab is the always-dark code block.
 
 ### Named Rules
 **The Flat-By-Default Rule.** Surfaces are flat at rest and have no shadow. A shadow is allowed only for something that floats above the page (a popover list, a toast, the sticky bulk bar), always with the 1.5px ink border, never to make a panel look raised.

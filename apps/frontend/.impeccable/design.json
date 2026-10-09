@@ -7,106 +7,106 @@
       "paper": {
         "role": "neutral",
         "displayName": "Paper",
-        "canonical": "oklch(0.985 0.006 85)",
+        "canonical": "oklch(0.9818 0.0054 95.0986)",
         "tonalRamp": [
-          "oklch(0.15 0.006 85)",
-          "oklch(0.25 0.006 85)",
-          "oklch(0.35 0.006 85)",
-          "oklch(0.45 0.006 85)",
-          "oklch(0.55 0.006 85)",
-          "oklch(0.65 0.006 85)",
-          "oklch(0.80 0.006 85)",
-          "oklch(0.95 0.006 85)"
+          "oklch(0.15 0.0054 95.0986)",
+          "oklch(0.25 0.0054 95.0986)",
+          "oklch(0.35 0.0054 95.0986)",
+          "oklch(0.45 0.0054 95.0986)",
+          "oklch(0.55 0.0054 95.0986)",
+          "oklch(0.65 0.0054 95.0986)",
+          "oklch(0.80 0.0054 95.0986)",
+          "oklch(0.95 0.0054 95.0986)"
         ]
       },
       "ink": {
         "role": "primary",
         "displayName": "Ink",
-        "canonical": "oklch(0.19 0.01 70)",
+        "canonical": "oklch(0.1908 0.002 106.5859)",
         "tonalRamp": [
-          "oklch(0.15 0.01 70)",
-          "oklch(0.25 0.01 70)",
-          "oklch(0.35 0.01 70)",
-          "oklch(0.45 0.01 70)",
-          "oklch(0.55 0.01 70)",
-          "oklch(0.65 0.01 70)",
-          "oklch(0.80 0.01 70)",
-          "oklch(0.95 0.01 70)"
+          "oklch(0.15 0.002 106.5859)",
+          "oklch(0.25 0.002 106.5859)",
+          "oklch(0.35 0.002 106.5859)",
+          "oklch(0.45 0.002 106.5859)",
+          "oklch(0.55 0.002 106.5859)",
+          "oklch(0.65 0.002 106.5859)",
+          "oklch(0.80 0.002 106.5859)",
+          "oklch(0.95 0.002 106.5859)"
         ]
       },
       "wash": {
         "role": "neutral",
         "displayName": "Wash",
-        "canonical": "oklch(0.955 0.008 85)",
+        "canonical": "oklch(0.9341 0.0153 90.239)",
         "tonalRamp": [
-          "oklch(0.15 0.008 85)",
-          "oklch(0.25 0.008 85)",
-          "oklch(0.35 0.008 85)",
-          "oklch(0.45 0.008 85)",
-          "oklch(0.55 0.008 85)",
-          "oklch(0.65 0.008 85)",
-          "oklch(0.80 0.008 85)",
-          "oklch(0.95 0.008 85)"
+          "oklch(0.15 0.0153 90.239)",
+          "oklch(0.25 0.0153 90.239)",
+          "oklch(0.35 0.0153 90.239)",
+          "oklch(0.45 0.0153 90.239)",
+          "oklch(0.55 0.0153 90.239)",
+          "oklch(0.65 0.0153 90.239)",
+          "oklch(0.80 0.0153 90.239)",
+          "oklch(0.95 0.0153 90.239)"
         ]
       },
       "hairline": {
         "role": "neutral",
         "displayName": "Hairline",
-        "canonical": "oklch(0.91 0.01 85)",
+        "canonical": "oklch(0.94 0.003 97.3627)",
         "tonalRamp": [
-          "oklch(0.15 0.01 85)",
-          "oklch(0.25 0.01 85)",
-          "oklch(0.35 0.01 85)",
-          "oklch(0.45 0.01 85)",
-          "oklch(0.55 0.01 85)",
-          "oklch(0.65 0.01 85)",
-          "oklch(0.80 0.01 85)",
-          "oklch(0.95 0.01 85)"
+          "oklch(0.15 0.003 97.3627)",
+          "oklch(0.25 0.003 97.3627)",
+          "oklch(0.35 0.003 97.3627)",
+          "oklch(0.45 0.003 97.3627)",
+          "oklch(0.55 0.003 97.3627)",
+          "oklch(0.65 0.003 97.3627)",
+          "oklch(0.80 0.003 97.3627)",
+          "oklch(0.95 0.003 97.3627)"
         ]
       },
       "field-rule": {
         "role": "neutral",
         "displayName": "Field Rule",
-        "canonical": "oklch(0.78 0.012 80)",
+        "canonical": "oklch(0.78 0.008 98.3528)",
         "tonalRamp": [
-          "oklch(0.15 0.012 80)",
-          "oklch(0.25 0.012 80)",
-          "oklch(0.35 0.012 80)",
-          "oklch(0.45 0.012 80)",
-          "oklch(0.55 0.012 80)",
-          "oklch(0.65 0.012 80)",
-          "oklch(0.80 0.012 80)",
-          "oklch(0.95 0.012 80)"
+          "oklch(0.15 0.008 98.3528)",
+          "oklch(0.25 0.008 98.3528)",
+          "oklch(0.35 0.008 98.3528)",
+          "oklch(0.45 0.008 98.3528)",
+          "oklch(0.55 0.008 98.3528)",
+          "oklch(0.65 0.008 98.3528)",
+          "oklch(0.80 0.008 98.3528)",
+          "oklch(0.95 0.008 98.3528)"
         ]
       },
       "graphite": {
         "role": "neutral",
         "displayName": "Graphite",
-        "canonical": "oklch(0.46 0.012 75)",
+        "canonical": "oklch(0.5341 0.0078 97.4503)",
         "tonalRamp": [
-          "oklch(0.15 0.012 75)",
-          "oklch(0.25 0.012 75)",
-          "oklch(0.35 0.012 75)",
-          "oklch(0.45 0.012 75)",
-          "oklch(0.55 0.012 75)",
-          "oklch(0.65 0.012 75)",
-          "oklch(0.80 0.012 75)",
-          "oklch(0.95 0.012 75)"
+          "oklch(0.15 0.0078 97.4503)",
+          "oklch(0.25 0.0078 97.4503)",
+          "oklch(0.35 0.0078 97.4503)",
+          "oklch(0.45 0.0078 97.4503)",
+          "oklch(0.55 0.0078 97.4503)",
+          "oklch(0.65 0.0078 97.4503)",
+          "oklch(0.80 0.0078 97.4503)",
+          "oklch(0.95 0.0078 97.4503)"
         ]
       },
       "signal": {
         "role": "secondary",
         "displayName": "Signal Orange",
-        "canonical": "oklch(0.553 0.195 38.4)",
+        "canonical": "oklch(0.6724 0.1308 38.7559)",
         "tonalRamp": [
-          "oklch(0.15 0.195 38.4)",
-          "oklch(0.25 0.195 38.4)",
-          "oklch(0.35 0.195 38.4)",
-          "oklch(0.45 0.195 38.4)",
-          "oklch(0.55 0.195 38.4)",
-          "oklch(0.65 0.195 38.4)",
-          "oklch(0.80 0.195 38.4)",
-          "oklch(0.95 0.195 38.4)"
+          "oklch(0.15 0.1308 38.7559)",
+          "oklch(0.25 0.1308 38.7559)",
+          "oklch(0.35 0.1308 38.7559)",
+          "oklch(0.45 0.1308 38.7559)",
+          "oklch(0.55 0.1308 38.7559)",
+          "oklch(0.65 0.1308 38.7559)",
+          "oklch(0.80 0.1308 38.7559)",
+          "oklch(0.95 0.1308 38.7559)"
         ]
       },
       "success": {
@@ -187,121 +187,121 @@
       "paper-dark": {
         "role": "neutral",
         "displayName": "Night Paper",
-        "canonical": "oklch(0.17 0.006 70)",
+        "canonical": "oklch(0.2679 0.0036 106.6427)",
         "tonalRamp": [
-          "oklch(0.15 0.006 70)",
-          "oklch(0.25 0.006 70)",
-          "oklch(0.35 0.006 70)",
-          "oklch(0.45 0.006 70)",
-          "oklch(0.55 0.006 70)",
-          "oklch(0.65 0.006 70)",
-          "oklch(0.80 0.006 70)",
-          "oklch(0.95 0.006 70)"
+          "oklch(0.15 0.0036 106.6427)",
+          "oklch(0.25 0.0036 106.6427)",
+          "oklch(0.35 0.0036 106.6427)",
+          "oklch(0.45 0.0036 106.6427)",
+          "oklch(0.55 0.0036 106.6427)",
+          "oklch(0.65 0.0036 106.6427)",
+          "oklch(0.80 0.0036 106.6427)",
+          "oklch(0.95 0.0036 106.6427)"
         ]
       },
       "ink-dark": {
         "role": "primary",
         "displayName": "Ink (dark)",
-        "canonical": "oklch(0.95 0.008 85)",
+        "canonical": "oklch(0.9576 0.0027 106.4494)",
         "tonalRamp": [
-          "oklch(0.15 0.008 85)",
-          "oklch(0.25 0.008 85)",
-          "oklch(0.35 0.008 85)",
-          "oklch(0.45 0.008 85)",
-          "oklch(0.55 0.008 85)",
-          "oklch(0.65 0.008 85)",
-          "oklch(0.80 0.008 85)",
-          "oklch(0.95 0.008 85)"
+          "oklch(0.15 0.0027 106.4494)",
+          "oklch(0.25 0.0027 106.4494)",
+          "oklch(0.35 0.0027 106.4494)",
+          "oklch(0.45 0.0027 106.4494)",
+          "oklch(0.55 0.0027 106.4494)",
+          "oklch(0.65 0.0027 106.4494)",
+          "oklch(0.80 0.0027 106.4494)",
+          "oklch(0.95 0.0027 106.4494)"
         ]
       },
       "wash-dark": {
         "role": "neutral",
         "displayName": "Wash (dark)",
-        "canonical": "oklch(0.235 0.007 70)",
+        "canonical": "oklch(0.2928 0.0018 106.5092)",
         "tonalRamp": [
-          "oklch(0.15 0.007 70)",
-          "oklch(0.25 0.007 70)",
-          "oklch(0.35 0.007 70)",
-          "oklch(0.45 0.007 70)",
-          "oklch(0.55 0.007 70)",
-          "oklch(0.65 0.007 70)",
-          "oklch(0.80 0.007 70)",
-          "oklch(0.95 0.007 70)"
+          "oklch(0.15 0.0018 106.5092)",
+          "oklch(0.25 0.0018 106.5092)",
+          "oklch(0.35 0.0018 106.5092)",
+          "oklch(0.45 0.0018 106.5092)",
+          "oklch(0.55 0.0018 106.5092)",
+          "oklch(0.65 0.0018 106.5092)",
+          "oklch(0.80 0.0018 106.5092)",
+          "oklch(0.95 0.0018 106.5092)"
         ]
       },
       "hairline-dark": {
         "role": "neutral",
         "displayName": "Hairline (dark)",
-        "canonical": "oklch(0.3 0.007 70)",
+        "canonical": "oklch(0.31 0.004 106.8928)",
         "tonalRamp": [
-          "oklch(0.15 0.007 70)",
-          "oklch(0.25 0.007 70)",
-          "oklch(0.35 0.007 70)",
-          "oklch(0.45 0.007 70)",
-          "oklch(0.55 0.007 70)",
-          "oklch(0.65 0.007 70)",
-          "oklch(0.80 0.007 70)",
-          "oklch(0.95 0.007 70)"
+          "oklch(0.15 0.004 106.8928)",
+          "oklch(0.25 0.004 106.8928)",
+          "oklch(0.35 0.004 106.8928)",
+          "oklch(0.45 0.004 106.8928)",
+          "oklch(0.55 0.004 106.8928)",
+          "oklch(0.65 0.004 106.8928)",
+          "oklch(0.80 0.004 106.8928)",
+          "oklch(0.95 0.004 106.8928)"
         ]
       },
       "field-rule-dark": {
         "role": "neutral",
         "displayName": "Field Rule (dark)",
-        "canonical": "oklch(0.42 0.008 70)",
+        "canonical": "oklch(0.42 0.006 100.2195)",
         "tonalRamp": [
-          "oklch(0.15 0.008 70)",
-          "oklch(0.25 0.008 70)",
-          "oklch(0.35 0.008 70)",
-          "oklch(0.45 0.008 70)",
-          "oklch(0.55 0.008 70)",
-          "oklch(0.65 0.008 70)",
-          "oklch(0.80 0.008 70)",
-          "oklch(0.95 0.008 70)"
+          "oklch(0.15 0.006 100.2195)",
+          "oklch(0.25 0.006 100.2195)",
+          "oklch(0.35 0.006 100.2195)",
+          "oklch(0.45 0.006 100.2195)",
+          "oklch(0.55 0.006 100.2195)",
+          "oklch(0.65 0.006 100.2195)",
+          "oklch(0.80 0.006 100.2195)",
+          "oklch(0.95 0.006 100.2195)"
         ]
       },
       "graphite-dark": {
         "role": "neutral",
         "displayName": "Graphite (dark)",
-        "canonical": "oklch(0.72 0.012 80)",
+        "canonical": "oklch(0.7713 0.0169 99.0657)",
         "tonalRamp": [
-          "oklch(0.15 0.012 80)",
-          "oklch(0.25 0.012 80)",
-          "oklch(0.35 0.012 80)",
-          "oklch(0.45 0.012 80)",
-          "oklch(0.55 0.012 80)",
-          "oklch(0.65 0.012 80)",
-          "oklch(0.80 0.012 80)",
-          "oklch(0.95 0.012 80)"
+          "oklch(0.15 0.0169 99.0657)",
+          "oklch(0.25 0.0169 99.0657)",
+          "oklch(0.35 0.0169 99.0657)",
+          "oklch(0.45 0.0169 99.0657)",
+          "oklch(0.55 0.0169 99.0657)",
+          "oklch(0.65 0.0169 99.0657)",
+          "oklch(0.80 0.0169 99.0657)",
+          "oklch(0.95 0.0169 99.0657)"
         ]
       },
       "popover-dark": {
         "role": "neutral",
         "displayName": "Popover (dark)",
-        "canonical": "oklch(0.215 0.007 70)",
+        "canonical": "oklch(0.3085 0.0035 106.6039)",
         "tonalRamp": [
-          "oklch(0.15 0.007 70)",
-          "oklch(0.25 0.007 70)",
-          "oklch(0.35 0.007 70)",
-          "oklch(0.45 0.007 70)",
-          "oklch(0.55 0.007 70)",
-          "oklch(0.65 0.007 70)",
-          "oklch(0.80 0.007 70)",
-          "oklch(0.95 0.007 70)"
+          "oklch(0.15 0.0035 106.6039)",
+          "oklch(0.25 0.0035 106.6039)",
+          "oklch(0.35 0.0035 106.6039)",
+          "oklch(0.45 0.0035 106.6039)",
+          "oklch(0.55 0.0035 106.6039)",
+          "oklch(0.65 0.0035 106.6039)",
+          "oklch(0.80 0.0035 106.6039)",
+          "oklch(0.95 0.0035 106.6039)"
         ]
       },
       "signal-dark": {
         "role": "secondary",
         "displayName": "Signal Orange (dark)",
-        "canonical": "oklch(0.75 0.17 52)",
+        "canonical": "oklch(0.6724 0.1308 38.7559)",
         "tonalRamp": [
-          "oklch(0.15 0.17 52)",
-          "oklch(0.25 0.17 52)",
-          "oklch(0.35 0.17 52)",
-          "oklch(0.45 0.17 52)",
-          "oklch(0.55 0.17 52)",
-          "oklch(0.65 0.17 52)",
-          "oklch(0.80 0.17 52)",
-          "oklch(0.95 0.17 52)"
+          "oklch(0.15 0.1308 38.7559)",
+          "oklch(0.25 0.1308 38.7559)",
+          "oklch(0.35 0.1308 38.7559)",
+          "oklch(0.45 0.1308 38.7559)",
+          "oklch(0.55 0.1308 38.7559)",
+          "oklch(0.65 0.1308 38.7559)",
+          "oklch(0.80 0.1308 38.7559)",
+          "oklch(0.95 0.1308 38.7559)"
         ]
       },
       "success-dark": {
@@ -473,7 +473,7 @@
       "refersTo": "button-primary",
       "description": "Ink on paper; the default action.",
       "html": "<button class=\"ds-btn-primary\">Save changes</button>",
-      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:var(--foreground, oklch(0.19 0.01 70));color:var(--background, oklch(0.985 0.006 85));border:1.5px solid var(--foreground, oklch(0.19 0.01 70));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-primary:hover{opacity:.85}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.985 0.006 85)),0 0 0 4px var(--signal, oklch(0.553 0.195 38.4))}"
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:var(--foreground, oklch(0.1908 0.002 106.5859));color:var(--background, oklch(0.9818 0.0054 95.0986));border:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-primary:hover{opacity:.85}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.9818 0.0054 95.0986)),0 0 0 4px var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Signal Button",
@@ -481,7 +481,7 @@
       "refersTo": "button-signal",
       "description": "The single action that launches a deploy.",
       "html": "<button class=\"ds-btn-signal\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z\"/><path d=\"m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z\"/></svg>Redeploy</button>",
-      "css": ".ds-btn-signal{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:8px 16px;background:var(--signal, oklch(0.553 0.195 38.4));color:var(--background, oklch(0.985 0.006 85));border:1.5px solid var(--signal, oklch(0.553 0.195 38.4));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-signal:hover{opacity:.9}.ds-btn-signal:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.985 0.006 85)),0 0 0 4px var(--signal, oklch(0.553 0.195 38.4))}"
+      "css": ".ds-btn-signal{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:8px 16px;background:var(--signal, oklch(0.6724 0.1308 38.7559));color:var(--background, oklch(0.9818 0.0054 95.0986));border:1.5px solid var(--signal, oklch(0.6724 0.1308 38.7559));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-signal:hover{opacity:.9}.ds-btn-signal:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.9818 0.0054 95.0986)),0 0 0 4px var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Outline Button",
@@ -489,7 +489,7 @@
       "refersTo": "button-outline",
       "description": "Secondary action; inverts to ink on hover.",
       "html": "<button class=\"ds-btn-outline\">Pull</button>",
-      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:transparent;color:var(--foreground, oklch(0.19 0.01 70));border:1.5px solid var(--foreground, oklch(0.19 0.01 70));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-btn-outline:hover{background:var(--foreground, oklch(0.19 0.01 70));color:var(--background, oklch(0.985 0.006 85))}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.985 0.006 85)),0 0 0 4px var(--signal, oklch(0.553 0.195 38.4))}"
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:transparent;color:var(--foreground, oklch(0.1908 0.002 106.5859));border:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-btn-outline:hover{background:var(--foreground, oklch(0.1908 0.002 106.5859));color:var(--background, oklch(0.9818 0.0054 95.0986))}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.9818 0.0054 95.0986)),0 0 0 4px var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Underlined Input",
@@ -497,7 +497,7 @@
       "refersTo": "input-field",
       "description": "Only the bottom rule; it turns Signal on focus.",
       "html": "<input class=\"ds-input\" placeholder=\"Search stacks\" />",
-      "css": ".ds-input{width:100%;height:40px;padding:4px 0;background:transparent;color:var(--foreground, oklch(0.19 0.01 70));border:0;border-bottom:1.5px solid var(--foreground, oklch(0.19 0.01 70));border-radius:0;font:400 14px Archivo, ui-sans-serif, system-ui, sans-serif;outline:none;transition:border-color .15s}.ds-input::placeholder{color:var(--muted-foreground, oklch(0.46 0.012 75))}.ds-input:focus-visible{border-bottom-color:var(--signal, oklch(0.553 0.195 38.4))}"
+      "css": ".ds-input{width:100%;height:40px;padding:4px 0;background:transparent;color:var(--foreground, oklch(0.1908 0.002 106.5859));border:0;border-bottom:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859));border-radius:0;font:400 14px Archivo, ui-sans-serif, system-ui, sans-serif;outline:none;transition:border-color .15s}.ds-input::placeholder{color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-input:focus-visible{border-bottom-color:var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Top Nav",
@@ -505,7 +505,7 @@
       "refersTo": "nav-link",
       "description": "Mono-caps links; the active one gets a 2px Signal underline on the bar rule.",
       "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"ds-nav-link ds-active\">Overview</a><a href=\"#\" class=\"ds-nav-link\">Stacks</a><a href=\"#\" class=\"ds-nav-link\">History</a></nav>",
-      "css": ".ds-nav{display:flex;gap:24px;height:56px;border-bottom:1.5px solid var(--foreground, oklch(0.19 0.01 70))}.ds-nav-link{display:flex;align-items:center;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.46 0.012 75));text-decoration:none;transition:color .15s}.ds-nav-link:hover{color:var(--foreground, oklch(0.19 0.01 70))}.ds-nav-link.ds-active{color:var(--foreground, oklch(0.19 0.01 70));box-shadow:inset 0 -2px 0 var(--signal, oklch(0.553 0.195 38.4))}.ds-nav-link:focus-visible{outline:2px solid var(--signal, oklch(0.553 0.195 38.4))}"
+      "css": ".ds-nav{display:flex;gap:24px;height:56px;border-bottom:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-nav-link{display:flex;align-items:center;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));text-decoration:none;transition:color .15s}.ds-nav-link:hover{color:var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-nav-link.ds-active{color:var(--foreground, oklch(0.1908 0.002 106.5859));box-shadow:inset 0 -2px 0 var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-nav-link:focus-visible{outline:2px solid var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Filter Tabs",
@@ -513,7 +513,7 @@
       "refersTo": "nav-link",
       "description": "Segmented filter: ink label, Signal underline for the chosen one, a count after.",
       "html": "<div class=\"ds-seg\"><span class=\"ds-seg-o ds-on\">All <b>12</b></span><span class=\"ds-seg-o\">Running <b>9</b></span><span class=\"ds-seg-o\">Stopped <b>1</b></span><span class=\"ds-seg-o\">Problems <b class=\"ds-alert\">2</b></span></div>",
-      "css": ".ds-seg{display:flex;flex-wrap:wrap;gap:4px 16px}.ds-seg-o{position:relative;display:flex;align-items:center;gap:6px;height:36px;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.46 0.012 75));cursor:pointer}.ds-seg-o b{font-weight:500;font-variant-numeric:tabular-nums}.ds-seg-o b.ds-alert{color:var(--signal, oklch(0.553 0.195 38.4))}.ds-seg-o::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent}.ds-seg-o.ds-on{color:var(--foreground, oklch(0.19 0.01 70))}.ds-seg-o.ds-on::after{background:var(--signal, oklch(0.553 0.195 38.4))}"
+      "css": ".ds-seg{display:flex;flex-wrap:wrap;gap:4px 16px}.ds-seg-o{position:relative;display:flex;align-items:center;gap:6px;height:36px;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));cursor:pointer}.ds-seg-o b{font-weight:500;font-variant-numeric:tabular-nums}.ds-seg-o b.ds-alert{color:var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-seg-o::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent}.ds-seg-o.ds-on{color:var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-seg-o.ds-on::after{background:var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Stack List Row",
@@ -521,15 +521,15 @@
       "refersTo": "list-row",
       "description": "Signature row: dot, name, one marker, service count. The open row inverts to ink.",
       "html": "<ul class=\"ds-rows\"><li class=\"ds-row ds-open\"><span class=\"ds-dot\" style=\"background:var(--success,oklch(0.51 0.154 150))\"></span><span class=\"ds-name\">api-gateway</span><span class=\"ds-n\">4</span></li><li class=\"ds-row\"><span class=\"ds-dot\" style=\"background:var(--success,oklch(0.51 0.154 150))\"></span><span class=\"ds-name\">worker</span><span class=\"ds-mark\">Update</span><span class=\"ds-n\">2</span></li><li class=\"ds-row\"><span class=\"ds-dot ds-ring\"></span><span class=\"ds-name\">staging-db</span><span class=\"ds-n\">1</span></li></ul>",
-      "css": ".ds-rows{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--border, oklch(0.91 0.01 85))}.ds-row{display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;border-top:1px solid var(--border, oklch(0.91 0.01 85));background:var(--background, oklch(0.985 0.006 85));color:var(--foreground, oklch(0.19 0.01 70));font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;transition:background-color .15s}.ds-row:hover{background:var(--muted, oklch(0.955 0.008 85))}.ds-row.ds-open{background:var(--foreground, oklch(0.19 0.01 70));color:var(--background, oklch(0.985 0.006 85))}.ds-dot{width:8px;height:8px;border-radius:9999px;flex:none}.ds-ring{box-shadow:inset 0 0 0 1.5px var(--muted-foreground, oklch(0.46 0.012 75))}.ds-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-mark{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--signal, oklch(0.553 0.195 38.4))}.ds-n{width:20px;text-align:right;font:400 12px 'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums;opacity:.7}"
+      "css": ".ds-rows{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--border, oklch(0.94 0.003 97.3627))}.ds-row{display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;border-top:1px solid var(--border, oklch(0.94 0.003 97.3627));background:var(--background, oklch(0.9818 0.0054 95.0986));color:var(--foreground, oklch(0.1908 0.002 106.5859));font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;transition:background-color .15s}.ds-row:hover{background:var(--muted, oklch(0.9341 0.0153 90.239))}.ds-row.ds-open{background:var(--foreground, oklch(0.1908 0.002 106.5859));color:var(--background, oklch(0.9818 0.0054 95.0986))}.ds-dot{width:8px;height:8px;border-radius:9999px;flex:none}.ds-ring{box-shadow:inset 0 0 0 1.5px var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-mark{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-n{width:20px;text-align:right;font:400 12px 'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums;opacity:.7}"
     },
     {
       "name": "Status Tag",
       "kind": "chip",
       "refersTo": "nav-link",
       "description": "8px dot plus a mono-caps word; colour only on the dot, or on the word when attention is needed.",
-      "html": "<span class=\"ds-tag\"><i class=\"ds-d\" style=\"background:var(--success,oklch(0.51 0.154 150))\"></i>Running</span> <span class=\"ds-tag ds-bad\"><i class=\"ds-d\" style=\"background:var(--signal,oklch(0.553 0.195 38.4))\"></i>Unhealthy</span>",
-      "css": ".ds-tag{display:inline-flex;align-items:center;gap:8px;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.46 0.012 75));white-space:nowrap}.ds-tag.ds-bad{color:var(--signal, oklch(0.553 0.195 38.4))}.ds-d{width:8px;height:8px;border-radius:9999px}"
+      "html": "<span class=\"ds-tag\"><i class=\"ds-d\" style=\"background:var(--success,oklch(0.51 0.154 150))\"></i>Running</span> <span class=\"ds-tag ds-bad\"><i class=\"ds-d\" style=\"background:var(--signal,oklch(0.6724 0.1308 38.7559))\"></i>Unhealthy</span>",
+      "css": ".ds-tag{display:inline-flex;align-items:center;gap:8px;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));white-space:nowrap}.ds-tag.ds-bad{color:var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-d{width:8px;height:8px;border-radius:9999px}"
     },
     {
       "name": "Count Strip",
@@ -537,7 +537,7 @@
       "refersTo": "list-row",
       "description": "Rule on the left, hairline-separated cells: mono label above, stat figure below.",
       "html": "<dl class=\"ds-strip\"><div><dt>Running</dt><dd>9</dd></div><div><dt class=\"ds-s\">Problems</dt><dd class=\"ds-s\">2</dd></div><div><dt>Total</dt><dd class=\"ds-m\">12</dd></div></dl>",
-      "css": ".ds-strip{display:flex;margin:0;border-left:1.5px solid var(--foreground, oklch(0.19 0.01 70))}.ds-strip>div{display:flex;flex-direction:column;gap:8px;padding:0 20px;border-right:1px solid var(--border, oklch(0.91 0.01 85))}.ds-strip>div:last-child{border-right:0}.ds-strip dt{font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.46 0.012 75))}.ds-strip dd{margin:0;font:800 36px/1 Archivo, ui-sans-serif, system-ui, sans-serif;font-variant-numeric:tabular-nums}.ds-strip .ds-s{color:var(--signal, oklch(0.553 0.195 38.4))}.ds-strip .ds-m{color:var(--muted-foreground, oklch(0.46 0.012 75))}"
+      "css": ".ds-strip{display:flex;margin:0;border-left:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-strip>div{display:flex;flex-direction:column;gap:8px;padding:0 20px;border-right:1px solid var(--border, oklch(0.94 0.003 97.3627))}.ds-strip>div:last-child{border-right:0}.ds-strip dt{font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-strip dd{margin:0;font:800 36px/1 Archivo, ui-sans-serif, system-ui, sans-serif;font-variant-numeric:tabular-nums}.ds-strip .ds-s{color:var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-strip .ds-m{color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}"
     },
     {
       "name": "Column Header",
@@ -545,7 +545,7 @@
       "refersTo": "label",
       "description": "Table column head: mono caps in Graphite over a hairline-divided body; the last column aligns right.",
       "html": "<table class=\"ds-tbl\"><thead><tr><th>Service</th><th>Image</th><th class=\"ds-r\">Status</th></tr></thead><tbody><tr><td class=\"ds-hd\">api</td><td class=\"ds-img\">ghcr.io/acme/api:1.4.2</td><td class=\"ds-r\">Running</td></tr></tbody></table>",
-      "css": ".ds-tbl{width:100%;border-collapse:collapse;font:400 14px/1.5 Archivo, ui-sans-serif, system-ui, sans-serif;color:var(--foreground, oklch(0.19 0.01 70))}.ds-tbl th{padding:12px 16px 12px 0;text-align:left;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.46 0.012 75))}.ds-tbl td{padding:14px 16px 14px 0;border-top:1px solid var(--border, oklch(0.91 0.01 85));vertical-align:baseline}.ds-tbl .ds-hd{font:700 16px/1.35 Archivo, ui-sans-serif, system-ui, sans-serif;letter-spacing:-.025em}.ds-tbl .ds-img{font:400 12px 'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums}.ds-tbl .ds-r{text-align:right;padding-right:0}"
+      "css": ".ds-tbl{width:100%;border-collapse:collapse;font:400 14px/1.5 Archivo, ui-sans-serif, system-ui, sans-serif;color:var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-tbl th{padding:12px 16px 12px 0;text-align:left;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-tbl td{padding:14px 16px 14px 0;border-top:1px solid var(--border, oklch(0.94 0.003 97.3627));vertical-align:baseline}.ds-tbl .ds-hd{font:700 16px/1.35 Archivo, ui-sans-serif, system-ui, sans-serif;letter-spacing:-.025em}.ds-tbl .ds-img{font:400 12px 'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums}.ds-tbl .ds-r{text-align:right;padding-right:0}"
     },
     {
       "name": "Section Header",
@@ -553,7 +553,7 @@
       "refersTo": "nav-link",
       "description": "Optional Graphite number, section-role title and a muted mono note on a 1.5px ink rule.",
       "html": "<div class=\"ds-sec\"><span class=\"ds-num\">01</span><h2>Services</h2><span class=\"ds-note\">4 services</span></div>",
-      "css": ".ds-sec{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;padding-bottom:12px;border-bottom:1.5px solid var(--foreground, oklch(0.19 0.01 70))}.ds-sec h2{flex:1;margin:0;font:700 24px/1.15 Archivo, ui-sans-serif, system-ui, sans-serif;letter-spacing:-.02em}.ds-num{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;color:var(--muted-foreground, oklch(0.46 0.012 75))}.ds-note{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.46 0.012 75))}"
+      "css": ".ds-sec{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;padding-bottom:12px;border-bottom:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-sec h2{flex:1;margin:0;font:700 24px/1.15 Archivo, ui-sans-serif, system-ui, sans-serif;letter-spacing:-.02em}.ds-num{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-note{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}"
     },
     {
       "name": "Code Block",
@@ -561,7 +561,7 @@
       "refersTo": "code-block",
       "description": "Always-dark slab under a rule bar with a Copy button.",
       "html": "<div class=\"ds-code\"><div class=\"ds-bar\"><span>POST /api/v0/deploy · redeploy</span><button>Copy</button></div><pre><code>curl -X POST https://cd.example.com/api/v0/deploy \\\n  -H \"x-api-key: $KEY\"</code></pre></div>",
-      "css": ".ds-code .ds-bar{display:flex;align-items:center;justify-content:space-between;min-height:36px;border-bottom:1.5px solid var(--foreground, oklch(0.19 0.01 70));font:400 12px 'JetBrains Mono', ui-monospace, monospace;color:var(--muted-foreground, oklch(0.46 0.012 75))}.ds-code button{background:transparent;border:0;color:var(--muted-foreground, oklch(0.46 0.012 75));font:600 12px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;height:24px;padding:0 8px}.ds-code button:hover{background:var(--muted, oklch(0.955 0.008 85));color:var(--foreground, oklch(0.19 0.01 70))}.ds-code pre{margin:0;padding:16px 20px;overflow-x:auto;background:oklch(0.17 0 0);color:oklch(0.95 0.004 100);font:400 12px/24px 'JetBrains Mono', ui-monospace, monospace}"
+      "css": ".ds-code .ds-bar{display:flex;align-items:center;justify-content:space-between;min-height:36px;border-bottom:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859));font:400 12px 'JetBrains Mono', ui-monospace, monospace;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-code button{background:transparent;border:0;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));font:600 12px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;height:24px;padding:0 8px}.ds-code button:hover{background:var(--muted, oklch(0.9341 0.0153 90.239));color:var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-code pre{margin:0;padding:16px 20px;overflow-x:auto;background:oklch(0.17 0 0);color:oklch(0.95 0.004 100);font:400 12px/24px 'JetBrains Mono', ui-monospace, monospace}"
     }
   ],
   "narrative": {
