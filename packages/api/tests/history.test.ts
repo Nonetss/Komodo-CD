@@ -143,7 +143,11 @@ describe("history.activity", () => {
     const { events } = await activity()
 
     expect(events).toEqual([
-      expect.objectContaining({ action: "pull", success: true, via: "session" }),
+      expect.objectContaining({
+        action: "pull",
+        success: true,
+        via: "session",
+      }),
       expect.objectContaining({
         action: "redeploy",
         success: false,
