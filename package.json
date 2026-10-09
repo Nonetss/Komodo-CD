@@ -36,6 +36,7 @@
     "dev:backend": "turbo watch -F backend dev",
     "dev:frontend": "turbo watch -F frontend dev",
     "dev:site": "turbo watch -F site dev",
+    "setup:dev": "bash scripts/setup-dev.sh",
     "build": "turbo build",
     "start": "turbo start",
     "check-types": "turbo check-types",

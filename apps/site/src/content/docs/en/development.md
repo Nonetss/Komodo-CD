@@ -27,7 +27,7 @@ Requires [Bun](https://bun.sh) 1.4 or newer.
 
 ```bash
 bun install
-cp .env.example .env   # APP_URL=http://localhost:4321, a secret and the admin password
+bun run setup:dev   # writes .env with a random secret and admin password
 
 bun run dev            # backend (:3000) + frontend (:4321) with turbo watch, without the site
 bun run dev:backend    # only the backend
