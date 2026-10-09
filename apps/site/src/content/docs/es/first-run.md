@@ -26,11 +26,13 @@ Una vez guardada, la página muestra el estado de la conexión y cuántos stacks
 
 ## 3. Revisa tus stacks
 
-El **Resumen** (`/`, donde aterrizas al iniciar sesión) ordena los stacks de la instancia por urgencia, y cada stack aparece en una sola sección:
+El **Resumen** (`/`, donde aterrizas al iniciar sesión) reúne las cifras de la instancia en tres bloques:
 
-- **Requiere atención**: un estado de error o desconocido, un proyecto que falta en el host o ficheros que no están, con el motivo y, cuando suele arreglarlo, un botón de Redeploy.
-- **Hay algo nuevo que desplegar**: una de sus imágenes tiene actualización o el commit desplegado va por detrás del último. La tabla muestra qué cambia, y **Pull + Redeploy en los N** actualiza de una vez todos los stacks de la sección.
-- **En marcha** y **Parados**: el resto.
+- **Stacks**: cuántos están en marcha, con problemas o parados, los servicios con imagen nueva y los stacks con un commit nuevo, y qué stacks piden atención (un estado de error o desconocido, un proyecto que falta en el host o ficheros que no están) o tienen algo nuevo que desplegar.
+- **Seguridad**: cuántas imágenes hay escaneadas, cuáles tienen vulnerabilidades críticas, las CVEs por severidad y las imágenes más expuestas (ver la página de Seguridad).
+- **Despliegues**: los deploys y pulls de los últimos 30 días, día a día, con el porcentaje de éxito, cuántos se lanzaron desde CI, los stacks más desplegados y los últimos fallos.
+
+Debajo van los stacks **En marcha** y **Parados**.
 
 **Stacks** (`/stacks`) es la lista completa, con búsqueda y los filtros **Running** (en marcha o desplegándose), **Parados** (parados, caídos, en pausa o creados) y **Problemas**. Pulsa un stack para abrir su página en `/stacks/<nombre>`: sus servicios e imágenes, cuáles tienen imagen nueva, el commit desplegado y el último, y el curl que lanza cada acción desde CI.
 

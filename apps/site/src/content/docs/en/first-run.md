@@ -26,11 +26,13 @@ Once it is saved, the page shows the status of the connection and how many stack
 
 ## 3. Check your stacks
 
-The **Overview** (`/`, where you land after signing in) sorts every stack of the instance by urgency, and each stack appears in a single section:
+The **Overview** (`/`, where you land after signing in) gathers the key figures of the instance in three blocks:
 
-- **Needs attention**: a failed state, an unknown one, a project that is missing on the host or missing files, with the reason and, when it usually helps, a Redeploy button.
-- **Something new to deploy**: one of its images has an update available or the deployed commit is behind the latest one. The table shows what changes, and **Pull + Redeploy all** updates every stack in the section at once.
-- **Running** and **Stopped**: the rest.
+- **Stacks**: how many are running, have a problem or are stopped, the services with a newer image and the stacks with a new commit, and which stacks need attention (a failed or unknown state, a project missing on the host or missing files) or have something new to deploy.
+- **Security**: how many images have been scanned, which ones have critical vulnerabilities, the CVEs by severity and the most exposed images (see the Security page).
+- **Deployments**: the deploys and pulls of the last 30 days, per day, with the success rate, the share launched from CI, the most deployed stacks and the latest failures.
+
+Below them come the **Running** and **Stopped** stacks.
 
 **Stacks** (`/stacks`) is the full list, with search and the filters **Running** (running or deploying), **Stopped** (stopped, down, paused or created) and **Issues**. Click a stack to open its page at `/stacks/<name>`: its services and images, which ones have a new image, the deployed and latest commits, and the curl that runs each action from CI.
 

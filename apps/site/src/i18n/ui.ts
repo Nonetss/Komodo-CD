@@ -91,11 +91,11 @@ const en = {
       items: [
         {
           term: "Status at a glance",
-          text: "The overview sorts stacks by urgency: what needs attention, what has something new to deploy, what is running and what is stopped, each with the reason or the action it needs.",
+          text: "The overview gathers the key figures: stacks by state, what needs attention or has something new to deploy, image vulnerabilities and the deploys of the last 30 days with their success rate.",
         },
         {
           term: "Update hints",
-          text: "A stack is flagged when one of its images has an update or the deployed commit is behind the latest one, and a single Pull + Redeploy from the overview brings them all up to date.",
+          text: "A stack is flagged when one of its images has an update or the deployed commit is behind the latest one, and a single Pull + Redeploy from the Stacks page brings the selected ones up to date.",
         },
         {
           term: "API keys",
@@ -286,11 +286,11 @@ const es: Dictionary = {
       items: [
         {
           term: "El estado de un vistazo",
-          text: "El resumen ordena los stacks por urgencia: lo que requiere atención, lo que tiene algo nuevo que desplegar, lo que está en marcha y lo que está parado, cada uno con el motivo o la acción que necesita.",
+          text: "El resumen reúne las cifras clave: los stacks por estado, lo que pide atención o tiene algo nuevo que desplegar, las vulnerabilidades de las imágenes y los despliegues de los últimos 30 días con su porcentaje de éxito.",
         },
         {
           term: "Avisos de actualización",
-          text: "Un stack se marca cuando una de sus imágenes tiene actualización o el commit desplegado va por detrás del último, y un solo Pull + Redeploy desde el resumen los pone todos al día.",
+          text: "Un stack se marca cuando una de sus imágenes tiene actualización o el commit desplegado va por detrás del último, y un solo Pull + Redeploy desde la página de Stacks pone al día los que selecciones.",
         },
         {
           term: "API keys",

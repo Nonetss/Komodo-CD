@@ -6,9 +6,10 @@ same actions from CI with an API key.
 
 **Website and docs:** [nonetss.github.io/Komodo-CD](https://nonetss.github.io/Komodo-CD/)
 
-- **Overview**: every stack sorted by urgency (needs attention, something new
-  to deploy, running, stopped), with the reason a stack needs attention and a
-  single Pull + Redeploy for everything that has an update
+- **Overview**: the key figures of the instance at a glance: stacks by state,
+  which ones need attention or have something new, image vulnerabilities, and
+  the deploys of the last 30 days per day with their success rate, followed by
+  the running and stopped stacks
 - **Stacks**: a searchable, filterable list (running, stopped, with issues)
   next to the page of each stack: services, images with a new version, deployed
   and latest commit, and one-click Pull, Redeploy or Pull + Redeploy, also on
