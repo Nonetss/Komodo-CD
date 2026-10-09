@@ -21,7 +21,7 @@ export function ConnectionGuide() {
       <Text as="h2" id="connection-guide" variant="caption">
         {t("credentials.howTitle")}
       </Text>
-      <ol className="border-rule grid grid-cols-1 gap-x-6 gap-y-4 border-t-[1.5px] border-b py-5 sm:grid-cols-2 lg:grid-cols-4">
+      <ol className="border-rule grid grid-cols-1 gap-x-6 gap-y-4 rule-t border-b py-5 sm:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((step, i) => (
           <li key={step} className="flex min-w-0 gap-3 lg:flex-col">
             <span className="flex items-center gap-3">

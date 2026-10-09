@@ -49,7 +49,7 @@ export function TopNav({ items, path }: { items: NavItem[]; path: string }) {
 export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
   return (
     <nav
-      className="bg-background border-rule fixed inset-x-0 bottom-0 z-40 border-t-[1.5px] lg:hidden"
+      className="bg-background border-rule fixed inset-x-0 bottom-0 z-40 rule-t lg:hidden"
       style={{
         paddingBottom: "env(safe-area-inset-bottom)",
         viewTransitionName: "bottom-nav",

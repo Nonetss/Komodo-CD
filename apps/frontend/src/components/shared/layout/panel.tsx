@@ -38,7 +38,7 @@ export function Panel({
   )
 
   return (
-    <section className={cn("border-rule border-t-[1.5px] border-b", className)}>
+    <section className={cn("border-rule rule-t border-b", className)}>
       <header className="space-y-1.5 border-b py-4">
         <Text as={headingLevel} variant="headline">
           {title}

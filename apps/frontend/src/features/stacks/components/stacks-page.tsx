@@ -186,7 +186,7 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
       <section
         aria-label={t("stacks.title")}
         className={cn(
-          "border-rule flex-col lg:sticky lg:top-14 lg:flex lg:h-[calc(100dvh-3.5rem)] lg:border-r-[1.5px]",
+          "border-rule flex-col lg:sticky lg:top-14 lg:flex lg:h-[calc(100dvh-3.5rem)] lg:rule-r",
           openName ? "hidden" : "flex"
         )}
       >
@@ -238,7 +238,7 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
 function ListSkeleton() {
   return (
     <div className="flex flex-col gap-5 px-4 pt-7 sm:px-6">
-      <div className="border-rule space-y-3 border-b-[1.5px] pb-5">
+      <div className="border-rule space-y-3 rule-b pb-5">
         <Skeleton className="h-9 w-36" />
         <Skeleton className="h-3 w-32" />
       </div>

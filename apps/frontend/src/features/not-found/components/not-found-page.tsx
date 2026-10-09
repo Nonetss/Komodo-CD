@@ -9,7 +9,7 @@ const NotFoundPageContent = () => {
   const { t } = useTranslation()
   return (
     <div className="bg-dot-grid relative flex min-h-dvh items-center justify-center px-6">
-      <div className="bg-background border-rule relative max-w-sm space-y-5 border-y-[1.5px] px-8 py-10 text-center">
+      <div className="bg-background border-rule relative max-w-sm space-y-5 rule-y px-8 py-10 text-center">
         <Text as="p" variant="display" tone="signal" className="text-6xl">
           404
         </Text>

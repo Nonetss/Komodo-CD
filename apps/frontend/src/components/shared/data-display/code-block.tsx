@@ -42,7 +42,7 @@ export function CodeBlock({
   // tinta, oscuro en los dos temas
   return (
     <div className={cn("text-left", className)}>
-      <div className="border-rule flex min-h-9 items-center justify-between gap-2 border-b-[1.5px]">
+      <div className="border-rule flex min-h-9 items-center justify-between gap-2 rule-b">
         <span className="text-muted-foreground truncate font-mono text-xs">
           {label}
         </span>

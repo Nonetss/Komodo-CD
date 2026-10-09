@@ -62,7 +62,7 @@ export function CreateKeyForm({
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         noValidate
-        className="border-rule flex flex-col gap-3 border-y-[1.5px] py-4 sm:flex-row sm:items-end sm:py-5"
+        className="border-rule flex flex-col gap-3 rule-y py-4 sm:flex-row sm:items-end sm:py-5"
       >
         <FormField
           control={form.control}

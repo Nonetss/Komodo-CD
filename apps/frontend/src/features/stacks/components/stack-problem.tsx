@@ -14,7 +14,7 @@ export function StackProblem({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="border-signal flex flex-wrap items-baseline gap-x-5 gap-y-2 border-y-[1.5px] py-4">
+    <div className="border-signal flex flex-wrap items-baseline gap-x-5 gap-y-2 rule-y py-4">
       <Text variant="label" tone="signal">
         {t("problems.title")}
       </Text>

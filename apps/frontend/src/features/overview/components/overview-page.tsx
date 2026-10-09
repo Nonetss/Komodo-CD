@@ -155,7 +155,7 @@ function OverviewSkeleton() {
     <>
       {[0, 1].map((section) => (
         <div key={section} className="flex flex-col">
-          <div className="border-rule flex gap-5 border-b-[1.5px] pb-3">
+          <div className="border-rule flex gap-5 rule-b pb-3">
             <Skeleton className="h-3 w-5" />
             <Skeleton className="h-6 w-56" />
           </div>

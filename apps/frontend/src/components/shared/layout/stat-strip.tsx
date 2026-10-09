@@ -30,12 +30,7 @@ export function StatStrip({
   className?: string
 }) {
   return (
-    <dl
-      className={cn(
-        "border-rule flex flex-wrap gap-y-4 border-l-[1.5px]",
-        className
-      )}
-    >
+    <dl className={cn("border-rule flex flex-wrap gap-y-4 rule-l", className)}>
       {items.map((item) => (
         <div
           key={item.label}

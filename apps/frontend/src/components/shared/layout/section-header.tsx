@@ -31,7 +31,7 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        "border-rule flex flex-wrap items-baseline gap-x-5 gap-y-2 border-b-[1.5px] pb-3",
+        "border-rule flex flex-wrap items-baseline gap-x-5 gap-y-2 rule-b pb-3",
         className
       )}
     >

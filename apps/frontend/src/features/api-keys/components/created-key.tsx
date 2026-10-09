@@ -19,7 +19,7 @@ export function CreatedKey({
   const { t } = useTranslation()
   const appUrl = useAppUrl()
   return (
-    <section className="border-rule space-y-5 border-y-[1.5px] py-5">
+    <section className="border-rule space-y-5 rule-y py-5">
       <div className="flex items-start gap-2.5">
         <ShieldCheck
           aria-hidden

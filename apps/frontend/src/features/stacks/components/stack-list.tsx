@@ -62,7 +62,7 @@ export function StackList({
   // de stacks la ficha de la derecha sigue a la vista
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="border-rule flex flex-col gap-5 border-b-[1.5px] px-4 pt-7 pb-4 sm:px-6">
+      <div className="border-rule flex flex-col gap-5 rule-b px-4 pt-7 pb-4 sm:px-6">
         <header className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <Text as="h1" variant="display" className="text-4xl">

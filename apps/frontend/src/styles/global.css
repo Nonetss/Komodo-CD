@@ -184,6 +184,32 @@
   font-variation-settings: "wdth" 112;
 }
 
+/*
+ * Grosor del trazo de tinta que abre y cierra cada bloque (cabeceras, paneles,
+ * barras). Solo fija el ancho: el color lo pone `border-rule` (o
+ * `border-signal` en el aviso de problema) y el hilo fino interior sigue
+ * siendo `border`.
+ */
+@utility rule {
+  border-width: 1.5px;
+}
+@utility rule-t {
+  border-top-width: 1.5px;
+}
+@utility rule-b {
+  border-bottom-width: 1.5px;
+}
+@utility rule-l {
+  border-left-width: 1.5px;
+}
+@utility rule-r {
+  border-right-width: 1.5px;
+}
+@utility rule-y {
+  border-top-width: 1.5px;
+  border-bottom-width: 1.5px;
+}
+
 /* Revelado circular del cambio de tema (theme-toggle.tsx). Va acotado a
    `.theme-transitioning` para que las navegaciones del ClientRouter conserven
    el fundido por defecto de la raíz, como en console. */

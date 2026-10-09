@@ -37,7 +37,7 @@ export function StacksBulkBar({
     t(`deploy.actions.${ACTION_I18N[a]}.label`)
 
   return (
-    <div className="bg-popover text-popover-foreground border-rule @container sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] z-10 flex flex-wrap items-center gap-x-3 gap-y-2 border-[1.5px] px-4 py-2.5 shadow-lg lg:bottom-3">
+    <div className="bg-popover text-popover-foreground border-rule @container sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] z-10 flex flex-wrap items-center gap-x-3 gap-y-2 rule px-4 py-2.5 shadow-lg lg:bottom-3">
       {confirming ? (
         <InlineConfirm
           message={t("stacks.bulk.confirm", {

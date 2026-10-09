@@ -93,7 +93,7 @@ function StackSearchContent() {
         className="h-9 pl-6"
       />
       {expanded ? (
-        <div className="bg-background border-rule absolute inset-x-0 top-full z-40 mt-1 border-[1.5px]">
+        <div className="bg-background border-rule absolute inset-x-0 top-full z-40 mt-1 rule">
           {results.length > 0 ? (
             <div id={listId} role="listbox" className="divide-y">
               {results.map((stack, i) => (

@@ -28,7 +28,7 @@ export function PageHero({
   return (
     <header
       className={cn(
-        "border-rule flex flex-col gap-5 border-b-[1.5px] pb-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between",
+        "border-rule flex flex-col gap-5 rule-b pb-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between",
         className
       )}
     >
