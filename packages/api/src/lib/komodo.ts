@@ -1,8 +1,11 @@
 import { db } from "@komodo-cd/db"
 import { komodoTable } from "@komodo-cd/db/schema"
 import { logger } from "@komodo-cd/logger"
+import { ORPCError } from "@orpc/server"
 import { eq } from "drizzle-orm"
 import { KomodoClient, type Types } from "komodo_client"
+
+import { errors } from "#errors"
 
 /**
  * Mensaje legible de un error de Komodo. komodo_client no lanza `Error`, sino
@@ -15,6 +18,15 @@ export function komodoErrorMessage(err: unknown): string {
     if (typeof result?.error === "string" && result.error) return result.error
   }
   return "Error desconocido"
+}
+
+/**
+ * Error oRPC para un fallo hablando con Komodo: los errores ya definidos (503
+ * si no hay credenciales) pasan tal cual; lo que conteste Komodo es un 502.
+ */
+export function toKomodoError(err: unknown) {
+  if (err instanceof ORPCError) return err
+  return errors.BAD_GATEWAY({ message: komodoErrorMessage(err), cause: err })
 }
 
 type KomodoCredentials = {
@@ -66,7 +78,9 @@ class KomodoService {
 
   private ensureClient() {
     if (!this.client) {
-      throw new Error("Komodo client not initialized")
+      throw errors.SERVICE_UNAVAILABLE({
+        message: "Komodo no está configurado",
+      })
     }
     return this.client
   }
@@ -147,7 +161,15 @@ class KomodoService {
 
   async deleteCredentials(name: string) {
     try {
-      await db.delete(komodoTable).where(eq(komodoTable.name, name))
+      const deleted = await db
+        .delete(komodoTable)
+        .where(eq(komodoTable.name, name))
+        .returning({ id: komodoTable.id })
+      if (deleted.length === 0) {
+        throw errors.NOT_FOUND({
+          message: `No hay credenciales '${name}'`,
+        })
+      }
       this.client = null
       this.activeCredentials = null
       logger.info(`✅ Komodo credentials deleted for: ${name}`)

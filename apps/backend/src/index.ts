@@ -1,17 +1,24 @@
 import { komodoService } from "@komodo-cd/api/lib/komodo"
 import { auth } from "@komodo-cd/auth"
+import { closeDb } from "@komodo-cd/db"
 import { seed } from "@komodo-cd/db/seed"
 import { env } from "@komodo-cd/env/server"
 import { logger } from "@komodo-cd/logger"
 import { Hono } from "hono"
 import { bodyLimit } from "hono/body-limit"
 import { cors } from "hono/cors"
-import { logger as honoLogger } from "hono/logger"
 
 import { type AuthVariables, sessionMiddleware } from "@/middlewares/auth"
+import { requestLogger } from "@/middlewares/request-logger"
 import authRouter from "@/routers/auth"
 import openapiRouter from "@/routers/openapi"
 import rpcRouter from "@/routers/rpc"
+
+const PORT = 3000
+// Docker manda SIGKILL a los 10 s del SIGTERM: el apagado entero cabe antes
+const SHUTDOWN_TIMEOUT_MS = 8_000
+// Lo que esperan las peticiones en curso antes de cortar sus conexiones
+const HTTP_DRAIN_TIMEOUT_MS = 5_000
 
 // Ninguna petición legítima (JSON de la API, formularios de auth) se acerca
 // a 1 MiB; el límite corta cuerpos enormes antes de parsearlos.
@@ -30,7 +37,7 @@ app.use(
     allowMethods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
 )
-app.use("*", honoLogger())
+app.use("*", requestLogger)
 app.use(
   "*",
   bodyLimit({
@@ -51,28 +58,84 @@ app.route("/", openapiRouter)
 // handlers de señales solo se registran una vez.
 declare global {
   var __backendBootstrapped: boolean | undefined
+  var __backendServer: ReturnType<typeof Bun.serve> | undefined
+}
+
+async function stopHttpServer() {
+  const server = globalThis.__backendServer
+  if (!server) return
+
+  let drainTimer: ReturnType<typeof setTimeout> | undefined
+  const drained = await Promise.race([
+    server.stop().then(() => true),
+    new Promise<false>((resolve) => {
+      drainTimer = setTimeout(() => resolve(false), HTTP_DRAIN_TIMEOUT_MS)
+    }),
+  ])
+  clearTimeout(drainTimer)
+
+  if (!drained) {
+    logger.warn("http drain timed out, closing open connections")
+    await server.stop(true)
+  }
+}
+
+let shuttingDown = false
+
+async function shutdown(signal: NodeJS.Signals) {
+  if (shuttingDown) return
+  shuttingDown = true
+  logger.info({ signal }, "shutting down")
+
+  // Sin unref a propósito: si un paso se cuelga, esto termina el proceso
+  setTimeout(() => {
+    logger.error("shutdown timed out")
+    process.exit(1)
+  }, SHUTDOWN_TIMEOUT_MS)
+
+  let failed = false
+  const step = async (name: string, run: () => unknown) => {
+    try {
+      await run()
+    } catch (err) {
+      failed = true
+      logger.error({ err, step: name }, "shutdown step failed")
+    }
+  }
+
+  // Primero HTTP, para que ninguna petición nueva toque la base de datos; la
+  // conexión al final, porque las peticiones en curso aún pueden usarla.
+  await step("http", stopHttpServer)
+  await step("database", closeDb)
+
+  logger.info({ signal, failed }, "shutdown complete")
+  process.exit(failed ? 1 : 0)
 }
 
 if (!globalThis.__backendBootstrapped) {
   globalThis.__backendBootstrapped = true
 
-  logger.info("🚀 Iniciando bootstrap...")
-  await seed(auth)
-  await komodoService.initialize()
-  logger.info("✅ Bootstrap completado")
-
-  for (const signal of ["SIGINT", "SIGTERM"] as const) {
-    process.on(signal, () => {
-      logger.info({ signal }, "🛑 Señal de apagado recibida, cerrando servidor")
-      process.exit(0)
-    })
+  try {
+    await seed(auth)
+    await komodoService.initialize()
+  } catch (err) {
+    logger.error({ err }, "bootstrap failed")
+    process.exit(1)
   }
 
-  logger.info("🌐 Servidor corriendo en http://localhost:3000")
+  for (const signal of ["SIGINT", "SIGTERM"] as const) {
+    process.on(signal, () => void shutdown(signal))
+  }
 }
 
-export default {
-  port: 3000,
+// Servido a mano, no con `export default`, para que el apagado tenga un
+// servidor que parar. Se ejecuta en cada hot reload para coger el `fetch`
+// nuevo; el `id` fijo hace que Bun recargue el servidor en marcha en lugar de
+// volver a abrir el puerto.
+globalThis.__backendServer = Bun.serve({
+  id: "backend",
+  port: PORT,
   fetch: app.fetch,
   maxRequestBodySize: MAX_BODY_SIZE,
-}
+})
+logger.info({ port: PORT }, "server listening")

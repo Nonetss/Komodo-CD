@@ -4,8 +4,7 @@ import { actionHistoryTable } from "@komodo-cd/db/schema"
 import { logger } from "@komodo-cd/logger"
 import type { z } from "zod"
 
-import { errors } from "#errors"
-import { komodoErrorMessage, komodoService } from "#lib/komodo"
+import { komodoErrorMessage, komodoService, toKomodoError } from "#lib/komodo"
 import { ntfyService } from "#lib/ntfy"
 import type { deployInput } from "#v0/deploy/input"
 
@@ -65,7 +64,7 @@ export const deployHandler = {
         user: user.name || user.email || user.id,
       })
 
-      throw errors.INTERNAL_SERVER_ERROR({ message, cause: err })
+      throw toKomodoError(err)
     }
   },
 }

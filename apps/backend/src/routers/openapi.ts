@@ -1,6 +1,5 @@
 import { createContext } from "@komodo-cd/api/context"
 import { appRouter } from "@komodo-cd/api/router"
-import { logger } from "@komodo-cd/logger"
 import { OpenAPIHandler } from "@orpc/openapi/fetch"
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins"
 import { ORPCError, onError } from "@orpc/server"
@@ -43,11 +42,11 @@ const handler = new OpenAPIHandler(appRouter, {
     }),
   ],
   interceptors: [
-    onError((err) => {
+    onError((err, { context }) => {
       // Los errores definidos (401, 400, 500 con mensaje…) ya los gestiona o
       // registra el propio procedimiento; aquí solo lo inesperado.
       if (err instanceof ORPCError && err.defined) return
-      logger.error({ err }, "openapi error")
+      context.logger.error({ err }, "openapi error")
     }),
   ],
 })

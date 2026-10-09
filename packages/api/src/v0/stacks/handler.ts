@@ -1,5 +1,4 @@
-import { errors } from "#errors"
-import { komodoErrorMessage, komodoService } from "#lib/komodo"
+import { komodoService, toKomodoError } from "#lib/komodo"
 import type { StackItem } from "#v0/stacks/output"
 
 export const stacksHandler = {
@@ -10,10 +9,7 @@ export const stacksHandler = {
       // contrato real lo valida `stacksOutput.list` al salir.
       return { success: true, stacks: stacks as unknown as StackItem[] }
     } catch (err) {
-      throw errors.INTERNAL_SERVER_ERROR({
-        message: komodoErrorMessage(err),
-        cause: err,
-      })
+      throw toKomodoError(err)
     }
   },
 }
