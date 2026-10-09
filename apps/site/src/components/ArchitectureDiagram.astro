@@ -12,7 +12,7 @@ const n = dict.arch.nodes
 const r = dict.arch.roles
 
 // Topología del stack de Docker Compose dibujada con los tokens del sitio,
-// así sigue al tema. Coordenadas en el espacio 1200×420 (el viewBox recorta
+// así sigue al tema. Coordenadas en el espacio 1200×428 (el viewBox recorta
 // los 40 vacíos de arriba); cada caja mide 76 de alto y se rotula desde su
 // borde izquierdo.
 interface Box {
@@ -25,21 +25,33 @@ interface Box {
 }
 
 const boxes: Box[] = [
-  { x: 20, y: 132, w: 170, name: n.browser },
-  { x: 20, y: 300, w: 170, name: n.ci, role: r.ci },
+  { x: 20, y: 124, w: 170, name: n.browser },
+  { x: 20, y: 312, w: 170, name: n.ci, role: r.ci },
   {
-    x: 300,
-    y: 132,
-    w: 220,
+    x: 290,
+    y: 124,
+    w: 240,
     name: n.caddy,
     port: ":80",
     role: `${r.caddy} · ${dict.arch.published}`,
   },
-  { x: 300, y: 300, w: 220, name: n.astro, port: ":4321", role: r.astro },
-  { x: 640, y: 132, w: 230, name: n.backend, port: ":3000", role: r.backend },
-  { x: 640, y: 300, w: 230, name: n.sqlite, port: "/data", role: r.sqlite },
-  { x: 960, y: 132, w: 220, name: n.komodo, role: r.komodo },
-  { x: 960, y: 300, w: 220, name: n.servers, role: r.servers },
+  { x: 290, y: 312, w: 240, name: n.astro, port: ":4321", role: r.astro },
+  { x: 660, y: 124, w: 230, name: n.backend, port: ":3000", role: r.backend },
+  { x: 660, y: 312, w: 230, name: n.sqlite, port: "/data", role: r.sqlite },
+  { x: 960, y: 124, w: 220, name: n.komodo, role: r.komodo },
+  { x: 960, y: 312, w: 220, name: n.servers, role: r.servers },
+]
+
+// Marcos de los dos contenedores de la columna central: el gateway (Caddy,
+// el único puerto publicado) y el frontend (Astro SSR, solo en la red).
+interface Frame {
+  y: number
+  name: string
+}
+
+const frames: Frame[] = [
+  { y: 60, name: n.gateway },
+  { y: 248, name: n.frontend },
 ]
 
 interface Edge {
@@ -53,31 +65,38 @@ interface Edge {
 }
 
 const edges: Edge[] = [
-  { d: "M190,170 H294", label: "HTTPS", lx: 242, ly: 160 },
+  { d: "M190,162 H284", label: "HTTPS", lx: 237, ly: 152 },
   {
-    d: "M190,338 H240 V190 H294",
+    d: "M190,350 H235 V182 H284",
     label: "x-api-key",
     lx: 196,
-    ly: 360,
+    ly: 372,
     anchor: "start",
   },
-  { d: "M410,208 V294", label: "/*", lx: 420, ly: 256, anchor: "start" },
-  { d: "M520,170 H634", label: "/rpc /api", lx: 580, ly: 160 },
-  { d: "M755,208 V294", label: "SQL", lx: 765, ly: 256, anchor: "start" },
-  { d: "M870,170 H954", label: "HTTPS", lx: 912, ly: 160 },
+  { d: "M410,200 V306", label: "/*", lx: 420, ly: 238, anchor: "start" },
+  { d: "M530,162 H654", label: "/rpc /api", lx: 602, ly: 152 },
   {
-    d: "M1070,208 V294",
+    d: "M530,350 H580 V182 H654",
+    label: "/api/auth",
+    lx: 588,
+    ly: 270,
+    anchor: "start",
+  },
+  { d: "M775,200 V306", label: "SQL", lx: 785, ly: 257, anchor: "start" },
+  { d: "M890,162 H954", label: "HTTPS", lx: 925, ly: 152 },
+  {
+    d: "M1070,200 V306",
     external: true,
     label: "pull · deploy",
     lx: 1080,
-    ly: 256,
+    ly: 257,
     anchor: "start",
   },
 ]
 ---
 
 <svg
-  viewBox="0 40 1200 380"
+  viewBox="0 40 1200 388"
   role="img"
   aria-labelledby="arch-diagram-title arch-diagram-desc"
   class:list={["h-auto w-full", className]}
@@ -99,28 +118,34 @@ const edges: Edge[] = [
     </marker>
   </defs>
 
-  <!-- Contenedor del frontend: Caddy y Astro SSR van en la misma imagen. -->
+  <!-- Contenedores del gateway y del frontend, cada uno con su imagen. -->
+  {frames.map((frame) => (
   <g>
     <rect
-      x="280"
-      y="60"
-      width="260"
-      height="340"
+      x="270"
+      y={frame.y}
+      width="280"
+      height="160"
       rx="10"
       class="fill-none stroke-border"
-    ></rect>
-    <text x="298" y="92" class="font-sans text-[16px] font-medium fill-strong">
-      {n.frontend}
+    />
+    <text
+      x="288"
+      y={frame.y + 32}
+      class="font-sans text-[16px] font-medium fill-strong"
+    >
+      {frame.name}
     </text>
     <text
-      x="522"
-      y="92"
+      x="532"
+      y={frame.y + 32}
       text-anchor="end"
       class="font-mono text-[12px] fill-muted-foreground"
     >
       {r.container}
     </text>
   </g>
+))}
 
   <g class="fill-none stroke-muted-foreground" stroke-width="1.25">
     {edges.map((edge) => (

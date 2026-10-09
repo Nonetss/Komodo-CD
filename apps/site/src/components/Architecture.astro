@@ -30,15 +30,21 @@ const paths: { title: string; hops: Hop[] }[] = [
     title: dict.arch.pagePath,
     hops: [
       { name: n.browser, via: "HTTPS" },
-      { name: n.caddy, tech: n.frontend, port: ":80", via: "/*" },
-      { name: n.astro, tech: "React", port: ":4321" },
+      { name: n.caddy, tech: n.gateway, port: ":80", via: "/*" },
+      {
+        name: n.astro,
+        tech: `${n.frontend} · React`,
+        port: ":4321",
+        via: "/api/auth",
+      },
+      { name: n.backend, tech: "Better Auth", port: ":3000" },
     ],
   },
   {
     title: dict.arch.deployPath,
     hops: [
       { name: n.ci, tech: r.ci, via: "POST /api/v0/deploy" },
-      { name: n.caddy, tech: n.frontend, port: ":80", via: "/api" },
+      { name: n.caddy, tech: n.gateway, port: ":80", via: "/api" },
       {
         name: n.backend,
         tech: "Hono · oRPC",

@@ -100,18 +100,18 @@ const en = {
           text: "Optional ntfy notifications, on ntfy.sh or your own server, whenever a deploy fails, from CI or by hand.",
         },
         {
-          term: "Two images, one volume",
-          text: "Backend and frontend on ghcr.io, tagged latest and by release. SQLite in a single volume: no database server to run.",
+          term: "Three images, one volume",
+          text: "Backend, frontend and gateway on ghcr.io, tagged latest and by release. SQLite in a single volume: no database server to run.",
         },
       ],
     },
   },
   arch: {
     heading: "How it fits together",
-    lede: "Two containers run with Docker Compose. The frontend container holds Caddy, the only published port, which sends the API to the backend and every page to Astro. The backend owns a SQLite file and talks to your Komodo instance, and Komodo does the actual deploy on your servers.",
+    lede: "Three containers run with Docker Compose. The gateway runs Caddy, the only published port, which sends the API to the backend and every page to Astro SSR in the frontend container. The backend owns a SQLite file and talks to your Komodo instance, and Komodo does the actual deploy on your servers.",
     diagramTitle: "Topology",
     diagramDesc:
-      "A browser and a CI runner reach Caddy on port 80 inside the frontend container. Caddy sends /rpc, /api, /doc and /scalar to the Hono backend on port 3000 and every other path to Astro SSR on port 4321, which listens only inside the container. The backend reads and writes a SQLite file on the db_data volume and calls the Komodo Core API over HTTPS with a key and secret. Komodo then pulls and redeploys the stack on your servers through its Periphery agents.",
+      "A browser and a CI runner reach Caddy on port 80 in the gateway container. Caddy sends /rpc, /api, /doc and /scalar to the Hono backend on port 3000 and every other path to Astro SSR on port 4321 in the frontend container, which checks the session against the backend. Both listen only inside the Compose network. The backend reads and writes a SQLite file on the db_data volume and calls the Komodo Core API over HTTPS with a key and secret. Komodo then pulls and redeploys the stack on your servers through its Periphery agents.",
     legendHttp: "Connection, labelled with its protocol or route",
     legendKomodo: "Komodo's own traffic, outside Komodo CD",
     published: "published",
@@ -121,6 +121,7 @@ const en = {
     nodes: {
       browser: "Browser",
       ci: "CI runner",
+      gateway: "Gateway",
       frontend: "Frontend",
       caddy: "Caddy",
       astro: "Astro SSR",
@@ -131,24 +132,24 @@ const en = {
     },
     roles: {
       ci: "GitHub · Gitea",
-      container: "one container",
-      caddy: "gateway",
-      astro: "localhost only",
+      container: "container",
+      caddy: "reverse proxy",
+      astro: "Compose network only",
       backend: "Hono · oRPC · Better Auth",
       sqlite: "volume db_data",
       komodo: "your instance · Core API",
       servers: "Komodo Periphery",
     },
     routing: {
-      heading: "Caddy routing",
+      heading: "Gateway routing",
       route: "Request",
       target: "Goes to",
       rows: [
         { route: "/rpc/*  /api/*", target: "backend:3000" },
         { route: "/doc  /scalar", target: "backend:3000" },
-        { route: "any other path", target: "127.0.0.1:4321" },
+        { route: "any other path", target: "frontend:4321" },
       ],
-      note: "Only Caddy's port 80 is mapped to the host, as PORT. The backend is reachable only inside the Compose network, and Astro only inside its own container.",
+      note: "Only the gateway's port 80 is mapped to the host, as PORT. The backend and the frontend are reachable only inside the Compose network. Caddy also answers /health and adds basic security headers to every response.",
     },
     principles: [
       {
@@ -289,18 +290,18 @@ const es: Dictionary = {
           text: "Notificaciones opcionales de ntfy, en ntfy.sh o en tu propio servidor, cada vez que falla un deploy, desde CI o a mano.",
         },
         {
-          term: "Dos imágenes, un volumen",
-          text: "Backend y frontend en ghcr.io, con la etiqueta latest y la de cada versión. SQLite en un único volumen: sin servidor de base de datos.",
+          term: "Tres imágenes, un volumen",
+          text: "Backend, frontend y gateway en ghcr.io, con la etiqueta latest y la de cada versión. SQLite en un único volumen: sin servidor de base de datos.",
         },
       ],
     },
   },
   arch: {
     heading: "Cómo está montado",
-    lede: "Dos contenedores levantados con Docker Compose. El del frontend lleva Caddy, el único puerto publicado, que manda la API al backend y cada página a Astro. El backend es el dueño de un fichero SQLite y habla con tu instancia de Komodo, y Komodo hace el despliegue real en tus servidores.",
+    lede: "Tres contenedores levantados con Docker Compose. El gateway lleva Caddy, el único puerto publicado, que manda la API al backend y cada página a Astro SSR en el contenedor del frontend. El backend es el dueño de un fichero SQLite y habla con tu instancia de Komodo, y Komodo hace el despliegue real en tus servidores.",
     diagramTitle: "Topología",
     diagramDesc:
-      "Un navegador y un runner de CI llegan a Caddy por el puerto 80 dentro del contenedor del frontend. Caddy manda /rpc, /api, /doc y /scalar al backend Hono en el puerto 3000 y cualquier otra ruta a Astro SSR en el 4321, que solo escucha dentro del contenedor. El backend lee y escribe un fichero SQLite en el volumen db_data y llama a la API de Komodo Core por HTTPS con una key y un secret. Komodo hace entonces el pull y el redeploy del stack en tus servidores a través de sus agentes Periphery.",
+      "Un navegador y un runner de CI llegan a Caddy por el puerto 80 en el contenedor del gateway. Caddy manda /rpc, /api, /doc y /scalar al backend Hono en el puerto 3000 y cualquier otra ruta a Astro SSR en el 4321, en el contenedor del frontend, que comprueba la sesión contra el backend. Los dos solo escuchan dentro de la red de Compose. El backend lee y escribe un fichero SQLite en el volumen db_data y llama a la API de Komodo Core por HTTPS con una key y un secret. Komodo hace entonces el pull y el redeploy del stack en tus servidores a través de sus agentes Periphery.",
     legendHttp: "Conexión, con su protocolo o ruta",
     legendKomodo: "Tráfico propio de Komodo, fuera de Komodo CD",
     published: "publicado",
@@ -310,6 +311,7 @@ const es: Dictionary = {
     nodes: {
       browser: "Navegador",
       ci: "Runner de CI",
+      gateway: "Gateway",
       frontend: "Frontend",
       caddy: "Caddy",
       astro: "Astro SSR",
@@ -320,24 +322,24 @@ const es: Dictionary = {
     },
     roles: {
       ci: "GitHub · Gitea",
-      container: "un contenedor",
-      caddy: "gateway",
-      astro: "solo localhost",
+      container: "contenedor",
+      caddy: "proxy inverso",
+      astro: "solo red de Compose",
       backend: "Hono · oRPC · Better Auth",
       sqlite: "volumen db_data",
       komodo: "tu instancia · Core API",
       servers: "Komodo Periphery",
     },
     routing: {
-      heading: "Enrutado de Caddy",
+      heading: "Enrutado del gateway",
       route: "Petición",
       target: "Va a",
       rows: [
         { route: "/rpc/*  /api/*", target: "backend:3000" },
         { route: "/doc  /scalar", target: "backend:3000" },
-        { route: "cualquier otra ruta", target: "127.0.0.1:4321" },
+        { route: "cualquier otra ruta", target: "frontend:4321" },
       ],
-      note: "Solo el puerto 80 de Caddy se mapea al host, como PORT. El backend solo es accesible dentro de la red de Compose, y Astro solo dentro de su propio contenedor.",
+      note: "Solo el puerto 80 del gateway se mapea al host, como PORT. El backend y el frontend solo son accesibles dentro de la red de Compose. Caddy además responde a /health y añade cabeceras de seguridad básicas a cada respuesta.",
     },
     principles: [
       {
