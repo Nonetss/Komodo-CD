@@ -6,9 +6,12 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 type CopyButtonProps = {
-  value: string
+  /** Texto a copiar, o una función que lo genera al pulsar (para textos caros) */
+  value: string | (() => string)
   /** Muestra "Copiar"/"Copiado" junto al icono */
   withLabel?: boolean
+  /** Etiqueta en lugar de "Copiar" (con `withLabel`) */
+  label?: string
   className?: string
   size?: "xs" | "icon-xs" | "icon-sm" | "sm"
 }
@@ -16,6 +19,7 @@ type CopyButtonProps = {
 export function CopyButton({
   value,
   withLabel = false,
+  label,
   className,
   size,
 }: CopyButtonProps) {
@@ -29,7 +33,9 @@ export function CopyButton({
   }, [copied])
 
   const copy = async () => {
-    await navigator.clipboard.writeText(value)
+    await navigator.clipboard.writeText(
+      typeof value === "function" ? value() : value
+    )
     setCopied(true)
   }
 
@@ -39,7 +45,7 @@ export function CopyButton({
       variant="ghost"
       size={size ?? (withLabel ? "xs" : "icon-xs")}
       onClick={copy}
-      aria-label={copied ? t("common.copied") : t("common.copy")}
+      aria-label={copied ? t("common.copied") : (label ?? t("common.copy"))}
       className={cn(
         "text-muted-foreground",
         copied && "text-success hover:text-success",
@@ -47,7 +53,7 @@ export function CopyButton({
       )}
     >
       {copied ? <Check /> : <Copy />}
-      {withLabel && (copied ? t("common.copied") : t("common.copy"))}
+      {withLabel && (copied ? t("common.copied") : (label ?? t("common.copy")))}
     </Button>
   )
 }
