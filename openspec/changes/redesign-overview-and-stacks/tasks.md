@@ -42,7 +42,7 @@
 - [x] 3.5 Restyle the shell: the sidebar, mobile top bar and `BottomNav` with heavy rules, uppercase nav labels and a signal marker for the active item, and the logo block in `layouts/dashboard.astro`.
 - [x] 3.6 Audit `src/features/` and `src/entities/` for colour literals, primary tints (`bg-primary/…`, `text-primary` used as decoration) and `rounded-*` classes, and move them onto the shared components or tokens. This covers the deploy, history, credentials, API keys, login and 404 pages.
 
-- [x] 3.7 Replace the desktop sidebar with the design's top navbar: one sticky header for every size in `layouts/dashboard.astro` (logo, `TopNav` from `lg`, user initial and name, one `ShellControls` island), with the six-tab `BottomNav` kept below `lg`. Drop `SidebarNav` and the `layout` prop of `ShellControls`, merge the transition names into `top-bar`, and remove the `lg:pl-60` offset.
+- [x] 3.7 Replace the desktop sidebar with the design's top navbar: one sticky header for every size in `layouts/dashboard.astro` (the `KOMODO/CD` wordmark, `TopNav` from `lg`, one `ShellControls` island), with the six-tab `BottomNav` kept below `lg`. Drop `SidebarNav` and the `layout` prop of `ShellControls`, merge the transition names into `top-bar`, and remove the `lg:pl-60` offset.
 
 ## 4. Navigation and routes
 

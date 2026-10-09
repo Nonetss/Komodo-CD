@@ -170,11 +170,11 @@ Feature code is then audited for local colour or radius overrides (`bg-primary/â
 
 The user asked for the shell of the design artboards: a horizontal navbar, not the sidebar. The desktop sidebar and the mobile top bar merge into one sticky `<header>` in `layouts/dashboard.astro`, closed by the heavy rule:
 
-- the logo on the left;
+- the `KOMODO/CD` wordmark on the left (the shared `Wordmark`, also on the login page), as in the artboards;
 - `TopNav` (uppercase mono links, a signal underline sitting on the rule for the active one), shown from `lg`;
-- on the right, the user's initial square and name (email as tooltip, from `lg`), then the single `ShellControls` island.
+- on the right, only the single `ShellControls` island.
 
-The inner container uses the same `max-w-6xl` and padding as `<main>`, so the bar lines up with the page. Below `lg` the header keeps only logo and controls, and the six-tab `BottomNav` stays. `ShellControls` loses its `layout` prop because there is only one position now. The `sidebar-chrome` / `mobile-header` transition names become one `top-bar` name, and `main` no longer has the `lg:pl-60` offset.
+The bar spans the full width with the page gutters, as in the stacks artboard. Ordinary pages keep a centred `max-w-6xl` column. The Stacks pages pass `bleed` to the layout: they go full width under the bar, and their list column is sticky at viewport height with its own scroll, so the detail stays in view with hundreds of stacks. Below `lg` the header keeps only logo and controls, and the six-tab `BottomNav` stays. `ShellControls` loses its `layout` prop because there is only one position now. The `sidebar-chrome` / `mobile-header` transition names become one `top-bar` name, and `main` no longer has the `lg:pl-60` offset. `main` also loses its own `dashboard-page` name: the page fade goes on `<html>` (`layouts/main.astro`), because a named `main` morphs its size between the bleed and the centred pages and each change looked different. `PageHero` drops the surface icon above the title, which the artboards do not have.
 
 ### Navigation
 
