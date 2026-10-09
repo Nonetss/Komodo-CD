@@ -2,14 +2,17 @@
 import "@/styles/global.css"
 
 import { Font } from "astro:assets"
-import { ClientRouter } from "astro:transitions"
+import { ClientRouter, fade } from "astro:transitions"
 
 const { title } = Astro.props
 
 const { lang } = Astro.locals
+// Al navegar, toda la página hace el mismo fundido corto. Las barras tienen
+// nombre propio y no se animan (global.css)
+const pageFade = fade({ duration: "0.2s" })
 ---
 
-<html lang={lang}>
+<html lang={lang} transition:animate={pageFade}>
   <head>
     <meta charset="utf-8">
     <meta

@@ -1,6 +1,4 @@
 ---
-import { fade } from "astro:transitions"
-
 import { Wordmark } from "@/components/shared/brand/wordmark"
 import { Toaster } from "@/components/shared/feedback/toaster"
 import {
@@ -69,8 +67,6 @@ const container = `mx-auto w-full max-w-6xl ${gutter}`
     ? "pb-mobile-nav lg:pb-0"
     : [container, "pb-mobile-nav pt-6 lg:pt-10 lg:pb-12"],
 ]}
-    transition:animate={fade({ duration: "0.2s" })}
-    transition:name="dashboard-page"
   >
     <slot />
   </main>
