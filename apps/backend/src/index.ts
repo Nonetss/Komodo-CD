@@ -1,3 +1,4 @@
+import { deployEvents } from "@komodo-cd/api/lib/deploy-events"
 import { komodoService } from "@komodo-cd/api/lib/komodo"
 import { auth } from "@komodo-cd/auth"
 import { closeDb } from "@komodo-cd/db"
@@ -103,7 +104,10 @@ async function shutdown(signal: NodeJS.Signals) {
     }
   }
 
-  // Primero HTTP, para que ninguna petición nueva toque la base de datos; la
+  // Antes que nada se cierran los streams de deploys: son conexiones que no
+  // terminan solas y harían esperar al drenado de HTTP hasta su timeout.
+  await step("events", () => deployEvents.close())
+  // Después HTTP, para que ninguna petición nueva toque la base de datos; la
   // conexión al final, porque las peticiones en curso aún pueden usarla.
   await step("http", stopHttpServer)
   await step("database", closeDb)

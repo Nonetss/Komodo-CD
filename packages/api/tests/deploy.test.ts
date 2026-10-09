@@ -3,6 +3,7 @@ import { db } from "@komodo-cd/db"
 import { actionHistoryTable } from "@komodo-cd/db/schema"
 import { call } from "@orpc/server"
 
+import { deployEvents } from "#lib/deploy-events"
 import { komodoService } from "#lib/komodo"
 import { ntfyService } from "#lib/ntfy"
 import { appRouter } from "#router"
@@ -89,5 +90,92 @@ describe("deploy.trigger", () => {
 
     const err = await expectErrorCode(trigger("pull"), "SERVICE_UNAVAILABLE")
     expect(err.status).toBe(503)
+  })
+})
+
+describe("deploy.trigger events", () => {
+  let pull: ReturnType<typeof spyOn>
+  let redeploy: ReturnType<typeof spyOn>
+  let notify: ReturnType<typeof spyOn>
+  let controller: AbortController
+
+  beforeEach(async () => {
+    await db.delete(actionHistoryTable)
+    controller = new AbortController()
+    pull = spyOn(komodoService, "pullImage").mockResolvedValue(
+      undefined as never
+    )
+    redeploy = spyOn(komodoService, "redeploy").mockResolvedValue(
+      undefined as never
+    )
+    notify = spyOn(ntfyService, "notifyDeployFailure").mockResolvedValue(
+      undefined
+    )
+  })
+
+  afterEach(() => {
+    controller.abort()
+    pull.mockRestore()
+    redeploy.mockRestore()
+    notify.mockRestore()
+  })
+
+  test("an API key deploy publishes started and finished for the same run", async () => {
+    const events = deployEvents.subscribe(controller.signal)
+
+    const result = await trigger("redeploy")
+
+    const started = (await events.next()).value
+    expect(started).toMatchObject({
+      type: "started",
+      run: { stack: "web", action: "redeploy", via: "apiKey", actorName: "ci" },
+    })
+    const finished = (await events.next()).value
+    expect(finished).toMatchObject({
+      type: "finished",
+      success: true,
+      message: result.message,
+    })
+    if (started?.type !== "started" || finished?.type !== "finished") {
+      throw new Error("unexpected events")
+    }
+    expect(finished.run.id).toBe(started.run.id)
+    expect(deployEvents.running()).toHaveLength(0)
+    // La respuesta de trigger no cambia
+    expect(Object.keys(result).sort()).toEqual([
+      "action",
+      "message",
+      "stack",
+      "success",
+    ])
+  })
+
+  test("a failure finishes with its message, after the history row and before ntfy", async () => {
+    redeploy.mockRejectedValue(komodoFailure)
+    // ntfy no responde hasta que el test lo suelta
+    let releaseNtfy = () => {}
+    notify.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseNtfy = resolve
+        })
+    )
+    const events = deployEvents.subscribe(controller.signal)
+
+    const pending = expectErrorCode(trigger("redeploy"), "BAD_GATEWAY")
+
+    expect((await events.next()).value).toMatchObject({ type: "started" })
+    expect((await events.next()).value).toMatchObject({
+      type: "finished",
+      success: false,
+      message: "stack not found",
+    })
+    expect(deployEvents.running()).toHaveLength(0)
+    const rows = await db.select().from(actionHistoryTable)
+    expect(rows).toHaveLength(1)
+    expect(notify).toHaveBeenCalledTimes(1)
+
+    releaseNtfy()
+    await pending
   })
 })

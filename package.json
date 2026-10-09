@@ -13,6 +13,7 @@
       "drizzle-orm": "1.0.0-rc.4",
       "drizzle-kit": "1.0.0-rc.4",
       "@orpc/client": "^1.15.4",
+      "@orpc/experimental-publisher": "^1.15.4",
       "@orpc/openapi": "^1.15.4",
       "@orpc/server": "^1.15.4",
       "@orpc/zod": "^1.15.4",

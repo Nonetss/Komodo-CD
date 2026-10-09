@@ -19,6 +19,7 @@
     "@komodo-cd/auth": "workspace:*",
     "@komodo-cd/db": "workspace:*",
     "@komodo-cd/logger": "workspace:*",
+    "@orpc/experimental-publisher": "catalog:",
     "@orpc/server": "catalog:",
     "drizzle-orm": "catalog:",
     "komodo_client": "^1.19.5",
