@@ -1,10 +1,5 @@
-# Visual Identity
+## MODIFIED Requirements
 
-## Purpose
-
-The dashboard's editorial look: Archivo and JetBrains Mono, paper and ink palettes for light and dark, rules instead of cards, square corners and one signal accent for what needs action, all carried by tokens and shared components.
-
-## Requirements
 ### Requirement: Typography
 
 The dashboard SHALL use two self-hosted families:
@@ -81,28 +76,7 @@ Section numbers SHALL NOT use the signal accent; they SHALL be set in the muted 
 - **WHEN** an overview section header shows its number
 - **THEN** the number SHALL be in the muted tone, not the signal accent
 
-### Requirement: Rules instead of cards
-
-The layout SHALL separate content with rules, not boxes:
-
-- a heavy ink rule under page headers, section headers and the navigation;
-- a hairline between list items and table rows.
-
-Buttons, inputs, list items and containers SHALL have square corners. Shadows SHALL be reserved for elements that float above the page (toasts, popovers, the bulk action bar). Tinted or rounded cards SHALL NOT be used to group content.
-
-#### Scenario: Section header
-
-- **WHEN** a section with a title is rendered
-- **THEN** its header SHALL sit on a heavy ink rule and its items SHALL be separated by hairlines without card backgrounds
-
-### Requirement: Shared components carry the look
-
-The visual identity SHALL live in the shadcn primitives in `src/components/ui/` and the shared patterns in `src/components/shared/`: `Button`, `Input`, `Segmented`, `StatusDot` and `StatusTag`, `PageHero`, `CodeBlock`, list, state and error cards, and the app shell. Feature components SHALL compose them and SHALL NOT restyle them with their own colours, radii or fonts. A page that is not redesigned SHALL adopt the identity through these components alone.
-
-#### Scenario: History page
-
-- **WHEN** the History page is rendered after the change, with its layout unchanged
-- **THEN** it SHALL show the new typography, palette and square shapes
+## ADDED Requirements
 
 ### Requirement: Numbers only for ranked sections
 
