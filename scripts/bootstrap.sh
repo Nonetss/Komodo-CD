@@ -147,6 +147,14 @@ download_file() {
   mv "$temporary_file" "$destination"
 }
 
+# Before any prompt, so nobody answers everything just to be told at the end
+# that there is already an installation here.
+ENV_FILE="$TARGET_DIR/.env"
+if [[ -e "$ENV_FILE" ]]; then
+  err "$ENV_FILE already exists — delete it manually if you want to regenerate"
+  exit 1
+fi
+
 # ── Inputs ───────────────────────────────────────────────────────────────────
 log "Configuration — answer the prompts."
 echo
@@ -154,10 +162,12 @@ echo
 # Asked before the public URL so the URL default can follow the chosen port.
 # compose.yml publishes "${PORT:-80}:80" (the Caddy gateway).
 PORT=$(prompt "Host port to expose the app" "80")
-if ! [[ "$PORT" =~ ^[0-9]+$ ]] || (( PORT < 1 || PORT > 65535 )); then
+# 10#: "08" is decimal 8, not an invalid octal that aborts under set -e
+if ! [[ "$PORT" =~ ^[0-9]{1,5}$ ]] || (( 10#$PORT < 1 || 10#$PORT > 65535 )); then
   err "Invalid port"
   exit 1
 fi
+PORT=$((10#$PORT))
 
 if [[ "$PORT" == "80" ]]; then
   DEFAULT_URL="http://localhost"
@@ -172,6 +182,11 @@ APP_URL="${APP_URL%/}"
 if [[ ! "$APP_URL" =~ ^https?:// ]]; then
   err "Invalid URL (must start with http:// or https://)"
   exit 1
+fi
+if [[ "$APP_URL" =~ ^http://([^/:]+) ]] \
+  && [[ ! "${BASH_REMATCH[1]}" =~ ^(localhost|127\.0\.0\.1)$ ]]; then
+  note "Plain http:// on a public host: passwords and sessions travel unencrypted."
+  note "Put a TLS proxy in front and use the https:// URL here (see the deploy guide)."
 fi
 
 ADMIN_NAME=$(prompt "Admin name" "Admin")
@@ -213,11 +228,6 @@ ok "Secrets generated (BETTER_AUTH_SECRET)"
 # ── Download compose file ────────────────────────────────────────────────────
 # Do this before creating .env: a network error must not leave an installation
 # that looks complete and refuses to run again because .env already exists.
-ENV_FILE="$TARGET_DIR/.env"
-if [[ -e "$ENV_FILE" ]]; then
-  err "$ENV_FILE already exists — delete it manually if you want to regenerate"
-  exit 1
-fi
 
 COMPOSE_FILE="$TARGET_DIR/compose.yml"
 if [[ ! -f "$COMPOSE_FILE" ]]; then
