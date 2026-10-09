@@ -8,7 +8,7 @@ Publishes the same oRPC router as a REST API for CI pipelines at `/api/v0/*`, wi
 
 ### Requirement: REST API
 
-The backend SHALL serve the router with oRPC's `OpenAPIHandler` under the `/api` prefix, using each procedure's `.route()` method and path (e.g. `POST /api/v0/deploy`, `GET /api/v0/deploy/events`, `GET /api/v0/stacks`, `GET /api/v0/history`, `GET|POST|DELETE /api/v0/apikeys`, `GET|POST|DELETE /api/v0/deploy/credentials`, `GET|POST|DELETE /api/v0/deploy/credentials/ntfy`, `POST /api/v0/deploy/credentials/ntfy/test`). Paths that match no procedure SHALL fall through so `/api/auth/*` keeps working. Unexpected errors SHALL be logged as `openapi error` with the request's logger. Procedures whose output is an event iterator SHALL be served as `text/event-stream`.
+The backend SHALL serve the router with oRPC's `OpenAPIHandler` under the `/api` prefix, using each procedure's `.route()` method and path (e.g. `POST /api/v0/deploy`, `GET /api/v0/deploy/events`, `GET /api/v0/stacks`, `GET /api/v0/history`, `GET /api/v0/history/activity`, `GET|POST|DELETE /api/v0/apikeys`, `GET|POST|DELETE /api/v0/deploy/credentials`, `GET|POST|DELETE /api/v0/deploy/credentials/ntfy`, `POST /api/v0/deploy/credentials/ntfy/test`). Paths that match no procedure SHALL fall through so `/api/auth/*` keeps working. Unexpected errors SHALL be logged as `openapi error` with the request's logger. Procedures whose output is an event iterator SHALL be served as `text/event-stream`.
 
 #### Scenario: Deploy with curl
 

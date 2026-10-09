@@ -63,6 +63,20 @@ The system SHALL expose `v0.history.list` as a `protectedProcedure` (`GET /api/v
 - **WHEN** a row has no `user_name` and `user_email` `ana@example.com`
 - **THEN** its entry SHALL have `via` `session` and `actorName` `ana@example.com`
 
+### Requirement: List the activity
+
+The system SHALL expose `v0.history.activity` as a `protectedProcedure` (`GET /api/v0/history/activity`, tag `History`) taking `days` (an integer from 1 to 90, 30 when omitted; other values SHALL be rejected) and returning `{ success, since, truncated, events: [{ stack, action, success, via, createdAt }] }`: the rows created in the last `days` days, newest first, with `since` the start of the window and `createdAt` as ISO strings and `via` derived as in `v0.history.list`. It SHALL return at most 10,000 events, with `truncated` set when there were more.
+
+#### Scenario: Default window
+
+- **WHEN** rows exist 31 days, 7 days and 2 hours ago and `v0.history.activity` is called without `days`
+- **THEN** the response SHALL contain the rows of 2 hours and 7 days ago, in that order, and `truncated` SHALL be `false`
+
+#### Scenario: Window out of range
+
+- **WHEN** `v0.history.activity` is called with `days` 0 or 91
+- **THEN** the system SHALL reject the input
+
 ### Requirement: History page
 
 The dashboard SHALL provide a History page at `/history` showing the entries as a timeline grouped into last hour, today, last week and older, each entry with a success or failure mark, the stack, the translated action label, a relative time (full date and time in its tooltip, formatted in the UI language), the message (in the danger tone for failures) and the actor. The actor SHALL be taken from `via` and `actorName`: an API key actor SHALL be marked with a key icon and show the key name, or a translated "API key" label when `actorName` is `null`; a session actor SHALL show `actorName` with a user icon. A filter SHALL switch between all, successful and failed entries, each with its count. The page SHALL have a refresh button, a skeleton while loading, an empty state and an error state with retry. While open, the page SHALL use the live deploy subscription so that the history is refreshed whenever any deploy finishes, wherever it was triggered.
