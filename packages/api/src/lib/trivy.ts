@@ -143,8 +143,16 @@ export function parseTrivyReport(raw: string): ScanResult {
       a.pkg.localeCompare(b.pkg)
   )
 
+  // Se cuentan CVEs distintas, no pares paquete × CVE: la misma CVE en
+  // `python3.9` y `libpython3.9-stdlib` es un único problema que arreglar.
+  // Al ir ordenadas, la primera aparición de cada id es la más grave.
   const counts = { critical: 0, high: 0, medium: 0, low: 0, unknown: 0 }
+  const counted = new Set<string>()
+  const fixable = new Set<string>()
   for (const v of vulnerabilities) {
+    if (v.fixed) fixable.add(v.id)
+    if (counted.has(v.id)) continue
+    counted.add(v.id)
     counts[v.severity.toLowerCase() as keyof typeof counts]++
   }
 
@@ -152,7 +160,7 @@ export function parseTrivyReport(raw: string): ScanResult {
     os: os ? [os.Family, os.Name].filter(Boolean).join(" ") : null,
     digest,
     counts,
-    fixable: vulnerabilities.filter((v) => v.fixed).length,
+    fixable: fixable.size,
     vulnerabilities,
   }
 }

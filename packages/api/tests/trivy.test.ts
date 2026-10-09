@@ -41,7 +41,7 @@ describe("parseTrivyReport", () => {
     ])
   })
 
-  test("counts the ones with a fixed version", () => {
+  test("counts the CVEs with a fixed version", () => {
     const critical = result.vulnerabilities[0]
     expect(critical).toMatchObject({
       id: "CVE-2026-1111",
@@ -50,6 +50,19 @@ describe("parseTrivyReport", () => {
       target: "app/package-lock.json",
     })
     expect(result.fixable).toBe(4)
+  })
+
+  test("counts a CVE found in several packages once", () => {
+    const report = JSON.parse(trivyReportJson)
+    const [first] = report.Results[0].Vulnerabilities
+    report.Results[0].Vulnerabilities.push({
+      ...first,
+      PkgName: "busybox-binsh",
+    })
+    const parsed = parseTrivyReport(JSON.stringify(report))
+    expect(parsed.vulnerabilities).toHaveLength(6)
+    expect(parsed.counts.medium).toBe(1)
+    expect(parsed.fixable).toBe(4)
   })
 
   test("reads an unknown severity as UNKNOWN", () => {
