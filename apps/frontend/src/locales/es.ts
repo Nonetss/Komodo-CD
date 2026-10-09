@@ -12,6 +12,7 @@ export default {
     switchLanguage: "Switch to English",
   },
   nav: {
+    overview: "Resumen",
     stacks: "Stacks",
     history: "Historial",
     deploy: "Deploy",
@@ -32,7 +33,7 @@ export default {
   notFound: {
     title: "Página no encontrada",
     description: "La página que buscas no existe o se ha movido.",
-    back: "Volver a stacks",
+    back: "Volver al resumen",
   },
   stacks: {
     title: "Stacks",
@@ -65,31 +66,39 @@ export default {
       failed_other: "{{action}} falló en {{count}} de {{total}} stacks",
     },
     stats: {
-      total: "Total",
       running: "Running",
       stopped: "Parados",
       problems: "Con problemas",
     },
     filterAll: "Todos",
+    filterLabel: "Filtrar por estado",
+    running: "Acción en curso",
+    back: "Todos los stacks",
+    detailLabel: "Ficha del stack",
+    pickOne: "Elige un stack de la lista",
+    pickOneDescription:
+      "Verás su estado, sus servicios con su imagen y cómo desplegarlo desde CI.",
+    notFound: "No hay ningún stack llamado {{name}}",
+    notFoundDescription:
+      "Puede que se haya renombrado o borrado en Komodo. Elige otro de la lista.",
+    serviceColumn: "Servicio",
+    imageColumn: "Imagen",
+    statusColumn: "Estado",
+    newImage: "↑ imagen nueva",
+    upToDate: "al día",
     services_one: "{{count}} servicio",
     services_other: "{{count}} servicios",
     servicesTitle: "Servicios",
     ciTitle: "Llamar desde CI",
     ciHint:
       "Sustituye <code>{{placeholder}}</code> por una key de <keys>API Keys</keys>.",
-    expand: "Ver detalles",
-    collapse: "Ocultar detalles",
-    projectMissing: "Proyecto no encontrado en el host",
-    missingFiles: "Archivos ausentes: {{files}}",
     updateAvailable: "Update disponible",
     updateTag: "update",
     deployed: "Desplegado",
-    latest: "Último",
-    repoLabel: "Repositorio",
-    commitLabel: "Commit",
+    latestCommit: "Último commit",
+    newImages: "Imágenes nuevas",
     count: {
       running: "running",
-      problems: "con problemas",
       total: "total",
     },
     states: {
@@ -105,6 +114,52 @@ export default {
       down: "Down",
       unknown: "Unknown",
     },
+  },
+  problems: {
+    title: "Requiere atención",
+    "project-missing":
+      "El proyecto no está en el host, así que Komodo no puede levantarlo.",
+    "missing-files": "Faltan archivos en el host: {{files}}.",
+    danger:
+      "Algún contenedor no está sano, se ha caído o se está borrando. Un redeploy suele bastar.",
+    unknown: "Komodo no puede informar del estado de este stack.",
+  },
+  overview: {
+    title: "Resumen",
+    description:
+      "Lo que pide tu atención en Komodo, de lo más urgente a lo que ya está al día.",
+    refresh: "Actualizar resumen",
+    counts: {
+      attention: "Atención",
+      updates: "Updates",
+      running: "Running",
+      total: "Total",
+    },
+    stacksAside_one: "{{count}} stack",
+    stacksAside_other: "{{count}} stacks",
+    servicesShort: "{{count}} svc",
+    deploying: "deploying…",
+    details: "Detalles",
+    attention: {
+      title: "Requiere atención",
+      empty: "Nada requiere tu atención.",
+    },
+    updates: {
+      title: "Hay algo nuevo que desplegar",
+      empty: "Todo está al día.",
+      all: "Pull + Redeploy en los {{count}}",
+      confirm_one: "¿Pull + Redeploy en {{count}} stack?",
+      confirm_other: "¿Pull + Redeploy en {{count}} stacks?",
+      commitOnly: "Solo el commit",
+      columns: {
+        stack: "Stack",
+        changes: "Qué cambia",
+        commit: "Commit",
+        actions: "Acciones",
+      },
+    },
+    running: { title: "En marcha" },
+    stopped: { title: "Parados" },
   },
   deploy: {
     title: "Deploy manual",

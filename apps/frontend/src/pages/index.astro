@@ -1,4 +1,8 @@
 ---
-return Astro.redirect("/stacks")
+import { OverviewPage } from "@/features/overview"
+import DashboardLayout from "@/layouts/dashboard.astro"
 ---
 
+<DashboardLayout surface="overview">
+  <OverviewPage client:load lang={Astro.locals.lang} />
+</DashboardLayout>

@@ -1,17 +1,17 @@
 ---
 import { StacksPage } from "@/features/stacks"
 import DashboardLayout from "@/layouts/dashboard.astro"
+
+// Astro ya entrega el parámetro decodificado. Si no hay ningún stack con ese
+// nombre, la isla muestra el estado de "no encontrado".
+const { name } = Astro.params
 ---
 
-<!--
-  Misma isla persistida que `[name].astro`: al pasar de un stack a otro
-  conserva búsqueda, grupo y selección y solo recibe la nueva prop `stack`.
--->
 <DashboardLayout surface="stacks">
   <StacksPage
     client:load
     transition:persist="stacks-page"
-    stack={null}
+    stack={name ?? null}
     lang={Astro.locals.lang}
   />
 </DashboardLayout>

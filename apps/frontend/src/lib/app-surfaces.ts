@@ -2,12 +2,14 @@ import {
   History,
   KeyRound,
   Layers,
+  LayoutDashboard,
   type LucideIcon,
   Rocket,
   Server,
 } from "lucide-react"
 
 export type SurfaceId =
+  | "overview"
   | "stacks"
   | "deploy"
   | "history"
@@ -27,6 +29,7 @@ export type AppSurface = {
  * un icono lo cambia en todas partes. Las etiquetas viven en i18n (`nav.<id>`).
  */
 export const APP_SURFACES: AppSurface[] = [
+  { id: "overview", path: "/", icon: LayoutDashboard },
   { id: "stacks", path: "/stacks", icon: Layers },
   { id: "deploy", path: "/deploy", icon: Rocket },
   { id: "history", path: "/history", icon: History },
