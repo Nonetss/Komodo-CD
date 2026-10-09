@@ -8,8 +8,8 @@
     },
     "astro": {
       "source": "astrolicious/agent-skills",
-      "sourceType": "github",
-      "computedHash": "597a4587f30f1152d3ab2923e84db842a18604e09e16885ffa067730fb435d9d"
+      "sourceType": "autoskills-registry",
+      "computedHash": "2afd3a02edf4374598ce471dabb1ab5638851dbf7b82d0bb36f1019331eafb54"
     },
     "bash-defensive-patterns": {
       "source": "wshobson/agents",
@@ -78,8 +78,8 @@
     },
     "shadcn": {
       "source": "shadcn/ui",
-      "sourceType": "github",
-      "computedHash": "507f011a70e8b3ae242bdc0bb5b39fd91a1d4049a0f3c281991ccf84973d591c"
+      "sourceType": "autoskills-registry",
+      "computedHash": "3e8ca56eb3af0f18b9cca3ae002f2b52f5dd23bceb286dd7403e18ae2fb38d08"
     },
     "tailwind-css-patterns": {
       "source": "giuseppe-trisciuoglio/developer-kit",
