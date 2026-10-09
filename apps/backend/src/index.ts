@@ -1,4 +1,5 @@
 import { deployEvents } from "@komodo-cd/api/lib/deploy-events"
+import { imageScans } from "@komodo-cd/api/lib/image-scans"
 import { komodoService } from "@komodo-cd/api/lib/komodo"
 import { auth } from "@komodo-cd/auth"
 import { closeDb } from "@komodo-cd/db"
@@ -107,6 +108,9 @@ async function shutdown(signal: NodeJS.Signals) {
   // Antes que nada se cierran los streams de deploys: son conexiones que no
   // terminan solas y harían esperar al drenado de HTTP hasta su timeout.
   await step("events", () => deployEvents.close())
+  // Los escaneos de Trivy pueden durar minutos: se cortan (sus filas quedan a
+  // medias y se vuelven a encolar al listar) en lugar de esperar.
+  await step("scans", () => imageScans.close())
   // Después HTTP, para que ninguna petición nueva toque la base de datos; la
   // conexión al final, porque las peticiones en curso aún pueden usarla.
   await step("http", stopHttpServer)
