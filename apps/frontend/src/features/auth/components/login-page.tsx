@@ -72,7 +72,7 @@ function BrandPanel() {
             {STRIP.map((c, i) => (
               <span
                 key={i}
-                className={`h-2 flex-1 rounded-[2px] ${STRIP_COLOR[c]}`}
+                className={`h-2 flex-1 rounded-md ${STRIP_COLOR[c]}`}
               />
             ))}
           </div>
