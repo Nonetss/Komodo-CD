@@ -60,7 +60,7 @@ Only commit when the user asks. Messages follow Conventional Commits, `type(scop
 
 Before writing a new component, hook, helper or procedure, search what exists (`apps/frontend/src/components`, `src/hooks`, `src/lib`, `src/entities/`, the feature's own folder under `src/features/`, and `packages/api/src`) and reuse it when it fits. Feedback has shared pieces: `toastMutation` (`src/lib/toast.ts`) for mutations that report with a toast, `useConfirm` (`src/hooks/use-confirm.ts`) for two-click destructive buttons, `InlineConfirm` for confirmations that replace their controls in place, `QueryErrorCard` and `RefreshButton` for query states, `Panel` for form blocks and the `Button` `icon`/`loading` props for pending buttons. Layout has `PageHero`, `SectionHeader` (numbered sections) and `StatStrip` (counters and facts). Deploy actions from a page go through `useDeployRunner` (`src/entities/deploy-action`), and stack grouping rules (`hasProblem`, `hasUpdate`, `urgency`…) live in `src/entities/stack`.
 
-The visual identity (Archivo + JetBrains Mono, paper and ink, rules instead of cards, square corners, one orange `signal` accent for what needs action) lives in the tokens of `src/styles/global.css` and the shared components: features compose them and never hard-code colours, radii or fonts.
+The visual identity (Archivo + JetBrains Mono, paper and ink, rules instead of cards, square corners, one orange `signal` accent for what needs action; tracked mono caps `label` only for facts and chrome, `caption` for the name of a field or a block) lives in the tokens of `src/styles/global.css` and the shared components: features compose them and never hard-code colours, radii or fonts.
 
 ### Process management
 

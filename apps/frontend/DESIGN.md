@@ -2,25 +2,25 @@
 name: Komodo CD
 description: An operations bulletin for deploys — paper and ink, ruled lines instead of boxes, and one orange signal for whatever needs action.
 colors:
-  paper: "oklch(1 0 0)"
-  ink: "oklch(0.17 0 0)"
-  wash: "oklch(0.965 0.004 100)"
-  hairline: "oklch(0.915 0.005 100)"
-  field-rule: "oklch(0.8 0.006 100)"
-  graphite: "oklch(0.48 0.006 100)"
+  paper: "oklch(0.985 0.006 85)"
+  ink: "oklch(0.19 0.01 70)"
+  wash: "oklch(0.955 0.008 85)"
+  hairline: "oklch(0.91 0.01 85)"
+  field-rule: "oklch(0.78 0.012 80)"
+  graphite: "oklch(0.46 0.012 75)"
   signal: "oklch(0.553 0.195 38.4)"
-  success: "oklch(0.527 0.154 150)"
-  warning: "oklch(0.554 0.135 66)"
+  success: "oklch(0.51 0.154 150)"
+  warning: "oklch(0.535 0.135 66)"
   info: "oklch(0.546 0.2 263)"
   code-slab: "oklch(0.17 0 0)"
   code-text: "oklch(0.95 0.004 100)"
-  paper-dark: "oklch(0.165 0.002 100)"
-  ink-dark: "oklch(0.955 0.005 100)"
-  wash-dark: "oklch(0.23 0.003 100)"
-  hairline-dark: "oklch(0.29 0.003 100)"
-  field-rule-dark: "oklch(0.4 0.004 100)"
-  graphite-dark: "oklch(0.72 0.008 100)"
-  popover-dark: "oklch(0.21 0.002 100)"
+  paper-dark: "oklch(0.17 0.006 70)"
+  ink-dark: "oklch(0.95 0.008 85)"
+  wash-dark: "oklch(0.235 0.007 70)"
+  hairline-dark: "oklch(0.3 0.007 70)"
+  field-rule-dark: "oklch(0.42 0.008 70)"
+  graphite-dark: "oklch(0.72 0.012 80)"
+  popover-dark: "oklch(0.215 0.007 70)"
   signal-dark: "oklch(0.75 0.17 52)"
   success-dark: "oklch(0.78 0.17 152)"
   warning-dark: "oklch(0.82 0.15 85)"
@@ -30,23 +30,21 @@ typography:
   display:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "2.75rem"
-    fontWeight: 900
+    fontWeight: 800
     lineHeight: 0.95
-    letterSpacing: "-0.035em"
-    fontVariation: "'wdth' 125"
+    letterSpacing: "-0.03em"
+    fontVariation: "'wdth' 112"
   section:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1.5rem"
-    fontWeight: 800
+    fontWeight: 700
     lineHeight: 1.15
     letterSpacing: "-0.02em"
-    fontVariation: "'wdth' 112"
   stat:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "2.25rem"
     fontWeight: 800
     lineHeight: 1
-    fontVariation: "'wdth' 112"
   headline:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1rem"
@@ -63,6 +61,11 @@ typography:
     fontSize: "0.8125rem"
     fontWeight: 400
     lineHeight: 1.45
+  caption:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 500
+    lineHeight: 1.4
   label:
     fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, monospace"
     fontSize: "0.6875rem"
@@ -142,11 +145,11 @@ components:
 
 **Creative North Star: "The Operations Bulletin"**
 
-Komodo CD looks like a printed operations bulletin: a sheet of paper, black ink, and heavy rules that open each page and each section the way a bulletin's mastheads do. Nothing is boxed. Hairlines separate rows, a thick ink rule closes every header, and the page reads top to bottom like a report handed over at the end of a shift. It is built for someone who arrives after a push, a failed deploy or an ntfy alert, often on a phone, and wants to know in one glance what is wrong and what to press.
+Komodo CD looks like a printed operations bulletin: a sheet of warm paper, dark ink, and heavy rules that open each page and each section the way a bulletin's mastheads do. Nothing is boxed. Hairlines separate rows, a thick ink rule closes every header, and the page reads top to bottom like a report handed over at the end of a shift. It is built for someone who arrives after a push, a failed deploy or an ntfy alert, often on a phone, and wants to know in one glance what is wrong and what to press.
 
 Colour is rationed. The whole interface is ink on paper (paper on ink in the dark theme), and a single orange, Signal Orange, marks what needs action or orientation: a problem, an available update, the action that deploys something new, the active item. Because it appears so rarely, it is read at once. State never floods a surface; it lives in an 8px dot and in the word beside it.
 
-Type does the composing. Archivo in a wide, heavy cut gives titles the weight of a masthead, while JetBrains Mono in small caps carries labels, counters and every technical value, so facts feel like entries in a log. Corners are square everywhere, there are no shadows at rest, and no card has a background; structure comes from lines and from the rhythm of the type scale.
+Type does the composing. Only the page title takes Archivo's wide, heavy cut, so it carries the weight of a masthead; the rest of the type is plain Archivo. JetBrains Mono in small caps is kept for facts and chrome (counters, status words, navigation, every technical value), so those feel like entries in a log, and names are set in quiet sentence-case Archivo. Corners are square everywhere, there are no shadows at rest, and no card has a background; structure comes from lines and from the rhythm of the type scale.
 
 **Key Characteristics:**
 - Paper and ink with one accent, Signal Orange, used only for what needs action or marks the current place.
@@ -158,13 +161,13 @@ Type does the composing. Archivo in a wide, heavy cut gives titles the weight of
 
 ## Colors
 
-A near-monochrome editorial palette: neutral paper and ink with a barely warm grey (hue 100) for the secondary tones, and a single orange accent. Light is the default theme; dark inverts ink and paper rather than inventing a second palette.
+A near-monochrome editorial palette: warm off-white paper and ink with a warm tint (hue 70–85) in the greys of both themes, and a single orange accent. Light is the default theme; dark inverts ink and paper rather than inventing a second palette.
 
 ### Primary
 - **Ink** (oklch(0.17 0 0); dark: Ink Light, oklch(0.955 0.005 100)): the text colour, the thick rules, the default button fill, selection highlight and the inverted "open" row. It is the primary colour; the interface is mostly ink on paper.
 
 ### Secondary
-- **Signal Orange** (oklch(0.553 0.195 38.4); dark: oklch(0.75 0.17 52)): the only accent. It marks problems (also the danger and destructive colour), available updates, the signal button that launches a deploy, the active nav underline, section numbers, link underlines and the focus ring. In dark it lightens to stay legible on ink.
+- **Signal Orange** (oklch(0.553 0.195 38.4); dark: oklch(0.75 0.17 52)): the only accent. It marks problems (also the danger and destructive colour), available updates, the signal button that launches a deploy, the active nav underline, link underlines and the focus ring. In dark it lightens to stay legible on ink.
 
 ### Tertiary
 - **Go Green** (oklch(0.527 0.154 150); dark oklch(0.78 0.17 152)): running state and success, as a dot and as the word beside it.
@@ -172,7 +175,7 @@ A near-monochrome editorial palette: neutral paper and ink with a barely warm gr
 - **Link Blue** (oklch(0.546 0.2 263); dark oklch(0.72 0.15 255)): informational state, such as an action in progress.
 
 ### Neutral
-- **Paper** (oklch(1 0 0); dark: Night Paper, oklch(0.165 0.002 100)): the page, panels, cards and popovers share it; there is no surface step between them in light.
+- **Paper** (oklch(0.985 0.006 85); dark: Night Paper, oklch(0.17 0.006 70)): the page, panels, cards and popovers share it; there is no surface step between them in light.
 - **Wash** (oklch(0.965 0.004 100); dark oklch(0.23 0.003 100)): the only tint behind a control: hover on rows and ghost buttons, secondary and muted fills.
 - **Hairline** (oklch(0.915 0.005 100); dark oklch(0.29 0.003 100)): the 1px dividers between rows and the dotted guest-screen texture.
 - **Field Rule** (oklch(0.8 0.006 100); dark oklch(0.4 0.004 100)): the underline of unfocused inputs.
@@ -180,7 +183,7 @@ A near-monochrome editorial palette: neutral paper and ink with a barely warm gr
 - **Code Slab** (oklch(0.17 0 0); dark oklch(0.12 0 0)): the code block is always dark in both themes, with code text oklch(0.95 0.004 100) and syntax tones for flags (oklch(0.78 0.08 300)), keywords (oklch(0.82 0.09 70)), URLs (oklch(0.8 0.07 220)), strings (oklch(0.8 0.09 160)), properties (oklch(0.78 0.08 254)) and placeholders (oklch(0.78 0.15 52)).
 
 ### Named Rules
-**The One Signal Rule.** Signal Orange only appears where the reader needs to act or know where they are: a problem, an update, the deploy action, the current page. If two things on a screen are orange and neither needs action, one of them is wrong.
+**The One Signal Rule.** Signal Orange only appears where the reader needs to act or know where they are: a problem, an update, the deploy action, the current page. Section numbers are Graphite, not orange. If two things on a screen are orange and neither needs action, one of them is wrong.
 
 **The Dot-and-Word Rule.** State colour (green, amber, blue, orange) lives only in the 8px dot and in the status word beside it. Never fill a row, badge or panel with a state colour.
 
@@ -192,22 +195,23 @@ A near-monochrome editorial palette: neutral paper and ink with a barely warm gr
 **Body Font:** Archivo, regular weight
 **Label/Mono Font:** JetBrains Mono (with ui-monospace, SFMono-Regular, monospace)
 
-**Character:** Archivo stretched to 112–125 width and set at 800–900 weight gives titles the density of a masthead; at body size it is a neutral, readable grotesque. JetBrains Mono in widely tracked caps is the bulletin's index: counters, tags, nav, and anything that is a value to copy.
+**Character:** Archivo stretched to width 112 at weight 800 gives the page title the density of a masthead and is the only expanded text; everywhere else it is a neutral, readable grotesque. JetBrains Mono in widely tracked caps is the bulletin's index: counters, status words, nav, and anything that is a value to copy.
 
 ### Hierarchy
-- **Display** (900, 2.75rem, 0.95; up to 4.5rem on large screens in page heroes, -0.035em, width 125): the page title, one per page, balanced and allowed to wrap anywhere.
-- **Section** (800, 1.5rem, 1.15, -0.02em, width 112): numbered section titles and the wide secondary heading.
-- **Stat** (800, 2.25rem, 1, tabular numerals, width 112): the large figures in the count strip.
+- **Display** (800, 2.75rem, 0.95; up to 4.5rem on large screens in page heroes, -0.03em, width 112): the page title, one per page, balanced and allowed to wrap anywhere.
+- **Section** (700, 1.5rem, 1.15, -0.02em): section titles, at normal width.
+- **Stat** (800, 2.25rem, 1, tabular numerals): the large figures in the count strip.
 - **Headline** (700, 1rem, 1.35, -0.025em): row names, panel titles, block headings.
 - **Body** (400, 0.875rem, 1.5): prose and the default for anything unstyled.
+- **Caption** (Archivo, 500, 0.75rem, 1.4, sentence case, usually muted): the name of a field or of an explanatory block, such as a form label or a metadata field name.
 - **Meta** (400, 0.8125rem, 1.45): descriptions and hints under a headline; muted, capped near `max-w-prose`.
-- **Label** (JetBrains Mono, 500, 0.6875rem, 1.3, 0.1em, uppercase): field labels, counters, nav, filter tabs, status words. 11px is the readable floor; nothing is set smaller.
+- **Label** (JetBrains Mono, 500, 0.6875rem, 1.3, 0.1em, uppercase): counters, nav, filter tabs, status words and table column headers. 11px is the readable floor; nothing is set smaller.
 - **Data** (JetBrains Mono, 400, 0.75rem, tabular numerals, ligatures off): commits, hashes, URLs, curl snippets, any technical value that may be copied verbatim.
 
 ### Named Rules
-**The Role-Not-Size Rule.** Type is chosen by role (display, section, stat, headline, body, meta, label, data), through the shared `Text` component, never by composing size, weight and tracking locally. A new text is one of the existing roles or the scale gets a new role.
+**The Role-Not-Size Rule.** Type is chosen by role (display, section, stat, headline, body, meta, caption, label, data), through the shared `Text` component, never by composing size, weight and tracking locally. A new text is one of the existing roles or the scale gets a new role.
 
-**The Mono-for-Facts Rule.** Anything that is a value rather than a sentence (counts, ids, hashes, URLs, status words) is JetBrains Mono, tabular, with ligatures off. Prose never is.
+**The Mono-for-Facts Rule.** Anything that is a value rather than a sentence (counts, ids, hashes, URLs, status words) is JetBrains Mono, tabular, with ligatures off. Prose never is, and neither is the name of a field or a block: that is a `caption`, not a tracked uppercase `label`.
 
 ## Layout
 
@@ -250,7 +254,7 @@ Square. Every radius token resolves to 0: buttons, inputs, panels, badges, avata
 ### Inputs / Fields
 - **Style:** underlined, not boxed: transparent background, only a 1.5px bottom rule in ink, 40px high, zero horizontal padding, Graphite placeholder.
 - **Focus:** the bottom rule turns Signal Orange. **Error:** the same rule takes the destructive colour (Signal). **Disabled:** 50% opacity.
-- **Labels:** form labels are small caps in Archivo (not mono), 11px, tracked 0.12em, Graphite, turning Signal when the field is in error. Checkboxes and radios use native controls with the accent set to ink (Signal on an inverted row).
+- **Labels:** form labels are the `caption` role (Archivo, sentence case, 12px, Graphite), turning Signal when the field is in error. Checkboxes and radios use native controls with the accent set to ink (Signal on an inverted row).
 
 ### Navigation
 - **Top bar (desktop):** 56px, sticky, paper background with a 1.5px ink rule beneath. The "KOMODO/CD" wordmark in wide extrabold Archivo sits left; links are mono caps in Graphite that go to Ink when active, with a 2px Signal underline drawn at the bottom of the bar. Avatar, theme toggle and language switcher sit right.
@@ -267,7 +271,7 @@ Square. Every radius token resolves to 0: buttons, inputs, panels, badges, avata
 
 ### Page hero, section header, count strip
 - **Page hero:** display title, muted description, then counters, status and one action aligned to the right baseline; closed by a 1.5px ink rule.
-- **Section header:** Signal two-digit number in mono ("01"), section-role title, a muted mono note and an optional action, resting on a 1.5px rule.
+- **Section header:** optional two-digit Graphite number in mono ("01"), used only where the sections are ranked (the overview, by urgency) and never in the stack detail; section-role title, a muted mono note and an optional action, resting on a 1.5px rule.
 - **Count strip:** a 1.5px ink rule on the left, then cells separated by hairlines: mono label above, a stat-size figure below, Signal for what needs action and Graphite for the total.
 
 ### Code block
