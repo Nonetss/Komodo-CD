@@ -3,11 +3,11 @@ import { useSyncExternalStore } from "react"
 const subscribe = () => () => {}
 
 /**
- * `true` only after the React tree has hydrated on the client.
+ * `true` solo cuando el árbol de React ya ha hidratado en el cliente.
  *
- * Uses `useSyncExternalStore` so the server and the client's first paint
- * both see `false`, avoiding mismatches when TanStack Query reads a warm
- * browser cache populated by another island or navbar prefetch.
+ * Con `useSyncExternalStore`, el servidor y el primer render del cliente ven
+ * `false`, así que no hay desajustes aunque TanStack Query encuentre la caché
+ * del navegador ya caliente (otra isla o una navegación anterior la llenó).
  */
 export function useHydrated() {
   return useSyncExternalStore(

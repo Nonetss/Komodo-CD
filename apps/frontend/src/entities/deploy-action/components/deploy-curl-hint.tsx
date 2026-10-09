@@ -1,7 +1,7 @@
 import { Trans } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
-import { API_KEY_PLACEHOLDER } from "@/features/deploy/model/deploy-actions"
+import { API_KEY_PLACEHOLDER } from "@/entities/deploy-action/model/deploy-actions"
 import { cn } from "@/lib/utils"
 
 /** Pista bajo un `curl` de ejemplo: qué sustituir y dónde crear la key. */

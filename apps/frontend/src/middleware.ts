@@ -2,6 +2,7 @@ import { defineMiddleware } from "astro:middleware"
 import { splitSetCookieHeader } from "better-auth/cookies"
 
 import { authServer } from "@/lib/auth-server"
+import { getLang } from "@/lib/lang"
 
 const publicPaths = ["/login"]
 // Ficheros de public/: no necesitan sesión y no deben costar una petición
@@ -25,6 +26,8 @@ function appendRefreshedCookies(
 export const onRequest = defineMiddleware(async (context, next) => {
   const path = context.url.pathname
 
+  // Antes de la salida temprana: /login y la 404 también lo usan
+  context.locals.lang = getLang(context.cookies)
   context.locals.session = null
   context.locals.user = null
 

@@ -97,7 +97,7 @@ function FormLabel({
       data-slot="form-label"
       data-error={!!error}
       className={cn(
-        // Etiqueta micro-caps (rol `label`), como FieldLabel
+        // Etiqueta micro-caps: el rol `label` de Text
         "text-muted-foreground text-label data-[error=true]:text-destructive font-medium tracking-[0.12em] uppercase",
         className
       )}

@@ -1,9 +1,11 @@
-import { AlertCircle, ArrowRight, Loader2 } from "lucide-react"
+import { AlertCircle, ArrowRight } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
+import { LanguageSwitcherButton } from "@/components/shared/controls/language-switcher"
+import { ThemeToggle } from "@/components/shared/controls/theme-toggle"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -13,7 +15,6 @@ import {
   FormLabel,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { LanguageSwitcherButton, ThemeToggle } from "@/features/app-shell"
 import { useHydrated } from "@/hooks/use-hydrated"
 import { authClient } from "@/lib/auth-client"
 import { withIsland } from "@/providers/island"
@@ -205,9 +206,9 @@ const LoginPageContent = () => {
                   type="submit"
                   size="lg"
                   className="group w-full"
-                  disabled={!hydrated || submitting}
+                  disabled={!hydrated}
+                  loading={submitting}
                 >
-                  {submitting ? <Loader2 className="animate-spin" /> : null}
                   {submitting ? t("login.submitting") : t("login.submit")}
                   {!submitting && (
                     <ArrowRight className="transition-transform group-hover:translate-x-0.5" />

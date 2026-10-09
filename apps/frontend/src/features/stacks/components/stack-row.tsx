@@ -1,4 +1,4 @@
-import { AlertTriangle, ChevronDown, Loader2 } from "lucide-react"
+import { AlertTriangle, ChevronDown } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -17,12 +17,9 @@ import {
   buildDeployCurl,
   DEPLOY_ACTIONS,
   DeployCurlHint,
-} from "@/features/deploy"
+} from "@/entities/deploy-action"
+import { StackStateDot, StackStateTag } from "@/entities/stack"
 import { ImageRef } from "@/features/stacks/components/image-ref"
-import {
-  StackStateDot,
-  StackStateTag,
-} from "@/features/stacks/components/stack-state"
 import { hasUpdate } from "@/features/stacks/model/stack-groups"
 import { useAppUrl } from "@/hooks/use-app-url"
 import type { DeployAction, Stack } from "@/lib/api-types"
@@ -131,23 +128,21 @@ export function StackRow({
 
         <div className="flex shrink-0 items-center gap-0.5 opacity-70 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100">
           {DEPLOY_ACTIONS.map((action) => {
-            const Icon = ACTION_ICON[action]
             const label = t(`deploy.actions.${ACTION_I18N[action]}.label`)
-            const running = pendingAction === action
             return (
               <Button
                 key={action}
                 type="button"
                 variant="ghost"
                 size="icon-sm"
+                icon={ACTION_ICON[action]}
+                loading={pendingAction === action}
                 disabled={pendingAction !== null}
                 onClick={() => onAction(action)}
                 title={label}
                 aria-label={`${label} ${stack.name}`}
                 className="text-muted-foreground hover:text-foreground"
-              >
-                {running ? <Loader2 className="animate-spin" /> : <Icon />}
-              </Button>
+              />
             )
           })}
           <span
@@ -262,7 +257,7 @@ export function StackRow({
                         ink
                         title={t("stacks.updateAvailable")}
                       >
-                        update
+                        {t("stacks.updateTag")}
                       </StatusTag>
                     )}
                   </span>

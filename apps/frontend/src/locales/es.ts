@@ -7,6 +7,9 @@ export default {
     retry: "Reintentar",
     delete: "Eliminar",
     confirmDelete: "¿Seguro? Pulsa otra vez",
+    toggleTheme: "Cambiar tema",
+    // En el idioma de destino: es lo que lee quien no entiende el actual
+    switchLanguage: "Switch to English",
   },
   nav: {
     stacks: "Stacks",
@@ -79,6 +82,7 @@ export default {
     projectMissing: "Proyecto no encontrado en el host",
     missingFiles: "Archivos ausentes: {{files}}",
     updateAvailable: "Update disponible",
+    updateTag: "update",
     deployed: "Desplegado",
     latest: "Último",
     repoLabel: "Repositorio",
@@ -117,6 +121,7 @@ export default {
     ciDescription:
       "La misma acción, lista para pegar en un workflow de GitHub o Gitea Actions.",
     lastResult: "Último resultado",
+    exampleStack: "mi-stack",
     actions: {
       pull: {
         label: "Pull",
@@ -146,6 +151,7 @@ export default {
       failed: "Fallidas",
     },
     via: "por",
+    apiKeyActor: "API key",
     count: {
       failed: "fallidas",
       total: "total",
@@ -163,7 +169,6 @@ export default {
       "Claves para disparar deploys desde CI con la cabecera x-api-key.",
     refresh: "Actualizar API keys",
     new: "Nueva key",
-    cancel: "Cancelar",
     nameLabel: "Nombre",
     namePlaceholder: "p. ej. github-actions",
     create: "Crear key",
@@ -191,7 +196,6 @@ export default {
     refresh: "Actualizar",
     add: "Configurar conexión",
     replace: "Reemplazar",
-    cancel: "Cancelar",
     newTitle: "Datos de la instancia",
     newDescription:
       "La key y el secret se guardan en el servidor y nunca se muestran.",

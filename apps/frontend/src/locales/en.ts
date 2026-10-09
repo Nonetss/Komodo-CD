@@ -1,3 +1,5 @@
+import type { Dictionary } from "@/locales/types"
+
 export default {
   common: {
     copy: "Copy",
@@ -7,6 +9,9 @@ export default {
     retry: "Retry",
     delete: "Delete",
     confirmDelete: "Sure? Click again",
+    toggleTheme: "Toggle theme",
+    // En el idioma de destino: es lo que lee quien no entiende el actual
+    switchLanguage: "Cambiar a Español",
   },
   nav: {
     stacks: "Stacks",
@@ -79,6 +84,7 @@ export default {
     projectMissing: "Project not found on host",
     missingFiles: "Missing files: {{files}}",
     updateAvailable: "Update available",
+    updateTag: "update",
     deployed: "Deployed",
     latest: "Latest",
     repoLabel: "Repository",
@@ -117,6 +123,7 @@ export default {
     ciDescription:
       "The same action, ready to paste into a GitHub or Gitea Actions workflow.",
     lastResult: "Last result",
+    exampleStack: "my-stack",
     actions: {
       pull: {
         label: "Pull",
@@ -146,6 +153,7 @@ export default {
       failed: "Failed",
     },
     via: "by",
+    apiKeyActor: "API key",
     count: {
       failed: "failed",
       total: "total",
@@ -162,7 +170,6 @@ export default {
     description: "Keys to trigger deploys from CI with the x-api-key header.",
     refresh: "Refresh API keys",
     new: "New key",
-    cancel: "Cancel",
     nameLabel: "Name",
     namePlaceholder: "e.g. github-actions",
     create: "Create key",
@@ -189,7 +196,6 @@ export default {
     refresh: "Refresh",
     add: "Configure connection",
     replace: "Replace",
-    cancel: "Cancel",
     newTitle: "Instance details",
     newDescription:
       "The key and secret are stored on the server and never shown again.",
@@ -269,4 +275,4 @@ export default {
     errorDelete: "Error deleting the ntfy configuration",
     errorTest: "Couldn't send the notification",
   },
-} as const
+} as const satisfies Dictionary

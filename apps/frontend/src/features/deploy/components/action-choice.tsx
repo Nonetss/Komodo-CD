@@ -5,7 +5,7 @@ import {
   ACTION_I18N,
   ACTION_ICON,
   DEPLOY_ACTIONS,
-} from "@/features/deploy/model/deploy-actions"
+} from "@/entities/deploy-action"
 import type { DeployAction } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
 

@@ -1,11 +1,10 @@
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
-import { withIsland } from "@/providers/island"
 
-/** Versión sin envoltorio, para usar dentro de otra isla (hereda su idioma). */
+/** Cambia entre español e inglés. Va dentro de una isla (hereda su idioma). */
 export const LanguageSwitcherButton = () => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const isEs = i18n.language.startsWith("es")
 
   const toggle = () => {
@@ -22,12 +21,10 @@ export const LanguageSwitcherButton = () => {
       size="icon-sm"
       onClick={toggle}
       className="text-meta-sm font-mono font-bold"
-      aria-label={isEs ? "Switch to English" : "Cambiar a Español"}
-      title={isEs ? "Switch to English" : "Cambiar a Español"}
+      aria-label={t("common.switchLanguage")}
+      title={t("common.switchLanguage")}
     >
       {isEs ? "EN" : "ES"}
     </Button>
   )
 }
-
-export const LanguageSwitcher = withIsland(LanguageSwitcherButton)

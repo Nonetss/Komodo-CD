@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
-import { withIsland } from "@/providers/island"
 
-const LogOutButtonContent = () => {
+/** Cierra la sesión y vuelve al login. Va dentro de `ShellControls`. */
+export const LogOutButton = () => {
   const { t } = useTranslation()
 
   const handleLogout = async () => {
@@ -27,5 +27,3 @@ const LogOutButtonContent = () => {
     </Button>
   )
 }
-
-export const LogOutButton = withIsland(LogOutButtonContent)

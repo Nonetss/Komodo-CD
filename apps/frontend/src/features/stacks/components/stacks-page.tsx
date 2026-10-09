@@ -1,24 +1,25 @@
-import { Layers, RefreshCw, Search, ServerCrash, X } from "lucide-react"
+import { Layers, Search, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { SoftCardList } from "@/components/shared/data-display/soft-card-list"
+import { QueryErrorCard } from "@/components/shared/feedback/query-error-card"
 import { StateCard } from "@/components/shared/feedback/state-card"
+import { RefreshButton } from "@/components/shared/form/refresh-button"
 import { Segmented } from "@/components/shared/form/segmented"
 import { HeroCount, PageHero } from "@/components/shared/layout/page-hero"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ACTION_I18N, useDeployTrigger } from "@/features/deploy"
+import { ACTION_I18N, useDeployTrigger } from "@/entities/deploy-action"
+import { useStacks } from "@/entities/stack"
 import { StackRow } from "@/features/stacks/components/stack-row"
 import { StacksBulkBar } from "@/features/stacks/components/stacks-bulk-bar"
-import { useStacks } from "@/features/stacks/hooks/use-stacks"
 import { BULK_CONCURRENCY, runPool } from "@/features/stacks/model/run-pool"
 import { inGroup, type StackGroup } from "@/features/stacks/model/stack-groups"
 import type { DeployAction, Stack } from "@/lib/api-types"
 import { getErrorMessage } from "@/lib/orpc"
-import { notifyError, notifySuccess } from "@/lib/toast"
-import { cn } from "@/lib/utils"
+import { notifyError, notifySuccess, toastMutation } from "@/lib/toast"
 import { withIsland } from "@/providers/island"
 
 const EMPTY_STACKS: Stack[] = []
@@ -31,7 +32,6 @@ const StacksPageContent = () => {
   const deployTrigger = useDeployTrigger()
   const stacks = stacksQuery.data ?? EMPTY_STACKS
   const loading = stacksQuery.isLoading
-  const refreshing = stacksQuery.isFetching
 
   const [search, setSearch] = useState("")
   const [group, setGroup] = useState<StackGroup>("all")
@@ -112,21 +112,18 @@ const StacksPageContent = () => {
     { silent = false } = {}
   ) => {
     const label = actionLabel(action)
+    const trigger = () => deployTrigger.mutateAsync({ stack, action })
     setPending((p) => ({ ...p, [stack]: action }))
     try {
-      const res = await deployTrigger.mutateAsync({ stack, action })
-      if (!silent) {
-        notifySuccess(
-          t("stacks.actionDone", { action: label, stack }),
-          res.message
-        )
-      }
-    } catch (err) {
-      if (silent) throw err
-      notifyError(
-        `${label} · ${stack}`,
-        getErrorMessage(err, t("stacks.errorAction"))
-      )
+      if (silent) return await trigger()
+      return await toastMutation(trigger, {
+        success: (res) => ({
+          title: t("stacks.actionDone", { action: label, stack }),
+          description: res.message,
+        }),
+        error: `${label} · ${stack}`,
+        errorFallback: t("stacks.errorAction"),
+      })
     } finally {
       setPending((p) => ({ ...p, [stack]: null }))
     }
@@ -177,20 +174,13 @@ const StacksPageContent = () => {
   let content: React.ReactNode
   if (stacksQuery.isError) {
     content = (
-      <StateCard
-        tone="destructive"
-        icon={ServerCrash}
+      <QueryErrorCard
+        query={stacksQuery}
         title={t("stacks.errorLoad")}
-        description={getErrorMessage(stacksQuery.error, "")}
-        action={
-          <div className="flex flex-wrap justify-center gap-2">
-            <Button variant="outline" onClick={() => stacksQuery.refetch()}>
-              {t("common.retry")}
-            </Button>
-            <Button asChild>
-              <a href="/credentials">{t("stacks.configure")}</a>
-            </Button>
-          </div>
+        actions={
+          <Button asChild>
+            <a href="/credentials">{t("stacks.configure")}</a>
+          </Button>
         }
       />
     )
@@ -267,8 +257,7 @@ const StacksPageContent = () => {
             icon={Search}
             title={t("stacks.noMatch")}
             action={
-              <Button variant="outline" onClick={clearFilters}>
-                <X />
+              <Button variant="outline" icon={X} onClick={clearFilters}>
                 {t("stacks.clear")}
               </Button>
             }
@@ -347,15 +336,7 @@ const StacksPageContent = () => {
           />
         }
         action={
-          <Button
-            variant="outline"
-            onClick={() => stacksQuery.refetch()}
-            disabled={refreshing}
-            aria-label={t("stacks.refresh")}
-          >
-            <RefreshCw className={cn(refreshing && "animate-spin")} />
-            <span className="hidden sm:inline">{t("common.refresh")}</span>
-          </Button>
+          <RefreshButton query={stacksQuery} label={t("stacks.refresh")} />
         }
       />
       {content}

@@ -5,7 +5,7 @@ import { Text } from "@/components/shared/brand/typography"
 import { CodeBlock } from "@/components/shared/data-display/code-block"
 import { CopyButton } from "@/components/shared/form/copy-button"
 import { Button } from "@/components/ui/button"
-import { buildDeployCurl } from "@/features/deploy"
+import { buildDeployCurl } from "@/entities/deploy-action"
 import { useAppUrl } from "@/hooks/use-app-url"
 
 /** Key recién creada: se muestra una sola vez, con su curl de ejemplo */
@@ -47,7 +47,12 @@ export function CreatedKey({
         <CodeBlock
           language="shell"
           label="POST /api/v0/deploy"
-          code={buildDeployCurl(appUrl, "mi-stack", "pull-redeploy", value)}
+          code={buildDeployCurl(
+            appUrl,
+            t("deploy.exampleStack"),
+            "pull-redeploy",
+            value
+          )}
         />
       </div>
 

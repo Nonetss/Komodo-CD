@@ -1,22 +1,33 @@
-import { Loader2, Rocket } from "lucide-react"
-import { useId, useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Rocket } from "lucide-react"
+import { useMemo, useState } from "react"
+import { useForm, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { z } from "zod"
 
 import { Text } from "@/components/shared/brand/typography"
 import { CodeBlock } from "@/components/shared/data-display/code-block"
 import { StatusDot } from "@/components/shared/data-display/status-dot"
-import { FormField } from "@/components/shared/form/field-label"
 import { PageHero } from "@/components/shared/layout/page-hero"
 import { Button } from "@/components/ui/button"
-import { ActionChoice } from "@/features/deploy/components/action-choice"
-import { DeployCurlHint } from "@/features/deploy/components/deploy-curl-hint"
-import { StackCombobox } from "@/features/deploy/components/stack-combobox"
-import { useDeployTrigger } from "@/features/deploy/hooks/use-deploy"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import {
   ACTION_I18N,
   buildDeployCurl,
-} from "@/features/deploy/model/deploy-actions"
-import { useStacks } from "@/features/stacks"
+  DEPLOY_ACTIONS,
+  DeployCurlHint,
+  useDeployTrigger,
+} from "@/entities/deploy-action"
+import { useStacks } from "@/entities/stack"
+import { ActionChoice } from "@/features/deploy/components/action-choice"
+import { StackCombobox } from "@/features/deploy/components/stack-combobox"
 import { useAppUrl } from "@/hooks/use-app-url"
 import { useHydrated } from "@/hooks/use-hydrated"
 import type { DeployAction } from "@/lib/api-types"
@@ -25,30 +36,39 @@ import { notifyError, notifySuccess } from "@/lib/toast"
 import { cn } from "@/lib/utils"
 import { withIsland } from "@/providers/island"
 
+type DeployFormValues = { stack: string; action: DeployAction }
+
 type Result = { success: boolean; message: string; stack: string }
 
 const DeployPageContent = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const stacksQuery = useStacks()
   const deployTrigger = useDeployTrigger()
   const stacks = stacksQuery.data ?? []
   const appUrl = useAppUrl()
   const hydrated = useHydrated()
-  const errorId = useId()
-
-  const [stack, setStack] = useState("")
-  const [action, setAction] = useState<DeployAction>("pull-redeploy")
-  const [touched, setTouched] = useState(false)
   const [result, setResult] = useState<Result | null>(null)
 
-  const invalid = touched && stack.trim() === ""
-  const loading = deployTrigger.isPending
+  const schema = useMemo(
+    () =>
+      z.object({
+        stack: z.string().trim().min(1, t("deploy.required")),
+        action: z.enum(DEPLOY_ACTIONS),
+      }),
+    [i18n.language]
+  )
 
-  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setTouched(true)
-    const name = stack.trim()
-    if (!name) return
+  const form = useForm<DeployFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { stack: "", action: "pull-redeploy" },
+  })
+  const [stack, action] = useWatch({
+    control: form.control,
+    name: ["stack", "action"],
+  })
+
+  // El resultado se muestra también en línea: aquí no vale toastMutation
+  const onSubmit = async ({ stack: name, action }: DeployFormValues) => {
     setResult(null)
     const label = t(`deploy.actions.${ACTION_I18N[action]}.label`)
     try {
@@ -70,61 +90,77 @@ const DeployPageContent = () => {
         description={t("deploy.description")}
       />
 
-      <form
-        method="post"
-        onSubmit={onSubmit}
-        noValidate
-        className="bg-surface rounded-xl border"
-      >
-        <div className="space-y-6 p-5">
-          <FormField
-            label={t("deploy.stackLabel")}
-            htmlFor="deploy-stack"
-            error={invalid ? t("deploy.required") : undefined}
-            errorId={errorId}
-          >
-            <StackCombobox
-              id="deploy-stack"
-              stacks={stacks}
-              loading={stacksQuery.isLoading}
-              value={stack}
-              onChange={(v) => {
-                setStack(v)
-                setResult(null)
-              }}
-              invalid={invalid}
-              describedBy={invalid ? errorId : undefined}
+      <Form {...form}>
+        <form
+          method="post"
+          onSubmit={form.handleSubmit(onSubmit)}
+          noValidate
+          className="bg-surface rounded-xl border"
+        >
+          <div className="space-y-6 p-5">
+            <FormField
+              control={form.control}
+              name="stack"
+              render={({ field }) => (
+                <FormItem className="min-w-0">
+                  <FormLabel>{t("deploy.stackLabel")}</FormLabel>
+                  <FormControl>
+                    <StackCombobox
+                      {...field}
+                      stacks={stacks}
+                      loading={stacksQuery.isLoading}
+                      onChange={(value) => {
+                        field.onChange(value)
+                        setResult(null)
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </FormField>
 
-          <ActionChoice value={action} onChange={setAction} />
-        </div>
-
-        <div className="flex flex-col items-stretch gap-3 border-t px-5 py-4 sm:flex-row sm:items-center">
-          <div role="status" className="min-w-0 flex-1">
-            {result && (
-              <p className="text-meta flex items-start gap-2">
-                <StatusDot
-                  tone={result.success ? "success" : "danger"}
-                  className="mt-1.5"
-                />
-                <span
-                  className={cn(
-                    "min-w-0 wrap-break-word",
-                    result.success ? "text-muted-foreground" : "text-danger"
-                  )}
-                >
-                  {result.message}
-                </span>
-              </p>
-            )}
+            <FormField
+              control={form.control}
+              name="action"
+              render={({ field }) => (
+                <ActionChoice value={field.value} onChange={field.onChange} />
+              )}
+            />
           </div>
-          <Button type="submit" disabled={!hydrated || loading}>
-            {loading ? <Loader2 className="animate-spin" /> : <Rocket />}
-            {loading ? t("deploy.executing") : t("deploy.submit")}
-          </Button>
-        </div>
-      </form>
+
+          <div className="flex flex-col items-stretch gap-3 border-t px-5 py-4 sm:flex-row sm:items-center">
+            <div role="status" className="min-w-0 flex-1">
+              {result && (
+                <p className="text-meta flex items-start gap-2">
+                  <StatusDot
+                    tone={result.success ? "success" : "danger"}
+                    className="mt-1.5"
+                  />
+                  <span
+                    className={cn(
+                      "min-w-0 wrap-break-word",
+                      result.success ? "text-muted-foreground" : "text-danger"
+                    )}
+                  >
+                    {result.message}
+                  </span>
+                </p>
+              )}
+            </div>
+            <Button
+              type="submit"
+              icon={Rocket}
+              loading={deployTrigger.isPending}
+              disabled={!hydrated}
+            >
+              {deployTrigger.isPending
+                ? t("deploy.executing")
+                : t("deploy.submit")}
+            </Button>
+          </div>
+        </form>
+      </Form>
 
       <section aria-labelledby="deploy-ci" className="mt-4 space-y-3">
         <div>
@@ -138,7 +174,11 @@ const DeployPageContent = () => {
         <CodeBlock
           language="shell"
           label={`POST /api/v0/deploy · ${action}`}
-          code={buildDeployCurl(appUrl, stack.trim() || "mi-stack", action)}
+          code={buildDeployCurl(
+            appUrl,
+            stack.trim() || t("deploy.exampleStack"),
+            action
+          )}
         />
         <DeployCurlHint />
       </section>

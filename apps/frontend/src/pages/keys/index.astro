@@ -1,11 +1,8 @@
 ---
 import { ApiKeysPage } from "@/features/api-keys"
 import DashboardLayout from "@/layouts/dashboard.astro"
-import { getLang } from "@/lib/lang"
-
-const lang = getLang(Astro.cookies)
 ---
 
-<DashboardLayout title="API Keys">
-  <ApiKeysPage client:load lang={lang} />
+<DashboardLayout surface="apikeys">
+  <ApiKeysPage client:load lang={Astro.locals.lang} />
 </DashboardLayout>

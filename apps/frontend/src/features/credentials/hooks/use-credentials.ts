@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { stacksListKey } from "@/features/stacks"
+import { stacksListKey } from "@/entities/stack"
 import { useHydratedQuery } from "@/hooks/use-hydrated-query"
 import { orpc } from "@/lib/orpc"
 

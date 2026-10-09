@@ -7,11 +7,12 @@ import {
 import { useHydrated } from "@/hooks/use-hydrated"
 
 /**
- * SSR-safe wrapper around `useQuery` for Astro `client:only` islands.
+ * `useQuery` seguro para las islas `client:load` de Astro, que se renderizan
+ * en SSR y luego hidratan.
  *
- * Until hydration completes, cached data is ignored so the client matches the
- * server's pending state. After hydration, the shared browser QueryClient
- * cache is used immediately (no extra loading flash when data was prefetched).
+ * Hasta hidratar ignora la caché, así el cliente coincide con el estado
+ * pendiente que pintó el servidor. Después usa al momento la caché compartida
+ * del QueryClient del navegador (sin parpadeo de carga si ya había datos).
  */
 export function useHydratedQuery<
   TQueryFnData = unknown,

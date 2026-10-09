@@ -1,5 +1,6 @@
 import { Moon, Sun } from "lucide-react"
 import { flushSync } from "react-dom"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 
@@ -8,6 +9,8 @@ export interface ThemeToggleProps {
 }
 
 export const ThemeToggle = ({ className }: ThemeToggleProps) => {
+  const { t } = useTranslation()
+
   const toggle = (e: React.MouseEvent) => {
     const next = !document.documentElement.classList.contains("dark")
 
@@ -72,8 +75,8 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
       variant="ghost"
       size="icon-sm"
       onClick={toggle}
-      aria-label="Cambiar tema"
-      title="Cambiar tema"
+      aria-label={t("common.toggleTheme")}
+      title={t("common.toggleTheme")}
       className={className}
     >
       <Sun className="hidden dark:block" aria-hidden />

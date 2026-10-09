@@ -1,5 +1,4 @@
 import { ExternalLink, Loader2, Pencil, Trash2 } from "lucide-react"
-import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
@@ -9,11 +8,12 @@ import {
 } from "@/components/shared/data-display/metadata-cell"
 import { StatusTag } from "@/components/shared/data-display/status-dot"
 import { Button } from "@/components/ui/button"
+import { useStacks } from "@/entities/stack"
 import { useCredentialsDelete } from "@/features/credentials/hooks/use-credentials"
-import { useStacks } from "@/features/stacks"
+import { useConfirm } from "@/hooks/use-confirm"
 import type { Credential } from "@/lib/api-types"
 import { getErrorMessage } from "@/lib/orpc"
-import { notifyError, notifySuccess } from "@/lib/toast"
+import { toastMutation } from "@/lib/toast"
 
 /** Conexión configurada: nombre, estado, URL y número de stacks */
 export function ConnectionSummary({
@@ -27,28 +27,14 @@ export function ConnectionSummary({
   // El estado se deduce de si la lista de stacks responde
   const stacks = useStacks()
   const deleteCredentials = useCredentialsDelete()
-  const [confirming, setConfirming] = useState(false)
-
-  useEffect(() => {
-    if (!confirming) return
-    const timer = setTimeout(() => setConfirming(false), 3000)
-    return () => clearTimeout(timer)
-  }, [confirming])
-
-  const remove = async () => {
-    if (!credential.name) return
-    if (!confirming) {
-      setConfirming(true)
-      return
-    }
-    setConfirming(false)
-    try {
-      await deleteCredentials.mutateAsync({ name: credential.name })
-      notifySuccess(t("credentials.deleted", { name: credential.name }))
-    } catch (err) {
-      notifyError(t("credentials.errorDelete"), getErrorMessage(err, ""))
-    }
-  }
+  const { confirming, confirm: remove } = useConfirm(() => {
+    const { name } = credential
+    if (!name) return
+    return toastMutation(() => deleteCredentials.mutateAsync({ name }), {
+      success: () => ({ title: t("credentials.deleted", { name }) }),
+      error: t("credentials.errorDelete"),
+    })
+  })
 
   const checking = stacks.isLoading || (stacks.isFetching && !stacks.data)
 
@@ -63,18 +49,13 @@ export function ConnectionSummary({
             variant={confirming ? "destructive" : "ghost"}
             size="sm"
             onClick={remove}
-            disabled={deleteCredentials.isPending}
+            icon={Trash2}
+            loading={deleteCredentials.isPending}
             aria-label={t("credentials.deleteLabel")}
           >
-            {deleteCredentials.isPending ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <Trash2 />
-            )}
             {confirming ? t("common.confirmDelete") : t("common.delete")}
           </Button>
-          <Button variant="outline" size="sm" onClick={onReplace}>
-            <Pencil />
+          <Button variant="outline" size="sm" icon={Pencil} onClick={onReplace}>
             {t("credentials.replace")}
           </Button>
         </div>

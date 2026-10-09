@@ -1,38 +1,25 @@
-import { Loader2, Trash2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Trash2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
 import { Button } from "@/components/ui/button"
 import { useApiKeyDelete } from "@/features/api-keys/hooks/use-api-keys"
+import { useConfirm } from "@/hooks/use-confirm"
 import type { ApiKey } from "@/lib/api-types"
-import { getErrorMessage } from "@/lib/orpc"
-import { notifyError, notifySuccess } from "@/lib/toast"
+import { toastMutation } from "@/lib/toast"
 
 export function ApiKeyRow({ apiKey }: { apiKey: ApiKey }) {
   const { t, i18n } = useTranslation()
   const deleteKey = useApiKeyDelete()
-  const [confirming, setConfirming] = useState(false)
-
-  useEffect(() => {
-    if (!confirming) return
-    const timer = setTimeout(() => setConfirming(false), 3000)
-    return () => clearTimeout(timer)
-  }, [confirming])
-
-  const remove = async () => {
-    if (!confirming) {
-      setConfirming(true)
-      return
-    }
-    setConfirming(false)
-    try {
-      await deleteKey.mutateAsync({ id: apiKey.id })
-      notifySuccess(t("apikeys.deleted"), apiKey.name ?? undefined)
-    } catch (err) {
-      notifyError(t("apikeys.errorDelete"), getErrorMessage(err, ""))
-    }
-  }
+  const { confirming, confirm: remove } = useConfirm(() =>
+    toastMutation(() => deleteKey.mutateAsync({ id: apiKey.id }), {
+      success: () => ({
+        title: t("apikeys.deleted"),
+        description: apiKey.name ?? undefined,
+      }),
+      error: t("apikeys.errorDelete"),
+    })
+  )
 
   const created = new Intl.DateTimeFormat(i18n.language, {
     dateStyle: "medium",
@@ -63,7 +50,8 @@ export function ApiKeyRow({ apiKey }: { apiKey: ApiKey }) {
         variant={confirming ? "destructive" : "ghost"}
         size={confirming ? "sm" : "icon-sm"}
         onClick={remove}
-        disabled={deleteKey.isPending}
+        icon={Trash2}
+        loading={deleteKey.isPending}
         aria-label={
           confirming ? t("common.confirmDelete") : t("apikeys.deleteLabel")
         }
@@ -74,11 +62,6 @@ export function ApiKeyRow({ apiKey }: { apiKey: ApiKey }) {
             : "text-muted-foreground opacity-70 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
         }
       >
-        {deleteKey.isPending ? (
-          <Loader2 className="animate-spin" />
-        ) : (
-          <Trash2 />
-        )}
         {confirming && t("common.confirmDelete")}
       </Button>
     </li>

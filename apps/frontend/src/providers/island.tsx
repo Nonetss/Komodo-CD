@@ -1,7 +1,7 @@
 import type { ComponentType } from "react"
 import { I18nextProvider } from "react-i18next"
 
-import { getI18n, type Lang } from "@/lib/i18n"
+import { DEFAULT_LANG, getI18n, type Lang } from "@/lib/i18n"
 import { QueryProvider } from "@/providers/query-provider"
 
 export type IslandProps = {
@@ -15,7 +15,7 @@ export type IslandProps = {
  * hidrata con el mismo, sin desajustes.
  */
 export function withIsland<P extends object>(Component: ComponentType<P>) {
-  const Island = ({ lang = "es", ...props }: P & IslandProps) => (
+  const Island = ({ lang = DEFAULT_LANG, ...props }: P & IslandProps) => (
     <I18nextProvider i18n={getI18n(lang)}>
       <QueryProvider>
         <Component {...(props as P)} />

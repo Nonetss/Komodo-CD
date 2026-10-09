@@ -1,14 +1,13 @@
 import {
   BellOff,
   BellRing,
-  Loader2,
   Pause,
   Pencil,
   Play,
   Send,
   Trash2,
 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
@@ -17,6 +16,7 @@ import {
   MetadataList,
 } from "@/components/shared/data-display/metadata-cell"
 import { StatusTag } from "@/components/shared/data-display/status-dot"
+import { QueryErrorCard } from "@/components/shared/feedback/query-error-card"
 import { StateCard } from "@/components/shared/feedback/state-card"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -27,9 +27,9 @@ import {
   useNtfySave,
   useNtfyTest,
 } from "@/features/credentials/hooks/use-ntfy"
+import { useConfirm } from "@/hooks/use-confirm"
 import type { NtfyConfig } from "@/lib/api-types"
-import { getErrorMessage } from "@/lib/orpc"
-import { notifyError, notifySuccess } from "@/lib/toast"
+import { toastMutation } from "@/lib/toast"
 
 /** Avisos por ntfy cuando falla un deploy: resumen, alta y edición. */
 export function NtfySection() {
@@ -41,16 +41,10 @@ export function NtfySection() {
   let main: React.ReactNode
   if (configQuery.isError) {
     main = (
-      <StateCard
-        tone="destructive"
+      <QueryErrorCard
+        query={configQuery}
         icon={BellOff}
         title={t("ntfy.errorLoad")}
-        description={getErrorMessage(configQuery.error, "")}
-        action={
-          <Button variant="outline" onClick={() => configQuery.refetch()}>
-            {t("common.retry")}
-          </Button>
-        }
       />
     )
   } else if (configQuery.isLoading) {
@@ -72,8 +66,7 @@ export function NtfySection() {
         title={t("ntfy.empty")}
         description={t("ntfy.emptyDescription")}
         action={
-          <Button onClick={() => setEditing(true)}>
-            <BellRing />
+          <Button icon={BellRing} onClick={() => setEditing(true)}>
             {t("ntfy.add")}
           </Button>
         }
@@ -107,50 +100,36 @@ function NtfySummary({
   const save = useNtfySave()
   const test = useNtfyTest()
   const remove = useNtfyDelete()
-  const [confirming, setConfirming] = useState(false)
-
-  useEffect(() => {
-    if (!confirming) return
-    const timer = setTimeout(() => setConfirming(false), 3000)
-    return () => clearTimeout(timer)
-  }, [confirming])
 
   // Sin `token`: el backend conserva el guardado
-  const toggle = async () => {
-    try {
-      await save.mutateAsync({
-        url: config.url,
-        topic: config.topic,
-        enabled: !config.enabled,
-      })
-      notifySuccess(config.enabled ? t("ntfy.paused") : t("ntfy.resumed"))
-    } catch (err) {
-      notifyError(t("ntfy.errorSave"), getErrorMessage(err, ""))
-    }
-  }
+  const toggle = () =>
+    toastMutation(
+      () =>
+        save.mutateAsync({
+          url: config.url,
+          topic: config.topic,
+          enabled: !config.enabled,
+        }),
+      {
+        success: () => ({
+          title: config.enabled ? t("ntfy.paused") : t("ntfy.resumed"),
+        }),
+        error: t("ntfy.errorSave"),
+      }
+    )
 
-  const sendTest = async () => {
-    try {
-      const res = await test.mutateAsync(undefined)
-      notifySuccess(t("ntfy.testSent"), res.message)
-    } catch (err) {
-      notifyError(t("ntfy.errorTest"), getErrorMessage(err, ""))
-    }
-  }
+  const sendTest = () =>
+    toastMutation(() => test.mutateAsync(undefined), {
+      success: t("ntfy.testSent"),
+      error: t("ntfy.errorTest"),
+    })
 
-  const onRemove = async () => {
-    if (!confirming) {
-      setConfirming(true)
-      return
-    }
-    setConfirming(false)
-    try {
-      await remove.mutateAsync(undefined)
-      notifySuccess(t("ntfy.deleted"))
-    } catch (err) {
-      notifyError(t("ntfy.errorDelete"), getErrorMessage(err, ""))
-    }
-  }
+  const { confirming, confirm: onRemove } = useConfirm(() =>
+    toastMutation(() => remove.mutateAsync(undefined), {
+      success: () => ({ title: t("ntfy.deleted") }),
+      error: t("ntfy.errorDelete"),
+    })
+  )
 
   return (
     <div>
@@ -159,38 +138,31 @@ function NtfySummary({
           variant={confirming ? "destructive" : "ghost"}
           size="sm"
           onClick={onRemove}
-          disabled={remove.isPending}
+          icon={Trash2}
+          loading={remove.isPending}
           aria-label={t("ntfy.deleteLabel")}
         >
-          {remove.isPending ? <Loader2 className="animate-spin" /> : <Trash2 />}
           {confirming ? t("common.confirmDelete") : t("common.delete")}
         </Button>
         <Button
           variant="outline"
           size="sm"
           onClick={toggle}
-          disabled={save.isPending}
+          icon={config.enabled ? Pause : Play}
+          loading={save.isPending}
         >
-          {save.isPending ? (
-            <Loader2 className="animate-spin" />
-          ) : config.enabled ? (
-            <Pause />
-          ) : (
-            <Play />
-          )}
           {config.enabled ? t("ntfy.pause") : t("ntfy.resume")}
         </Button>
         <Button
           variant="outline"
           size="sm"
           onClick={sendTest}
-          disabled={test.isPending}
+          icon={Send}
+          loading={test.isPending}
         >
-          {test.isPending ? <Loader2 className="animate-spin" /> : <Send />}
           {t("ntfy.test")}
         </Button>
-        <Button variant="outline" size="sm" onClick={onEdit}>
-          <Pencil />
+        <Button variant="outline" size="sm" icon={Pencil} onClick={onEdit}>
           {t("ntfy.edit")}
         </Button>
       </div>

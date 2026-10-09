@@ -1,24 +1,16 @@
-import {
-  Check,
-  History as HistoryIcon,
-  KeyRound,
-  RefreshCw,
-  ServerCrash,
-  User,
-  X,
-} from "lucide-react"
+import { Check, History as HistoryIcon, KeyRound, User, X } from "lucide-react"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
+import { QueryErrorCard } from "@/components/shared/feedback/query-error-card"
 import { StateCard } from "@/components/shared/feedback/state-card"
+import { RefreshButton } from "@/components/shared/form/refresh-button"
 import { Segmented } from "@/components/shared/form/segmented"
 import { PageHero } from "@/components/shared/layout/page-hero"
-import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ACTION_I18N } from "@/features/deploy"
+import { ACTION_I18N } from "@/entities/deploy-action"
 import { useHistory } from "@/features/history/hooks/use-history"
 import type { HistoryItem } from "@/lib/api-types"
-import { getErrorMessage } from "@/lib/orpc"
 import { cn } from "@/lib/utils"
 import { withIsland } from "@/providers/island"
 
@@ -47,13 +39,11 @@ function relativeTime(date: Date, lang: string) {
   return new Intl.DateTimeFormat(lang, { dateStyle: "medium" }).format(date)
 }
 
-const API_KEY_PREFIX = "API Key"
-
 function Actor({ item }: { item: HistoryItem }) {
-  const name = item.userName ?? item.userEmail ?? item.userId
-  const viaKey = name.startsWith(API_KEY_PREFIX)
+  const { t } = useTranslation()
+  const viaKey = item.via === "apiKey"
   const Icon = viaKey ? KeyRound : User
-  const label = viaKey ? name.replace(/^API Key:?\s*/, "") || "API Key" : name
+  const label = item.actorName ?? t("history.apiKeyActor")
   return (
     <span className="inline-flex min-w-0 items-center gap-1">
       <Icon className="size-3 shrink-0" />
@@ -125,7 +115,6 @@ const HistoryPageContent = () => {
   const { t } = useTranslation()
   const historyQuery = useHistory()
   const history = historyQuery.data ?? []
-  const refreshing = historyQuery.isFetching
   const [filter, setFilter] = useState<Filter>("all")
 
   const counts = useMemo(
@@ -166,34 +155,12 @@ const HistoryPageContent = () => {
         title={t("history.title")}
         description={t("history.description")}
         action={
-          <Button
-            variant="outline"
-            onClick={() => historyQuery.refetch()}
-            disabled={refreshing}
-            aria-label={t("history.refresh")}
-          >
-            <RefreshCw className={cn(refreshing && "animate-spin")} />
-            <span className="hidden sm:inline">{t("common.refresh")}</span>
-          </Button>
+          <RefreshButton query={historyQuery} label={t("history.refresh")} />
         }
       />
 
       {historyQuery.isError ? (
-        <StateCard
-          tone="destructive"
-          icon={ServerCrash}
-          title={t("history.error")}
-          description={getErrorMessage(historyQuery.error, "")}
-          action={
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => historyQuery.refetch()}
-            >
-              {t("common.retry")}
-            </Button>
-          }
-        />
+        <QueryErrorCard query={historyQuery} title={t("history.error")} />
       ) : historyQuery.isLoading ? (
         <div className="space-y-4">
           {[0, 1, 2, 3, 4].map((i) => (

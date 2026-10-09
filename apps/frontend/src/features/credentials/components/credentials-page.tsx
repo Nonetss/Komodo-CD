@@ -1,6 +1,7 @@
-import { PlugZap, ServerCrash } from "lucide-react"
+import { PlugZap } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { QueryErrorCard } from "@/components/shared/feedback/query-error-card"
 import { StateCard } from "@/components/shared/feedback/state-card"
 import { PageHero } from "@/components/shared/layout/page-hero"
 import { Button } from "@/components/ui/button"
@@ -10,7 +11,6 @@ import { ConnectionGuide } from "@/features/credentials/components/connection-gu
 import { ConnectionSummary } from "@/features/credentials/components/connection-summary"
 import { NtfySection } from "@/features/credentials/components/ntfy-section"
 import { useCredentials } from "@/features/credentials/hooks/use-credentials"
-import { getErrorMessage } from "@/lib/orpc"
 import { withIsland } from "@/providers/island"
 
 const CredentialsPageContent = () => {
@@ -22,16 +22,9 @@ const CredentialsPageContent = () => {
   let main: React.ReactNode
   if (credentialsQuery.isError) {
     main = (
-      <StateCard
-        tone="destructive"
-        icon={ServerCrash}
+      <QueryErrorCard
+        query={credentialsQuery}
         title={t("credentials.errorLoad")}
-        description={getErrorMessage(credentialsQuery.error, "")}
-        action={
-          <Button variant="outline" onClick={() => credentialsQuery.refetch()}>
-            {t("common.retry")}
-          </Button>
-        }
       />
     )
   } else if (credentialsQuery.isLoading) {
@@ -55,8 +48,7 @@ const CredentialsPageContent = () => {
         title={t("credentials.empty")}
         description={t("credentials.emptyDescription")}
         action={
-          <Button onClick={() => setEditing(true)}>
-            <PlugZap />
+          <Button icon={PlugZap} onClick={() => setEditing(true)}>
             {t("credentials.add")}
           </Button>
         }

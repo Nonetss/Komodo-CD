@@ -1,10 +1,14 @@
-import { Loader2, X } from "lucide-react"
+import { X } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
 import { Button } from "@/components/ui/button"
-import { ACTION_I18N, ACTION_ICON, DEPLOY_ACTIONS } from "@/features/deploy"
+import {
+  ACTION_I18N,
+  ACTION_ICON,
+  DEPLOY_ACTIONS,
+} from "@/entities/deploy-action"
 import type { DeployAction } from "@/lib/api-types"
 
 /**
@@ -77,22 +81,18 @@ export function StacksBulkBar({
           </Text>
           <div className="flex shrink-0 items-center gap-1">
             {DEPLOY_ACTIONS.map((action) => {
-              const Icon = ACTION_ICON[action]
               return (
                 <Button
                   key={action}
                   size="sm"
                   variant="outline"
+                  icon={ACTION_ICON[action]}
+                  loading={runningAction === action}
                   disabled={disabled}
                   onClick={() => setConfirming(action)}
                   title={actionLabel(action)}
                   aria-label={actionLabel(action)}
                 >
-                  {runningAction === action ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <Icon />
-                  )}
                   <span className="hidden sm:inline">
                     {actionLabel(action)}
                   </span>

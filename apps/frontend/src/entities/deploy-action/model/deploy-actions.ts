@@ -2,11 +2,11 @@ import { Download, RotateCw, Zap } from "lucide-react"
 
 import type { DeployAction } from "@/lib/api-types"
 
-export const DEPLOY_ACTIONS: DeployAction[] = [
+export const DEPLOY_ACTIONS = [
   "pull",
   "redeploy",
   "pull-redeploy",
-]
+] as const satisfies readonly DeployAction[]
 
 /** Icono canónico de cada acción, igual en Stacks y en Deploy */
 export const ACTION_ICON = {
@@ -16,11 +16,11 @@ export const ACTION_ICON = {
 } as const satisfies Record<DeployAction, unknown>
 
 /** Clave i18n de cada acción (`deploy.actions.<key>`) */
-export const ACTION_I18N: Record<DeployAction, string> = {
+export const ACTION_I18N = {
   pull: "pull",
   redeploy: "redeploy",
   "pull-redeploy": "pullRedeploy",
-}
+} as const satisfies Record<DeployAction, string>
 
 /** Marcador de la key en los `curl` de ejemplo (se resalta al mostrarlos) */
 export const API_KEY_PLACEHOLDER = "<api-key>"

@@ -1,11 +1,8 @@
 ---
 import { StacksPage } from "@/features/stacks"
 import DashboardLayout from "@/layouts/dashboard.astro"
-import { getLang } from "@/lib/lang"
-
-const lang = getLang(Astro.cookies)
 ---
 
-<DashboardLayout title="Stacks">
-  <StacksPage client:load lang={lang} />
+<DashboardLayout surface="stacks">
+  <StacksPage client:load lang={Astro.locals.lang} />
 </DashboardLayout>

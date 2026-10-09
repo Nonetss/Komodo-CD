@@ -4,35 +4,34 @@ import { fade } from "astro:transitions"
 import { Toaster } from "@/components/shared/feedback/toaster"
 import {
   BottomNav,
-  LanguageSwitcher,
-  LogOutButton,
   type NavItem,
+  ShellControls,
   SidebarNav,
-  ThemeToggle,
 } from "@/features/app-shell"
 import Main from "@/layouts/main.astro"
-import { APP_SURFACES } from "@/lib/app-surfaces"
-import { getLang } from "@/lib/lang"
-import en from "@/locales/en"
-import es from "@/locales/es"
+import { APP_SURFACES, type SurfaceId } from "@/lib/app-surfaces"
+import { getI18n } from "@/lib/i18n"
 
-const { title = "Komodo CD" } = Astro.props
-const { user } = Astro.locals
+interface Props {
+  /** Página actual: da el título del documento (`nav.<surface>`) */
+  surface: SurfaceId
+}
 
-const lang = getLang(Astro.cookies)
-const nav = (lang === "en" ? en : es).nav
+const { surface } = Astro.props
+const { user, lang } = Astro.locals
+const { t } = getI18n(lang)
 
 const NAV: NavItem[] = APP_SURFACES.map((s) => ({
   key: s.id,
   href: s.path,
-  label: nav[s.id],
+  label: t(`nav.${s.id}`),
 }))
 
 const path = Astro.url.pathname
 const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
 ---
 
-<Main title={`${title} · Komodo CD`}>
+<Main title={`${t(`nav.${surface}`)} · Komodo CD`}>
   <!-- Barra lateral (escritorio) -->
   <!--
     El chrome no es `transition:persist` (como en console) porque el elemento
@@ -64,10 +63,7 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
         </div>
       </div>
       <div class="mt-1 flex items-center gap-0.5 px-1">
-        <LanguageSwitcher client:load lang={lang} />
-        <ThemeToggle client:load />
-        <div class="flex-1"></div>
-        <LogOutButton client:load lang={lang} />
+        <ShellControls client:load lang={lang} layout="sidebar" />
       </div>
     </div>
   </aside>
@@ -85,9 +81,7 @@ const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
         >
       </a>
       <div class="ml-auto flex items-center gap-0.5">
-        <LanguageSwitcher client:load lang={lang} />
-        <ThemeToggle client:load />
-        <LogOutButton client:load lang={lang} />
+        <ShellControls client:load lang={lang} layout="bar" />
       </div>
     </div>
   </header>

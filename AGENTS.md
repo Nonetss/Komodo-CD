@@ -17,7 +17,7 @@ Komodo CD: a thin layer between people, CI pipelines and a [Komodo](https://komo
 ## Project map
 
 - `apps/backend` — Hono on Bun, HTTP `:3000`. Mounts Better Auth (`/api/auth/*`), oRPC (`/rpc/*`), the REST API (`/api/v0/*`) and the OpenAPI docs (`/doc`, `/scalar`). On boot it applies migrations, seeds the admin and connects to Komodo; it shuts down in order on SIGTERM.
-- `apps/frontend` — Astro 7 SSR + React 19 islands + Tailwind v4 + shadcn/ui, `:4321`. In dev, Vite proxies the backend routes; in Docker it sits behind the gateway.
+- `apps/frontend` — Astro 7 SSR + React 19 islands + Tailwind v4 + shadcn/ui, `:4321`. In dev, Vite proxies the backend routes; in Docker it sits behind the gateway. Domain code lives in `src/features/<domain>/`; pieces shared by several features (`stack`, `deploy-action`) live in `src/entities/<entity>/`. A feature never imports another feature, and entities never import features. Each folder exposes an `index.ts`.
 - `apps/gateway` — Caddy (Docker assets only, not a workspace). The only published port: `routes.caddy` sends backend routes to the backend and the rest to the frontend. Keep it in sync with the Vite proxy in `apps/frontend/astro.config.mjs`.
 - `apps/site` — the static project website (Astro, English + Spanish docs), published to GitHub Pages. Not part of the running app; no dev command starts it except `bun run dev:site`.
 - `packages/api` (oRPC routers and handlers, Komodo and ntfy services, tests), `packages/auth` (Better Auth + session resolver: cookie or `x-api-key`), `packages/db` (Drizzle schema, migrations, seed), `packages/env` (validated server env), `packages/logger` (pino), `packages/config` (tsconfig).
@@ -49,7 +49,7 @@ Only commit when the user asks. Messages follow Conventional Commits, `type(scop
 ### Language conventions
 
 - Identifiers are English. Code comments are Spanish, like the existing code.
-- UI copy goes through the i18n dictionaries (`apps/frontend/src/locales/es.ts` and `en.ts`), never hard-coded.
+- UI copy goes through the i18n dictionaries (`apps/frontend/src/locales/es.ts` and `en.ts`), never hard-coded. `en.ts` is type-checked against `es.ts` and `t()` keys are typed (`src/i18next.d.ts`): a new key goes into both files.
 - Docs keep their language: `README.md` is English; the site docs exist in English and Spanish and change together.
 
 ### Migrations — agent hands off
@@ -58,7 +58,7 @@ Only commit when the user asks. Messages follow Conventional Commits, `type(scop
 
 ### Reuse first
 
-Before writing a new component, hook, helper or procedure, search what exists (`apps/frontend/src/components`, `src/hooks`, `src/lib`, the feature's own folder under `src/features/`, and `packages/api/src`) and reuse it when it fits.
+Before writing a new component, hook, helper or procedure, search what exists (`apps/frontend/src/components`, `src/hooks`, `src/lib`, `src/entities/`, the feature's own folder under `src/features/`, and `packages/api/src`) and reuse it when it fits. Feedback has shared pieces: `toastMutation` (`src/lib/toast.ts`) for mutations that report with a toast, `useConfirm` (`src/hooks/use-confirm.ts`) for two-click destructive buttons, `QueryErrorCard` and `RefreshButton` for query states, `Panel` for form cards and the `Button` `icon`/`loading` props for pending buttons.
 
 ### Process management
 

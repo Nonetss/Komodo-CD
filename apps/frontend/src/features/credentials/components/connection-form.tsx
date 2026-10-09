@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AlertTriangle, Loader2, Save } from "lucide-react"
+import { AlertTriangle, Save } from "lucide-react"
 import { useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
 
-import { Text } from "@/components/shared/brand/typography"
+import { Panel } from "@/components/shared/layout/panel"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -17,8 +17,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useCredentialsSave } from "@/features/credentials/hooks/use-credentials"
-import { getErrorMessage } from "@/lib/orpc"
-import { notifyError, notifySuccess } from "@/lib/toast"
+import { toastMutation } from "@/lib/toast"
 import { cn } from "@/lib/utils"
 
 type SaveFormValues = {
@@ -57,14 +56,13 @@ export function ConnectionForm({
   })
 
   const onSubmit = async (data: SaveFormValues) => {
-    try {
-      const res = await saveCredentials.mutateAsync(data)
-      notifySuccess(t("credentials.saved"), res.message)
-      form.reset()
-      onSaved()
-    } catch (err) {
-      notifyError(t("credentials.errorSave"), getErrorMessage(err, ""))
-    }
+    const saved = await toastMutation(() => saveCredentials.mutateAsync(data), {
+      success: t("credentials.saved"),
+      error: t("credentials.errorSave"),
+    })
+    if (!saved) return
+    form.reset()
+    onSaved()
   }
 
   const fields: {
@@ -93,72 +91,64 @@ export function ConnectionForm({
   }
 
   return (
-    <section className="bg-surface rounded-xl border">
-      <header className="space-y-1.5 border-b px-5 py-4">
-        <Text as="h2" variant="headline">
-          {t("credentials.newTitle")}
-        </Text>
-        <Text as="p" variant="meta" tone="muted" className="text-pretty">
-          {t("credentials.newDescription")}
-        </Text>
-      </header>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
-          <div className="space-y-5 p-5">
-            {replacing && (
-              <p className="text-warning text-meta flex items-start gap-2">
-                <AlertTriangle
-                  aria-hidden
-                  className="mt-0.5 size-3.5 shrink-0"
-                />
-                {t("credentials.replaceWarning")}
-              </p>
-            )}
-            <div className="grid gap-4 sm:grid-cols-2">
-              {fields.map((f) => (
-                <FormField
-                  key={f.name}
-                  control={form.control}
-                  name={f.name}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{label[f.name]}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type={f.type ?? "text"}
-                          placeholder={placeholder[f.name]}
-                          autoComplete={f.autoComplete}
-                          spellCheck={false}
-                          className={cn(f.mono && "font-mono md:text-xs")}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="flex justify-end gap-2 border-t px-5 py-4">
+    <Form {...form}>
+      <Panel
+        title={t("credentials.newTitle")}
+        description={t("credentials.newDescription")}
+        form={{ onSubmit: form.handleSubmit(onSubmit), noValidate: true }}
+        footer={
+          <>
             {onCancel && (
               <Button type="button" variant="outline" onClick={onCancel}>
-                {t("credentials.cancel")}
+                {t("common.cancel")}
               </Button>
             )}
-            <Button type="submit" disabled={saveCredentials.isPending}>
-              {saveCredentials.isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Save />
-              )}
+            <Button
+              type="submit"
+              icon={Save}
+              loading={saveCredentials.isPending}
+            >
               {saveCredentials.isPending
                 ? t("credentials.saving")
                 : t("credentials.save")}
             </Button>
+          </>
+        }
+      >
+        <div className="space-y-5 p-5">
+          {replacing && (
+            <p className="text-warning text-meta flex items-start gap-2">
+              <AlertTriangle aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+              {t("credentials.replaceWarning")}
+            </p>
+          )}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {fields.map((f) => (
+              <FormField
+                key={f.name}
+                control={form.control}
+                name={f.name}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{label[f.name]}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type={f.type ?? "text"}
+                        placeholder={placeholder[f.name]}
+                        autoComplete={f.autoComplete}
+                        spellCheck={false}
+                        className={cn(f.mono && "font-mono md:text-xs")}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
           </div>
-        </form>
-      </Form>
-    </section>
+        </div>
+      </Panel>
+    </Form>
   )
 }

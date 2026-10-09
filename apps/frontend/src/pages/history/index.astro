@@ -1,11 +1,8 @@
 ---
 import { HistoryPage } from "@/features/history"
 import DashboardLayout from "@/layouts/dashboard.astro"
-import { getLang } from "@/lib/lang"
-
-const lang = getLang(Astro.cookies)
 ---
 
-<DashboardLayout title="Historial">
-  <HistoryPage client:load lang={lang} />
+<DashboardLayout surface="history">
+  <HistoryPage client:load lang={Astro.locals.lang} />
 </DashboardLayout>

@@ -1,9 +1,12 @@
 ---
 import { LoginPage } from "@/features/auth"
 import Main from "@/layouts/main.astro"
-import { getLang } from "@/lib/lang"
+import { getI18n } from "@/lib/i18n"
 
-const lang = getLang(Astro.cookies)
+const { lang } = Astro.locals
+const title = getI18n(lang).t("login.title")
 ---
 
-<Main title="Login · Komodo CD"> <LoginPage client:load lang={lang} /> </Main>
+<Main title={`${title} · Komodo CD`}>
+  <LoginPage client:load lang={lang} />
+</Main>

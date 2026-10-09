@@ -1,4 +1,4 @@
-import { stateTone } from "@/features/stacks/components/stack-state"
+import { stateTone } from "@/entities/stack"
 import type { Stack, StackState } from "@/lib/api-types"
 
 /** Filtros de la lista de stacks */

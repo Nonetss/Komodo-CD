@@ -1,31 +1,37 @@
 import { ChevronsUpDown, Loader2 } from "lucide-react"
-import { useEffect, useId, useMemo, useRef, useState } from "react"
+import {
+  type ComponentProps,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
 import { Input } from "@/components/ui/input"
-import { StackStateDot } from "@/features/stacks"
+import { StackStateDot } from "@/entities/stack"
 import type { Stack } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
 
-/** Selector de stack con sugerencias (combobox accesible) */
+/**
+ * Selector de stack con sugerencias (combobox accesible). El resto de props
+ * (`id`, `name`, `ref`, `onBlur`, `aria-*`) llegan de `FormField` y
+ * `FormControl` y van al input.
+ */
 export function StackCombobox({
-  id,
   stacks,
   loading,
   value,
   onChange,
-  invalid,
-  describedBy,
+  ...inputProps
 }: {
-  id: string
   stacks: Stack[]
   loading: boolean
   value: string
   onChange: (value: string) => void
-  invalid: boolean
-  describedBy?: string
-}) {
+} & Omit<ComponentProps<"input">, "value" | "onChange">) {
   const { t } = useTranslation()
   const listId = useId()
   const [open, setOpen] = useState(false)
@@ -81,13 +87,11 @@ export function StackCombobox({
           />
         )}
         <Input
-          id={id}
+          {...inputProps}
           role="combobox"
           aria-expanded={open}
           aria-controls={listId}
           aria-autocomplete="list"
-          aria-invalid={invalid || undefined}
-          aria-describedby={describedBy}
           value={value}
           onChange={(e) => {
             onChange(e.target.value)

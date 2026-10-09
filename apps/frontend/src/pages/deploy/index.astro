@@ -1,11 +1,8 @@
 ---
 import { DeployPage } from "@/features/deploy"
 import DashboardLayout from "@/layouts/dashboard.astro"
-import { getLang } from "@/lib/lang"
-
-const lang = getLang(Astro.cookies)
 ---
 
-<DashboardLayout title="Deploy">
-  <DeployPage client:load lang={lang} />
+<DashboardLayout surface="deploy">
+  <DeployPage client:load lang={Astro.locals.lang} />
 </DashboardLayout>

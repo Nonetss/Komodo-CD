@@ -38,12 +38,17 @@ context: |
 
   Frontend convention (apps/frontend/src): domain code lives in
   features/<domain>/ with only the technical folders it uses (components/,
-  hooks/, model/) and an index.ts public entry point. Pages in pages/ only
-  mount one feature island wrapped with withIsland (providers/island.tsx).
-  Shared helpers in lib/, shared hooks in hooks/, shadcn primitives in
-  components/ui/, reusable patterns in components/shared/. Data is read
-  with useHydratedQuery over the orpc TanStack Query utilities; mutations
-  invalidate the queries they affect. Search and reuse before creating.
+  hooks/, model/) and an index.ts public entry point. Domain pieces shared
+  by several features live in entities/<entity>/ (stack, deploy-action)
+  with the same layout. A feature never imports another feature; entities
+  never import features. Pages in pages/ only mount one feature island
+  wrapped with withIsland (providers/island.tsx) and read the language from
+  Astro.locals.lang. Shared helpers in lib/, shared hooks in hooks/, shadcn
+  primitives in components/ui/, reusable patterns in components/shared/.
+  Data is read with useHydratedQuery over the orpc TanStack Query
+  utilities; mutations invalidate the queries they affect. Feedback uses
+  toastMutation, useConfirm, QueryErrorCard, RefreshButton and the Button
+  icon/loading props. Search and reuse before creating.
 
   Language: identifiers are English, code comments are Spanish. UI copy
   goes through the i18n dictionaries (apps/frontend/src/locales/es.ts and
