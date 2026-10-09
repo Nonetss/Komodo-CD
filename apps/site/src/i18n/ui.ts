@@ -67,7 +67,7 @@ const en = {
       },
       theme: {
         title: "Light or dark, English or Spanish.",
-        body: "Both themes and both languages are built in and remembered per browser. On a phone the side bar becomes a bottom navigation, so a redeploy is a couple of taps away.",
+        body: "Both themes and both languages are built in and remembered per browser. On a phone the top navigation becomes a bottom bar, so a redeploy is a couple of taps away.",
         alt: "The stacks page in the light theme",
       },
     } satisfies Record<
@@ -260,7 +260,7 @@ const es: Dictionary = {
       },
       theme: {
         title: "Claro u oscuro, inglés o español.",
-        body: "Los dos temas y los dos idiomas vienen de serie y se recuerdan por navegador. En el móvil la barra lateral pasa a ser una navegación inferior, así que un redeploy está a un par de toques.",
+        body: "Los dos temas y los dos idiomas vienen de serie y se recuerdan por navegador. En el móvil la navegación superior pasa a ser una barra inferior, así que un redeploy está a un par de toques.",
         alt: "La página de stacks con el tema claro",
       },
     },
