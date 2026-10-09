@@ -115,7 +115,7 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
       </Button>
     )
     return (
-      <div className="flex flex-col gap-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-12 sm:px-6 lg:px-10 lg:pt-10">
         <PageHero
           surface="stacks"
           title={t("stacks.title")}
@@ -178,14 +178,16 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
     )
   }
 
-  // En pantallas pequeñas se ve un panel cada vez: la lista en `/stacks` y la
-  // ficha en `/stacks/<nombre>`. La prop llega en SSR, así que no hay saltos
+  // La página va a todo el ancho bajo la barra (layout `bleed`): la columna
+  // de la lista pegada al borde, con su altura y su scroll, y la ficha al
+  // lado. En pantallas pequeñas se ve un panel cada vez: la lista en
+  // `/stacks` y la ficha en `/stacks/<nombre>`. La prop llega en SSR.
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(17rem,20rem)_minmax(0,1fr)] lg:gap-0">
+    <div className="lg:grid lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22rem_minmax(0,1fr)]">
       <section
         aria-label={t("stacks.title")}
         className={cn(
-          "border-rule flex-col gap-5 lg:flex lg:border-r-[1.5px] lg:pr-8",
+          "border-rule flex-col lg:sticky lg:top-14 lg:flex lg:h-[calc(100dvh-3.5rem)] lg:border-r-[1.5px]",
           openName ? "hidden" : "flex"
         )}
       >
@@ -209,20 +211,22 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
           <ListSkeleton />
         )}
         {selected.size > 0 && (
-          <StacksBulkBar
-            count={selected.size}
-            hidden={hiddenSelected}
-            runningAction={runner.bulkAction}
-            disabled={bulkDisabled}
-            onRun={runBulk}
-            onClear={() => setSelected(new Set())}
-          />
+          <div className="px-3 pt-2 pb-3">
+            <StacksBulkBar
+              count={selected.size}
+              hidden={hiddenSelected}
+              runningAction={runner.bulkAction}
+              disabled={bulkDisabled}
+              onRun={runBulk}
+              onClear={() => setSelected(new Set())}
+            />
+          </div>
         )}
       </section>
       <section
         aria-label={t("stacks.detailLabel")}
         className={cn(
-          "min-w-0 lg:block lg:pl-10",
+          "min-w-0 px-4 pt-6 pb-16 sm:px-6 lg:block lg:px-12 lg:pt-10",
           openName ? "block" : "hidden"
         )}
       >
@@ -234,10 +238,9 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 px-4 pt-7 sm:px-6">
       <div className="border-rule space-y-3 border-b-[1.5px] pb-5">
-        <Skeleton className="size-5" />
-        <Skeleton className="h-10 w-40" />
+        <Skeleton className="h-9 w-36" />
         <Skeleton className="h-3 w-32" />
       </div>
       <Skeleton className="h-10 w-full" />

@@ -15,9 +15,14 @@ import { getI18n } from "@/lib/i18n"
 interface Props {
   /** Página actual: da el título del documento (`nav.<surface>`) */
   surface: SurfaceId
+  /**
+   * La página ocupa todo el ancho bajo la barra y pone sus propios márgenes
+   * (p. ej. el maestro–detalle de stacks, con su columna pegada al borde)
+   */
+  bleed?: boolean
 }
 
-const { surface } = Astro.props
+const { surface, bleed = false } = Astro.props
 const { user, lang } = Astro.locals
 const { t } = getI18n(lang)
 
@@ -30,8 +35,10 @@ const NAV: NavItem[] = APP_SURFACES.map((s) => ({
 const path = Astro.url.pathname
 const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
 
-// Mismo ancho y márgenes que <main>: la barra se alinea con la página
-const container = "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-10"
+// Contenido de las páginas normales: columna centrada. La barra superior va
+// a todo el ancho con los mismos márgenes laterales
+const gutter = "px-4 sm:px-6 lg:px-10"
+const container = `mx-auto w-full max-w-6xl ${gutter}`
 ---
 
 <Main title={`${t(`nav.${surface}`)} · Komodo CD`}>
@@ -42,10 +49,10 @@ const container = "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-10"
     se sustituye en cada navegación, con nombre propio y sin animación.
   -->
   <header
-    class="bg-background border-rule sticky top-0 z-30 border-b-[1.5px]"
+    class="bg-background border-rule sticky top-0 z-30 h-14 border-b-[1.5px]"
     transition:name="top-bar"
   >
-    <div class:list={[container, "flex h-14 items-stretch gap-8"]}>
+    <div class:list={[gutter, "flex h-full items-stretch gap-8"]}>
       <a href="/" class="flex min-w-0 shrink-0 items-center gap-2.5">
         <img src="/logo.svg" alt="" aria-hidden="true" class="h-5 w-auto">
         <span
@@ -76,7 +83,11 @@ const container = "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-10"
   </header>
 
   <main
-    class:list={[container, "pb-mobile-nav pt-6 lg:pt-10 lg:pb-12"]}
+    class:list={[
+  bleed
+    ? "pb-mobile-nav lg:pb-0"
+    : [container, "pb-mobile-nav pt-6 lg:pt-10 lg:pb-12"],
+]}
     transition:animate={fade({ duration: "0.2s" })}
     transition:name="dashboard-page"
   >

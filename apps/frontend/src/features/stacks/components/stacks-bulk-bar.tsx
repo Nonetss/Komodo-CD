@@ -37,7 +37,7 @@ export function StacksBulkBar({
     t(`deploy.actions.${ACTION_I18N[a]}.label`)
 
   return (
-    <div className="bg-popover text-popover-foreground border-rule sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] z-10 flex flex-wrap items-center gap-x-3 gap-y-2 border-[1.5px] px-4 py-2.5 shadow-lg lg:bottom-4">
+    <div className="bg-popover text-popover-foreground border-rule @container sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] z-10 flex flex-wrap items-center gap-x-3 gap-y-2 border-[1.5px] px-4 py-2.5 shadow-lg lg:bottom-3">
       {confirming ? (
         <InlineConfirm
           message={t("stacks.bulk.confirm", {
@@ -79,7 +79,7 @@ export function StacksBulkBar({
                 title={actionLabel(action)}
                 aria-label={actionLabel(action)}
               >
-                <span className="hidden sm:inline">{actionLabel(action)}</span>
+                <span className="hidden @lg:inline">{actionLabel(action)}</span>
               </Button>
             ))}
             <span aria-hidden className="bg-border mx-1 h-4 w-px" />

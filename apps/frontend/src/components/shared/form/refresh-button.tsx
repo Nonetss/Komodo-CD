@@ -8,21 +8,28 @@ import { cn } from "@/lib/utils"
 export function RefreshButton({
   query,
   label,
+  iconOnly = false,
 }: {
   query: { isFetching: boolean; refetch: () => unknown }
   /** Etiqueta accesible (p. ej. "Actualizar stacks") */
   label: string
+  /** Solo el icono, para cabeceras estrechas (la etiqueta va en el título) */
+  iconOnly?: boolean
 }) {
   const { t } = useTranslation()
   return (
     <Button
-      variant="outline"
+      variant={iconOnly ? "ghost" : "outline"}
+      size={iconOnly ? "icon" : "default"}
       onClick={() => query.refetch()}
       disabled={query.isFetching}
       aria-label={label}
+      title={iconOnly ? label : undefined}
     >
       <RefreshCw className={cn(query.isFetching && "animate-spin")} />
-      <span className="hidden sm:inline">{t("common.refresh")}</span>
+      {iconOnly ? null : (
+        <span className="hidden sm:inline">{t("common.refresh")}</span>
+      )}
     </Button>
   )
 }

@@ -7,7 +7,7 @@ import DashboardLayout from "@/layouts/dashboard.astro"
   Misma isla persistida que `[name].astro`: al pasar de un stack a otro
   conserva búsqueda, grupo y selección y solo recibe la nueva prop `stack`.
 -->
-<DashboardLayout surface="stacks">
+<DashboardLayout surface="stacks" bleed>
   <StacksPage
     client:load
     transition:persist="stacks-page"

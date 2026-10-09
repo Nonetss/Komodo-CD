@@ -258,11 +258,10 @@ html.theme-transitioning::view-transition-new(root) {
   }
 }
 
-@layer utilities {
-  /* Espacio para la barra de navegación inferior en móvil (+ safe area) */
-  .pb-mobile-nav {
-    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
-  }
+/* Espacio para la barra de navegación inferior en móvil (+ safe area). Como
+   `@utility`, las variantes (`lg:pb-0`) lo sustituyen */
+@utility pb-mobile-nav {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
 }
 
 /* Textura de puntos plana para las pantallas de invitado (login, 404): un
