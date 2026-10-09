@@ -35,6 +35,10 @@
       "persistent": true,
       "interruptible": false
     },
+    "test": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
     "start": {
       "dependsOn": ["build"],
       "passThroughEnv": [

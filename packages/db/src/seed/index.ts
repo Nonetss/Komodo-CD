@@ -3,6 +3,8 @@ import { logger } from "@komodo-cd/logger"
 import { type AuthLike, seedAdmin } from "#seed/admin"
 import { runMigrations } from "#seed/migrate"
 
+export { runMigrations }
+
 export async function seed(auth: AuthLike) {
   logger.info("📦 Aplicando migraciones...")
   await runMigrations()

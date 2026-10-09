@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "imports": {
+    "#tests/*": "./tests/*.ts",
     "#*": "./src/*.ts"
   },
   "exports": {
@@ -11,7 +12,8 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
-    "check-types": "tsc --noEmit -p ."
+    "check-types": "tsc --noEmit -p .",
+    "test": "bun test"
   },
   "dependencies": {
     "@komodo-cd/auth": "workspace:*",
