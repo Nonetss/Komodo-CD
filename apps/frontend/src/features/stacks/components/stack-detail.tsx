@@ -59,7 +59,8 @@ export function StackDetail({
   const { info } = stack
   const pending = hasUpdate(stack)
   const changed = commitChanged(stack)
-  const newImages = info.services.filter((s) => s.update_available).length
+  // Komodo solo da los commits de los stacks que salen de un repo git
+  const fromRepo = !!(info.repo || info.linked_repo)
   const problem = problemKind(stack)
   const actionLabel = (a: DeployAction) =>
     t(`deploy.actions.${ACTION_I18N[a]}.label`)
@@ -130,28 +131,25 @@ export function StackDetail({
 
       {problem ? <StackProblem stack={stack} kind={problem} /> : null}
 
-      <StatStrip
-        items={[
-          {
-            label: t("stacks.deployed"),
-            value: info.deployed_hash ?? "—",
-            mono: true,
-          },
-          {
-            label: t("stacks.latestCommit"),
-            value: changed
-              ? `→ ${info.latest_hash}`
-              : (info.latest_hash ?? "—"),
-            mono: true,
-            tone: changed ? "signal" : "muted",
-          },
-          {
-            label: t("stacks.newImages"),
-            value: newImages,
-            tone: newImages > 0 ? "signal" : "muted",
-          },
-        ]}
-      />
+      {fromRepo ? (
+        <StatStrip
+          items={[
+            {
+              label: t("stacks.deployed"),
+              value: info.deployed_hash ?? "—",
+              mono: true,
+            },
+            {
+              label: t("stacks.latestCommit"),
+              value: changed
+                ? `→ ${info.latest_hash}`
+                : (info.latest_hash ?? "—"),
+              mono: true,
+              tone: changed ? "signal" : "muted",
+            },
+          ]}
+        />
+      ) : null}
 
       <section aria-labelledby="stack-services" className="flex flex-col">
         <SectionHeader

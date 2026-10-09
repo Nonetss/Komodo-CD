@@ -98,7 +98,6 @@ export default {
     updateTag: "update",
     deployed: "Deployed",
     latestCommit: "Latest commit",
-    newImages: "New images",
     count: {
       running: "running",
       total: "total",

@@ -58,8 +58,7 @@ The detail pane SHALL show the stack named in the URL:
 - the repository (linked when Komodo gives a link) and branch;
 - the action buttons;
 - the problem message (missing project, or the list of missing files) when there is one;
-- the deployed commit and the latest commit, the latter marked when it differs;
-- the number of services with a newer image;
+- for a stack backed by a git repository, the deployed commit and the latest commit, the latter marked when it differs (Komodo gives no commits for other stacks, so they are omitted);
 - a table with every service: its name, its image reference (registry dimmed, name, tag or a shortened digest; the full reference in the tooltip) and whether a newer image is available;
 - the CI `curl` snippet with a selector for the action.
 
