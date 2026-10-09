@@ -1,0 +1,100 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "alpine:3.19",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "OS": {
+      "Family": "alpine",
+      "Name": "3.19.9",
+      "EOSL": true
+    },
+    "ImageID": "sha256:83b2b6703a620bf2e001ab57f7adc414d891787b3c59859b1b62909e48dd2242",
+    "RepoDigests": [
+      "alpine@sha256:6baf43584bcb78f2e5847d1de515f23499913ac9f12bdf834811a3145eb11ca1"
+    ]
+  },
+  "Results": [
+    {
+      "Target": "alpine:3.19 (alpine 3.19.9)",
+      "Class": "os-pkgs",
+      "Type": "alpine",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-58251",
+          "PkgID": "busybox@1.36.1-r20",
+          "PkgName": "busybox",
+          "InstalledVersion": "1.36.1-r20",
+          "FixedVersion": "1.36.1-r21",
+          "Status": "fixed",
+          "Severity": "MEDIUM",
+          "Title": "In netstat in BusyBox through 1.37.0, local users can launch of networ ...",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-58251"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-46394",
+          "PkgID": "busybox@1.36.1-r20",
+          "PkgName": "busybox",
+          "InstalledVersion": "1.36.1-r20",
+          "FixedVersion": "1.36.1-r21",
+          "Status": "fixed",
+          "Severity": "LOW",
+          "Title": "In tar in BusyBox through 1.37.0, a TAR archive can have filenames hid ...",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-46394"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-40200",
+          "PkgID": "musl@1.2.4_git20230717-r5",
+          "PkgName": "musl",
+          "InstalledVersion": "1.2.4_git20230717-r5",
+          "FixedVersion": "1.2.4_git20230717-r6",
+          "Status": "fixed",
+          "Severity": "HIGH",
+          "Title": "musl: musl libc: Arbitrary code execution and denial of service via stack-based memory corruption in qsort",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-40200"
+        },
+        {
+          "VulnerabilityID": "CVE-2024-58251",
+          "PkgID": "busybox@1.36.1-r20",
+          "PkgName": "busybox",
+          "InstalledVersion": "1.36.1-r20",
+          "FixedVersion": "1.36.1-r21",
+          "Status": "fixed",
+          "Severity": "MEDIUM",
+          "Title": "In netstat in BusyBox through 1.37.0, local users can launch of networ ...",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-58251"
+        }
+      ]
+    },
+    {
+      "Target": "app/package-lock.json",
+      "Class": "lang-pkgs",
+      "Type": "npm",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-1111",
+          "PkgID": "left-pad@1.0.0",
+          "PkgName": "left-pad",
+          "InstalledVersion": "1.0.0",
+          "Status": "affected",
+          "Severity": "CRITICAL",
+          "Title": "left-pad: example critical without a fix",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-1111"
+        },
+        {
+          "VulnerabilityID": "GHSA-xxxx-yyyy-zzzz",
+          "PkgID": "tiny@0.1.0",
+          "PkgName": "tiny",
+          "InstalledVersion": "0.1.0",
+          "FixedVersion": "0.1.1",
+          "Status": "fixed",
+          "Severity": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "Target": "usr/bin/clean",
+      "Class": "lang-pkgs",
+      "Type": "gobinary"
+    }
+  ]
+}

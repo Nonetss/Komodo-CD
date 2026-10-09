@@ -97,6 +97,7 @@
       "dependencies": {
         "@komodo-cd/auth": "workspace:*",
         "@komodo-cd/db": "workspace:*",
+        "@komodo-cd/env": "workspace:*",
         "@komodo-cd/logger": "workspace:*",
         "@orpc/experimental-publisher": "catalog:",
         "@orpc/server": "catalog:",
