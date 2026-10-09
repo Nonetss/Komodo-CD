@@ -2,6 +2,7 @@ import connection from "@img/connection.png"
 import deploy from "@img/deploy.png"
 import history from "@img/history.png"
 import overviewImage from "@img/overview.png"
+import security from "@img/security.png"
 import stacks from "@img/stacks.png"
 import stacksLight from "@img/stacks-light.png"
 import type { ImageMetadata } from "astro"
@@ -25,6 +26,7 @@ export const tourScreens: (Screen & { id: TourStopId })[] = [
   { id: "stacks", route: "/stacks/photos", image: stacks },
   { id: "deploy", route: "/deploy", image: deploy },
   { id: "history", route: "/history", image: history },
+  { id: "security", route: "/security", image: security },
   { id: "connection", route: "/credentials", image: connection },
   { id: "theme", route: "/stacks/photos", image: stacksLight },
 ]

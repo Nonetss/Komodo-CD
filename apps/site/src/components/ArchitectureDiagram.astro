@@ -12,9 +12,9 @@ const n = dict.arch.nodes
 const r = dict.arch.roles
 
 // Topología del stack de Docker Compose dibujada con los tokens del sitio,
-// así sigue al tema. Coordenadas en el espacio 1200×428 (el viewBox recorta
+// así sigue al tema. Coordenadas en el espacio 1200×616 (el viewBox recorta
 // los 40 vacíos de arriba); cada caja mide 76 de alto y se rotula desde su
-// borde izquierdo.
+// borde izquierdo. Trivy ocupa una tercera fila bajo SQLite.
 interface Box {
   x: number
   y: number
@@ -38,6 +38,7 @@ const boxes: Box[] = [
   { x: 290, y: 312, w: 240, name: n.astro, port: ":4321", role: r.astro },
   { x: 660, y: 124, w: 230, name: n.backend, port: ":3000", role: r.backend },
   { x: 660, y: 312, w: 230, name: n.sqlite, port: "/data", role: r.sqlite },
+  { x: 660, y: 500, w: 230, name: n.trivy, port: ":4954", role: r.trivy },
   { x: 960, y: 124, w: 220, name: n.komodo, role: r.komodo },
   { x: 960, y: 312, w: 220, name: n.servers, role: r.servers },
 ]
@@ -83,6 +84,13 @@ const edges: Edge[] = [
     anchor: "start",
   },
   { d: "M775,200 V306", label: "SQL", lx: 785, ly: 257, anchor: "start" },
+  {
+    d: "M890,186 H925 V538 H896",
+    label: "scan",
+    lx: 933,
+    ly: 462,
+    anchor: "start",
+  },
   { d: "M890,162 H954", label: "HTTPS", lx: 925, ly: 152 },
   {
     d: "M1070,200 V306",
@@ -96,7 +104,7 @@ const edges: Edge[] = [
 ---
 
 <svg
-  viewBox="0 40 1200 388"
+  viewBox="0 40 1200 576"
   role="img"
   aria-labelledby="arch-diagram-title arch-diagram-desc"
   class:list={["h-auto w-full", className]}

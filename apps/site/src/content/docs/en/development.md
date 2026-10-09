@@ -14,7 +14,8 @@ Komodo CD is a Turborepo monorepo with Bun workspaces.
 | `apps/frontend` | Astro 7 (SSR) + React + TanStack Query. |
 | `apps/gateway` | The production Caddy: the only published port, routing to the backend and the frontend. |
 | `apps/site` | This website: static Astro, published to GitHub Pages. |
-| `packages/api` | oRPC routers (`v0`), the Komodo client and the ntfy service. |
+| `trivy` | Not a workspace: a service in `compose.yml` running the upstream `aquasec/trivy` server, which the backend's `trivy` client scans images against. |
+| `packages/api` | oRPC routers (`v0`), the Komodo client and the ntfy and Trivy services. |
 | `packages/auth` | Better Auth config and the session resolver (cookie or `x-api-key`). |
 | `packages/db` | Drizzle (SQLite/libsql): schema, relations, migrations and seed. |
 | `packages/env` | Validated server environment (t3-env + zod). |
@@ -57,14 +58,17 @@ The Dockerfiles live in `apps/*/Dockerfile`, but the build context is always the
 ```bash
 docker build -f apps/backend/Dockerfile -t komodo-cd-backend .
 docker build -f apps/frontend/Dockerfile -t komodo-cd-frontend .
+docker build -f apps/gateway/Dockerfile -t komodo-cd-gateway .
 ```
 
-`.github/workflows/docker-build.yml` builds and pushes both to `ghcr.io/nonetss/komodo-cd-backend` and `ghcr.io/nonetss/komodo-cd-frontend`:
+`.github/workflows/docker-build.yml` builds and pushes the three of them to `ghcr.io/nonetss/komodo-cd-backend`, `ghcr.io/nonetss/komodo-cd-frontend` and `ghcr.io/nonetss/komodo-cd-gateway`, rebuilding only the ones whose files changed:
 
 | Trigger | Tags |
 | --- | --- |
 | Push to `main` | `latest`, `main`, `main-<sha>` |
 | Tag `vX.Y.Z` | `X.Y.Z`, `X.Y` |
+
+The `trivy` service is not built here: it runs the upstream `aquasec/trivy` image, at the same version as `TRIVY_VERSION` in `apps/backend/Dockerfile`.
 
 To publish a release, tag the commit and create the GitHub release:
 

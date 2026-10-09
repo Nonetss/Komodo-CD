@@ -9,6 +9,7 @@ export type TourStopId =
   | "stacks"
   | "deploy"
   | "history"
+  | "security"
   | "connection"
   | "theme"
 
@@ -70,6 +71,11 @@ const en = {
         body: "Actions launched from the dashboard and from CI land in the same history, with who ran them (a user or the name of the API key), the result and Komodo's own error message when one fails.",
         alt: "History page listing successful and failed actions, grouped by time",
       },
+      security: {
+        title: "Know what each image carries.",
+        body: "Every image used by a stack is scanned with Trivy when it first shows up, after every deploy and on demand. The Security page sorts them by severity, says which vulnerabilities have a fix and which stacks use each image, and copies an image's report as Markdown. Private images it cannot pull are flagged as no access.",
+        alt: "Security page: counters of images with critical and high vulnerabilities, and an open image with its CVEs, the affected package and the fixed version",
+      },
       connection: {
         title: "One Komodo, one key pair.",
         body: "Paste the URL of your Komodo instance and a key and secret from its Settings → API Keys. They stay on the backend: the API lists the connection by name and URL, never with its credentials.",
@@ -85,7 +91,7 @@ const en = {
       { title: string; body: string; alt: string }
     >,
     overviewAlt:
-      "Overview page with counters for attention, updates, running and total, the stacks that need attention and the stacks with something new to deploy",
+      "Overview page with three numbered blocks: stacks by state with the ones that need attention or have something new, image vulnerabilities by severity, and a chart of the deploys of the last 30 days",
     rest: {
       heading: "And the rest",
       items: [
@@ -110,18 +116,18 @@ const en = {
           text: "Optional ntfy notifications, on ntfy.sh or your own server, whenever a deploy fails, from CI or by hand.",
         },
         {
-          term: "Three images, one volume",
-          text: "Backend, frontend and gateway on ghcr.io, tagged latest and by release. SQLite in a single volume: no database server to run.",
+          term: "Four containers, no database server",
+          text: "Backend, frontend and gateway on ghcr.io, tagged latest and by release, plus the official Trivy server for the scans. SQLite in a single volume: no database server to run.",
         },
       ],
     },
   },
   arch: {
     heading: "How it fits together",
-    lede: "Three containers run with Docker Compose. The gateway runs Caddy, the only published port, which sends the API to the backend and every page to Astro SSR in the frontend container. The backend owns a SQLite file and talks to your Komodo instance, and Komodo does the actual deploy on your servers.",
+    lede: "Four containers run with Docker Compose. The gateway runs Caddy, the only published port, which sends the API to the backend and every page to Astro SSR in the frontend container. The backend owns a SQLite file, talks to your Komodo instance and sends the images to scan to a Trivy server, and Komodo does the actual deploy on your servers.",
     diagramTitle: "Topology",
     diagramDesc:
-      "A browser and a CI runner reach Caddy on port 80 in the gateway container. Caddy sends /rpc, /api, /doc and /scalar to the Hono backend on port 3000 and every other path to Astro SSR on port 4321 in the frontend container, which checks the session against the backend. Both listen only inside the Compose network. The backend reads and writes a SQLite file on the db_data volume and calls the Komodo Core API over HTTPS with a key and secret. Komodo then pulls and redeploys the stack on your servers through its Periphery agents.",
+      "A browser and a CI runner reach Caddy on port 80 in the gateway container. Caddy sends /rpc, /api, /doc and /scalar to the Hono backend on port 3000 and every other path to Astro SSR on port 4321 in the frontend container, which checks the session against the backend. Both listen only inside the Compose network. The backend reads and writes a SQLite file on the db_data volume, scans images against the Trivy server on port 4954, which keeps its vulnerability database on the trivy_cache volume, and calls the Komodo Core API over HTTPS with a key and secret. Komodo then pulls and redeploys the stack on your servers through its Periphery agents.",
     legendHttp: "Connection, labelled with its protocol or route",
     legendKomodo: "Komodo's own traffic, outside Komodo CD",
     published: "published",
@@ -137,6 +143,7 @@ const en = {
       astro: "Astro SSR",
       backend: "Backend",
       sqlite: "SQLite",
+      trivy: "Trivy",
       komodo: "Komodo",
       servers: "Your servers",
     },
@@ -147,6 +154,7 @@ const en = {
       astro: "Compose network only",
       backend: "Hono · oRPC · Better Auth",
       sqlite: "volume db_data",
+      trivy: "server · volume trivy_cache",
       komodo: "your instance · Core API",
       servers: "Komodo Periphery",
     },
@@ -268,6 +276,11 @@ const es: Dictionary = {
         body: "Las acciones lanzadas desde el panel y desde CI acaban en el mismo historial, con quién las lanzó (un usuario o el nombre de la API key), el resultado y el propio mensaje de error de Komodo cuando algo falla.",
         alt: "Página de historial con acciones correctas y fallidas, agrupadas por tiempo",
       },
+      security: {
+        title: "Sabe qué lleva cada imagen.",
+        body: "Cada imagen que usa un stack se escanea con Trivy la primera vez que aparece, después de cada deploy y cuando lo pidas. La página de Seguridad las ordena por gravedad, dice qué vulnerabilidades tienen arreglo y qué stacks usan cada imagen, y copia el informe de una imagen en Markdown. Las imágenes privadas que no puede descargar se marcan como sin acceso.",
+        alt: "Página de seguridad: contadores de imágenes con vulnerabilidades críticas y altas, y una imagen abierta con sus CVE, el paquete afectado y la versión que lo arregla",
+      },
       connection: {
         title: "Un Komodo, un par de claves.",
         body: "Pega la URL de tu instancia de Komodo y una key y un secret de su Settings → API Keys. Se quedan en el backend: la API muestra la conexión por nombre y URL, nunca con sus credenciales.",
@@ -280,7 +293,7 @@ const es: Dictionary = {
       },
     },
     overviewAlt:
-      "Página de resumen con los contadores de atención, actualizaciones, activos y total, los stacks que requieren atención y los que tienen algo nuevo que desplegar",
+      "Página de resumen con tres bloques numerados: los stacks por estado con los que piden atención o tienen algo nuevo, las vulnerabilidades de las imágenes por gravedad y una gráfica de los despliegues de los últimos 30 días",
     rest: {
       heading: "Y el resto",
       items: [
@@ -305,18 +318,18 @@ const es: Dictionary = {
           text: "Notificaciones opcionales de ntfy, en ntfy.sh o en tu propio servidor, cada vez que falla un deploy, desde CI o a mano.",
         },
         {
-          term: "Tres imágenes, un volumen",
-          text: "Backend, frontend y gateway en ghcr.io, con la etiqueta latest y la de cada versión. SQLite en un único volumen: sin servidor de base de datos.",
+          term: "Cuatro contenedores, sin servidor de base de datos",
+          text: "Backend, frontend y gateway en ghcr.io, con la etiqueta latest y la de cada versión, más el servidor oficial de Trivy para los escaneos. SQLite en un único volumen: sin servidor de base de datos.",
         },
       ],
     },
   },
   arch: {
     heading: "Cómo está montado",
-    lede: "Tres contenedores levantados con Docker Compose. El gateway lleva Caddy, el único puerto publicado, que manda la API al backend y cada página a Astro SSR en el contenedor del frontend. El backend es el dueño de un fichero SQLite y habla con tu instancia de Komodo, y Komodo hace el despliegue real en tus servidores.",
+    lede: "Cuatro contenedores levantados con Docker Compose. El gateway lleva Caddy, el único puerto publicado, que manda la API al backend y cada página a Astro SSR en el contenedor del frontend. El backend es el dueño de un fichero SQLite, habla con tu instancia de Komodo y manda las imágenes que hay que escanear a un servidor de Trivy, y Komodo hace el despliegue real en tus servidores.",
     diagramTitle: "Topología",
     diagramDesc:
-      "Un navegador y un runner de CI llegan a Caddy por el puerto 80 en el contenedor del gateway. Caddy manda /rpc, /api, /doc y /scalar al backend Hono en el puerto 3000 y cualquier otra ruta a Astro SSR en el 4321, en el contenedor del frontend, que comprueba la sesión contra el backend. Los dos solo escuchan dentro de la red de Compose. El backend lee y escribe un fichero SQLite en el volumen db_data y llama a la API de Komodo Core por HTTPS con una key y un secret. Komodo hace entonces el pull y el redeploy del stack en tus servidores a través de sus agentes Periphery.",
+      "Un navegador y un runner de CI llegan a Caddy por el puerto 80 en el contenedor del gateway. Caddy manda /rpc, /api, /doc y /scalar al backend Hono en el puerto 3000 y cualquier otra ruta a Astro SSR en el 4321, en el contenedor del frontend, que comprueba la sesión contra el backend. Los dos solo escuchan dentro de la red de Compose. El backend lee y escribe un fichero SQLite en el volumen db_data, escanea las imágenes contra el servidor de Trivy en el puerto 4954, que guarda su base de datos de vulnerabilidades en el volumen trivy_cache, y llama a la API de Komodo Core por HTTPS con una key y un secret. Komodo hace entonces el pull y el redeploy del stack en tus servidores a través de sus agentes Periphery.",
     legendHttp: "Conexión, con su protocolo o ruta",
     legendKomodo: "Tráfico propio de Komodo, fuera de Komodo CD",
     published: "publicado",
@@ -332,6 +345,7 @@ const es: Dictionary = {
       astro: "Astro SSR",
       backend: "Backend",
       sqlite: "SQLite",
+      trivy: "Trivy",
       komodo: "Komodo",
       servers: "Tus servidores",
     },
@@ -342,6 +356,7 @@ const es: Dictionary = {
       astro: "solo red de Compose",
       backend: "Hono · oRPC · Better Auth",
       sqlite: "volumen db_data",
+      trivy: "servidor · volumen trivy_cache",
       komodo: "tu instancia · Core API",
       servers: "Komodo Periphery",
     },
