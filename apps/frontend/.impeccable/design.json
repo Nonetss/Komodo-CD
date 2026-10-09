@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-09T15:22:26Z",
+  "generatedAt": "2026-10-09T16:23:47Z",
   "title": "Design System: Komodo CD",
   "extensions": {
     "colorMeta": {
@@ -20,8 +20,23 @@
         ]
       },
       "ink": {
-        "role": "primary",
+        "role": "neutral",
         "displayName": "Ink",
+        "canonical": "oklch(0.3438 0.0269 95.7226)",
+        "tonalRamp": [
+          "oklch(0.15 0.0269 95.7226)",
+          "oklch(0.25 0.0269 95.7226)",
+          "oklch(0.35 0.0269 95.7226)",
+          "oklch(0.45 0.0269 95.7226)",
+          "oklch(0.55 0.0269 95.7226)",
+          "oklch(0.65 0.0269 95.7226)",
+          "oklch(0.80 0.0269 95.7226)",
+          "oklch(0.95 0.0269 95.7226)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule Ink",
         "canonical": "oklch(0.1908 0.002 106.5859)",
         "tonalRamp": [
           "oklch(0.15 0.002 106.5859)",
@@ -64,19 +79,19 @@
           "oklch(0.95 0.003 97.3627)"
         ]
       },
-      "field-rule": {
+      "control-edge": {
         "role": "neutral",
-        "displayName": "Field Rule",
-        "canonical": "oklch(0.78 0.008 98.3528)",
+        "displayName": "Control Edge",
+        "canonical": "oklch(0.92 0.004 98.3528)",
         "tonalRamp": [
-          "oklch(0.15 0.008 98.3528)",
-          "oklch(0.25 0.008 98.3528)",
-          "oklch(0.35 0.008 98.3528)",
-          "oklch(0.45 0.008 98.3528)",
-          "oklch(0.55 0.008 98.3528)",
-          "oklch(0.65 0.008 98.3528)",
-          "oklch(0.80 0.008 98.3528)",
-          "oklch(0.95 0.008 98.3528)"
+          "oklch(0.15 0.004 98.3528)",
+          "oklch(0.25 0.004 98.3528)",
+          "oklch(0.35 0.004 98.3528)",
+          "oklch(0.45 0.004 98.3528)",
+          "oklch(0.55 0.004 98.3528)",
+          "oklch(0.65 0.004 98.3528)",
+          "oklch(0.80 0.004 98.3528)",
+          "oklch(0.95 0.004 98.3528)"
         ]
       },
       "graphite": {
@@ -94,8 +109,23 @@
           "oklch(0.95 0.0078 97.4503)"
         ]
       },
+      "popover": {
+        "role": "neutral",
+        "displayName": "Popover",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 0)",
+          "oklch(0.25 0 0)",
+          "oklch(0.35 0 0)",
+          "oklch(0.45 0 0)",
+          "oklch(0.55 0 0)",
+          "oklch(0.65 0 0)",
+          "oklch(0.80 0 0)",
+          "oklch(0.95 0 0)"
+        ]
+      },
       "signal": {
-        "role": "secondary",
+        "role": "primary",
         "displayName": "Signal Orange",
         "canonical": "oklch(0.6724 0.1308 38.7559)",
         "tonalRamp": [
@@ -107,6 +137,36 @@
           "oklch(0.65 0.1308 38.7559)",
           "oklch(0.80 0.1308 38.7559)",
           "oklch(0.95 0.1308 38.7559)"
+        ]
+      },
+      "signal-ink": {
+        "role": "primary",
+        "displayName": "Signal Ink",
+        "canonical": "oklch(0.52 0.14 38.7559)",
+        "tonalRamp": [
+          "oklch(0.15 0.14 38.7559)",
+          "oklch(0.25 0.14 38.7559)",
+          "oklch(0.35 0.14 38.7559)",
+          "oklch(0.45 0.14 38.7559)",
+          "oklch(0.55 0.14 38.7559)",
+          "oklch(0.65 0.14 38.7559)",
+          "oklch(0.80 0.14 38.7559)",
+          "oklch(0.95 0.14 38.7559)"
+        ]
+      },
+      "danger": {
+        "role": "secondary",
+        "displayName": "Danger Red",
+        "canonical": "oklch(0.52 0.2078 25.3313)",
+        "tonalRamp": [
+          "oklch(0.15 0.2078 25.3313)",
+          "oklch(0.25 0.2078 25.3313)",
+          "oklch(0.35 0.2078 25.3313)",
+          "oklch(0.45 0.2078 25.3313)",
+          "oklch(0.55 0.2078 25.3313)",
+          "oklch(0.65 0.2078 25.3313)",
+          "oklch(0.80 0.2078 25.3313)",
+          "oklch(0.95 0.2078 25.3313)"
         ]
       },
       "success": {
@@ -186,7 +246,7 @@
       },
       "paper-dark": {
         "role": "neutral",
-        "displayName": "Night Paper",
+        "displayName": "Paper (dark)",
         "canonical": "oklch(0.2679 0.0036 106.6427)",
         "tonalRamp": [
           "oklch(0.15 0.0036 106.6427)",
@@ -200,7 +260,7 @@
         ]
       },
       "ink-dark": {
-        "role": "primary",
+        "role": "neutral",
         "displayName": "Ink (dark)",
         "canonical": "oklch(0.9576 0.0027 106.4494)",
         "tonalRamp": [
@@ -214,19 +274,34 @@
           "oklch(0.95 0.0027 106.4494)"
         ]
       },
+      "rule-dark": {
+        "role": "neutral",
+        "displayName": "Rule Ink (dark)",
+        "canonical": "oklch(0.9818 0.0054 95.0986)",
+        "tonalRamp": [
+          "oklch(0.15 0.0054 95.0986)",
+          "oklch(0.25 0.0054 95.0986)",
+          "oklch(0.35 0.0054 95.0986)",
+          "oklch(0.45 0.0054 95.0986)",
+          "oklch(0.55 0.0054 95.0986)",
+          "oklch(0.65 0.0054 95.0986)",
+          "oklch(0.80 0.0054 95.0986)",
+          "oklch(0.95 0.0054 95.0986)"
+        ]
+      },
       "wash-dark": {
         "role": "neutral",
         "displayName": "Wash (dark)",
-        "canonical": "oklch(0.2928 0.0018 106.5092)",
+        "canonical": "oklch(0.2213 0.0038 106.707)",
         "tonalRamp": [
-          "oklch(0.15 0.0018 106.5092)",
-          "oklch(0.25 0.0018 106.5092)",
-          "oklch(0.35 0.0018 106.5092)",
-          "oklch(0.45 0.0018 106.5092)",
-          "oklch(0.55 0.0018 106.5092)",
-          "oklch(0.65 0.0018 106.5092)",
-          "oklch(0.80 0.0018 106.5092)",
-          "oklch(0.95 0.0018 106.5092)"
+          "oklch(0.15 0.0038 106.707)",
+          "oklch(0.25 0.0038 106.707)",
+          "oklch(0.35 0.0038 106.707)",
+          "oklch(0.45 0.0038 106.707)",
+          "oklch(0.55 0.0038 106.707)",
+          "oklch(0.65 0.0038 106.707)",
+          "oklch(0.80 0.0038 106.707)",
+          "oklch(0.95 0.0038 106.707)"
         ]
       },
       "hairline-dark": {
@@ -244,19 +319,19 @@
           "oklch(0.95 0.004 106.8928)"
         ]
       },
-      "field-rule-dark": {
+      "control-edge-dark": {
         "role": "neutral",
-        "displayName": "Field Rule (dark)",
-        "canonical": "oklch(0.42 0.006 100.2195)",
+        "displayName": "Control Edge (dark)",
+        "canonical": "oklch(0.34 0.005 100.2195)",
         "tonalRamp": [
-          "oklch(0.15 0.006 100.2195)",
-          "oklch(0.25 0.006 100.2195)",
-          "oklch(0.35 0.006 100.2195)",
-          "oklch(0.45 0.006 100.2195)",
-          "oklch(0.55 0.006 100.2195)",
-          "oklch(0.65 0.006 100.2195)",
-          "oklch(0.80 0.006 100.2195)",
-          "oklch(0.95 0.006 100.2195)"
+          "oklch(0.15 0.005 100.2195)",
+          "oklch(0.25 0.005 100.2195)",
+          "oklch(0.35 0.005 100.2195)",
+          "oklch(0.45 0.005 100.2195)",
+          "oklch(0.55 0.005 100.2195)",
+          "oklch(0.65 0.005 100.2195)",
+          "oklch(0.80 0.005 100.2195)",
+          "oklch(0.95 0.005 100.2195)"
         ]
       },
       "graphite-dark": {
@@ -289,19 +364,34 @@
           "oklch(0.95 0.0035 106.6039)"
         ]
       },
-      "signal-dark": {
-        "role": "secondary",
-        "displayName": "Signal Orange (dark)",
-        "canonical": "oklch(0.6724 0.1308 38.7559)",
+      "signal-ink-dark": {
+        "role": "primary",
+        "displayName": "Signal Ink (dark)",
+        "canonical": "oklch(0.72 0.13 40)",
         "tonalRamp": [
-          "oklch(0.15 0.1308 38.7559)",
-          "oklch(0.25 0.1308 38.7559)",
-          "oklch(0.35 0.1308 38.7559)",
-          "oklch(0.45 0.1308 38.7559)",
-          "oklch(0.55 0.1308 38.7559)",
-          "oklch(0.65 0.1308 38.7559)",
-          "oklch(0.80 0.1308 38.7559)",
-          "oklch(0.95 0.1308 38.7559)"
+          "oklch(0.15 0.13 40)",
+          "oklch(0.25 0.13 40)",
+          "oklch(0.35 0.13 40)",
+          "oklch(0.45 0.13 40)",
+          "oklch(0.55 0.13 40)",
+          "oklch(0.65 0.13 40)",
+          "oklch(0.80 0.13 40)",
+          "oklch(0.95 0.13 40)"
+        ]
+      },
+      "danger-dark": {
+        "role": "secondary",
+        "displayName": "Danger Red (dark)",
+        "canonical": "oklch(0.7 0.1978 25.3313)",
+        "tonalRamp": [
+          "oklch(0.15 0.1978 25.3313)",
+          "oklch(0.25 0.1978 25.3313)",
+          "oklch(0.35 0.1978 25.3313)",
+          "oklch(0.45 0.1978 25.3313)",
+          "oklch(0.55 0.1978 25.3313)",
+          "oklch(0.65 0.1978 25.3313)",
+          "oklch(0.80 0.1978 25.3313)",
+          "oklch(0.95 0.1978 25.3313)"
         ]
       },
       "success-dark": {
@@ -352,7 +442,7 @@
       "code-slab-dark": {
         "role": "neutral",
         "displayName": "Code Slab (dark)",
-        "canonical": "oklch(0.12 0 0)",
+        "canonical": "oklch(0.2 0 0)",
         "tonalRamp": [
           "oklch(0.15 0 0)",
           "oklch(0.25 0 0)",
@@ -368,11 +458,11 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Page title, one per page: Archivo 800 at width 112, up to 4.5rem in page heroes."
+        "purpose": "Page title, one per page: Schibsted Grotesk 800, up to 4.5rem in page heroes."
       },
       "section": {
         "displayName": "Section",
-        "purpose": "Section titles at normal width."
+        "purpose": "Section titles."
       },
       "stat": {
         "displayName": "Stat",
@@ -392,27 +482,36 @@
       },
       "caption": {
         "displayName": "Caption",
-        "purpose": "Name of a field or an explanatory block, sentence case in Archivo."
+        "purpose": "Name of a field or an explanatory block, sentence case."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Mono caps for nav, counters, filter tabs, status words and table column heads."
+        "purpose": "Caps for counters, filter tabs and table column heads (nav links and bottom tabs set it in mono)."
       },
       "data": {
         "displayName": "Data",
-        "purpose": "Mono for ids, hashes, URLs, relative times and curl snippets."
+        "purpose": "JetBrains Mono for ids, hashes, URLs, relative times and curl snippets."
+      },
+      "status": {
+        "displayName": "Status",
+        "purpose": "The caps word that follows a status dot."
       }
     },
     "shadows": [
       {
+        "name": "soft-xs",
+        "value": "0 1px 3px 0 hsl(0 0% 0% / 0.05)",
+        "purpose": "Outline buttons."
+      },
+      {
         "name": "popover-lift",
-        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-        "purpose": "Combobox list (1.5px ink border plus shadow-md)."
+        "value": "0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1)",
+        "purpose": "Dropdown lists (shadow-md over a 1px hairline border)."
       },
       {
         "name": "float-lift",
-        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
-        "purpose": "Toasts and the sticky bulk-action bar (shadow-lg), always with a 1.5px ink border. Nothing else casts a shadow."
+        "value": "0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1)",
+        "purpose": "Toasts and the sticky bulk-action bar (shadow-lg). Nothing else casts a shadow."
       },
       {
         "name": "nav-active-underline",
@@ -421,8 +520,8 @@
       },
       {
         "name": "focus-ring",
-        "value": "0 0 0 2px var(--background), 0 0 0 4px var(--signal)",
-        "purpose": "Visible keyboard focus on buttons: 2px Signal ring with a 2px paper offset."
+        "value": "0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent)",
+        "purpose": "Keyboard focus on buttons: a 3px ring in Signal at 50% opacity, with a Signal border."
       }
     ],
     "motion": [
@@ -471,119 +570,132 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Ink on paper; the default action.",
+      "description": "Default action: Signal Orange fill, white text, 4px corners.",
       "html": "<button class=\"ds-btn-primary\">Save changes</button>",
-      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:var(--foreground, oklch(0.1908 0.002 106.5859));color:var(--background, oklch(0.9818 0.0054 95.0986));border:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-primary:hover{opacity:.85}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.9818 0.0054 95.0986)),0 0 0 4px var(--signal, oklch(0.6724 0.1308 38.7559))}"
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 16px;border:0;border-radius:4px;font:500 14px 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s,box-shadow .15s;background:var(--signal, oklch(0.6724 0.1308 38.7559));color:#fff}.ds-btn-primary:hover{background:color-mix(in oklch,var(--signal, oklch(0.6724 0.1308 38.7559)) 90%,transparent)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in oklch,var(--signal, oklch(0.6724 0.1308 38.7559)) 50%,transparent)}"
     },
     {
       "name": "Signal Button",
       "kind": "button",
-      "refersTo": "button-signal",
-      "description": "The single action that launches a deploy.",
+      "refersTo": "button-primary",
+      "description": "The action that launches something new (a deploy): the same orange fill with a leading icon.",
       "html": "<button class=\"ds-btn-signal\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z\"/><path d=\"m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z\"/></svg>Redeploy</button>",
-      "css": ".ds-btn-signal{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:8px 16px;background:var(--signal, oklch(0.6724 0.1308 38.7559));color:var(--background, oklch(0.9818 0.0054 95.0986));border:1.5px solid var(--signal, oklch(0.6724 0.1308 38.7559));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s}.ds-btn-signal:hover{opacity:.9}.ds-btn-signal:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.9818 0.0054 95.0986)),0 0 0 4px var(--signal, oklch(0.6724 0.1308 38.7559))}"
+      "css": ".ds-btn-signal{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 16px;border:0;border-radius:4px;font:500 14px 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s,box-shadow .15s;background:var(--signal, oklch(0.6724 0.1308 38.7559));color:#fff}.ds-btn-signal:hover{background:color-mix(in oklch,var(--signal, oklch(0.6724 0.1308 38.7559)) 90%,transparent)}.ds-btn-signal:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in oklch,var(--signal, oklch(0.6724 0.1308 38.7559)) 50%,transparent)}"
     },
     {
       "name": "Outline Button",
       "kind": "button",
       "refersTo": "button-outline",
-      "description": "Secondary action; inverts to ink on hover.",
+      "description": "Secondary action: Paper fill, hairline border and a faint shadow; hover takes the Wash tint.",
       "html": "<button class=\"ds-btn-outline\">Pull</button>",
-      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:8px 16px;background:transparent;color:var(--foreground, oklch(0.1908 0.002 106.5859));border:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859));border-radius:0;font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-btn-outline:hover{background:var(--foreground, oklch(0.1908 0.002 106.5859));color:var(--background, oklch(0.9818 0.0054 95.0986))}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background, oklch(0.9818 0.0054 95.0986)),0 0 0 4px var(--signal, oklch(0.6724 0.1308 38.7559))}"
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 16px;border:0;border-radius:4px;font:500 14px 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s,box-shadow .15s;background:var(--background, oklch(0.9818 0.0054 95.0986));color:var(--foreground, oklch(0.3438 0.0269 95.7226));border:1px solid var(--input, oklch(0.92 0.004 98.3528));box-shadow:0 1px 3px 0 hsl(0 0% 0%/.05)}.ds-btn-outline:hover{background:var(--accent, oklch(0.9245 0.0138 92.9892))}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in oklch,var(--signal, oklch(0.6724 0.1308 38.7559)) 50%,transparent);border-color:var(--signal, oklch(0.6724 0.1308 38.7559))}"
+    },
+    {
+      "name": "Destructive Button",
+      "kind": "button",
+      "refersTo": "button-destructive",
+      "description": "Deleting: Danger Red fill, confirmed with a second click.",
+      "html": "<button class=\"ds-btn-danger\">Delete stack</button>",
+      "css": ".ds-btn-danger{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 16px;border:0;border-radius:4px;font:500 14px 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .15s,box-shadow .15s;background:var(--destructive, oklch(0.52 0.2078 25.3313));color:#fff}.ds-btn-danger:hover{background:color-mix(in oklch,var(--destructive, oklch(0.52 0.2078 25.3313)) 90%,transparent)}.ds-btn-danger:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in oklch,var(--destructive, oklch(0.52 0.2078 25.3313)) 25%,transparent)}"
     },
     {
       "name": "Underlined Input",
       "kind": "input",
       "refersTo": "input-field",
-      "description": "Only the bottom rule; it turns Signal on focus.",
+      "description": "Field drawn as a bottom rule; the rule turns orange on focus.",
       "html": "<input class=\"ds-input\" placeholder=\"Search stacks\" />",
-      "css": ".ds-input{width:100%;height:40px;padding:4px 0;background:transparent;color:var(--foreground, oklch(0.1908 0.002 106.5859));border:0;border-bottom:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859));border-radius:0;font:400 14px Archivo, ui-sans-serif, system-ui, sans-serif;outline:none;transition:border-color .15s}.ds-input::placeholder{color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-input:focus-visible{border-bottom-color:var(--signal, oklch(0.6724 0.1308 38.7559))}"
+      "css": ".ds-input{width:100%;height:40px;padding:4px 0;background:transparent;color:var(--foreground, oklch(0.3438 0.0269 95.7226));border:0;border-bottom:1.5px solid var(--rule, oklch(0.1908 0.002 106.5859));border-radius:0;font:400 14px 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;outline:none;transition:border-color .15s}.ds-input::placeholder{color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-input:focus-visible{border-bottom-color:var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Top Nav",
       "kind": "nav",
       "refersTo": "nav-link",
-      "description": "Mono-caps links; the active one gets a 2px Signal underline on the bar rule.",
+      "description": "Mono caps links on a 56px bar over a 1.5px rule; the active link carries a 2px orange underline.",
       "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"ds-nav-link ds-active\">Overview</a><a href=\"#\" class=\"ds-nav-link\">Stacks</a><a href=\"#\" class=\"ds-nav-link\">History</a></nav>",
-      "css": ".ds-nav{display:flex;gap:24px;height:56px;border-bottom:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-nav-link{display:flex;align-items:center;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));text-decoration:none;transition:color .15s}.ds-nav-link:hover{color:var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-nav-link.ds-active{color:var(--foreground, oklch(0.1908 0.002 106.5859));box-shadow:inset 0 -2px 0 var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-nav-link:focus-visible{outline:2px solid var(--signal, oklch(0.6724 0.1308 38.7559))}"
+      "css": ".ds-nav{display:flex;gap:24px;height:56px;border-bottom:1.5px solid var(--rule, oklch(0.1908 0.002 106.5859))}.ds-nav-link{display:flex;align-items:center;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));text-decoration:none;transition:color .15s}.ds-nav-link:hover{color:var(--foreground, oklch(0.3438 0.0269 95.7226))}.ds-nav-link.ds-active{color:var(--foreground, oklch(0.3438 0.0269 95.7226));box-shadow:inset 0 -2px 0 var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-nav-link:focus-visible{outline:2px solid var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Filter Tabs",
       "kind": "chip",
       "refersTo": "nav-link",
-      "description": "Segmented filter: ink label, Signal underline for the chosen one, a count after.",
+      "description": "Caps options with a 2px orange underline on the chosen one; the count turns orange when it flags a problem.",
       "html": "<div class=\"ds-seg\"><span class=\"ds-seg-o ds-on\">All <b>12</b></span><span class=\"ds-seg-o\">Running <b>9</b></span><span class=\"ds-seg-o\">Stopped <b>1</b></span><span class=\"ds-seg-o\">Problems <b class=\"ds-alert\">2</b></span></div>",
-      "css": ".ds-seg{display:flex;flex-wrap:wrap;gap:4px 16px}.ds-seg-o{position:relative;display:flex;align-items:center;gap:6px;height:36px;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));cursor:pointer}.ds-seg-o b{font-weight:500;font-variant-numeric:tabular-nums}.ds-seg-o b.ds-alert{color:var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-seg-o::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent}.ds-seg-o.ds-on{color:var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-seg-o.ds-on::after{background:var(--signal, oklch(0.6724 0.1308 38.7559))}"
+      "css": ".ds-seg{display:flex;flex-wrap:wrap;gap:4px 16px}.ds-seg-o{position:relative;display:flex;align-items:center;gap:6px;height:36px;font:500 11px/1.3 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));cursor:pointer}.ds-seg-o b{font-weight:500;font-variant-numeric:tabular-nums}.ds-seg-o b.ds-alert{color:var(--signal-ink, oklch(0.52 0.14 38.7559))}.ds-seg-o::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent}.ds-seg-o.ds-on{color:var(--foreground, oklch(0.3438 0.0269 95.7226))}.ds-seg-o.ds-on::after{background:var(--signal, oklch(0.6724 0.1308 38.7559))}"
     },
     {
       "name": "Stack List Row",
       "kind": "custom",
       "refersTo": "list-row",
-      "description": "Signature row: dot, name, one marker, service count. The open row inverts to ink.",
-      "html": "<ul class=\"ds-rows\"><li class=\"ds-row ds-open\"><span class=\"ds-dot\" style=\"background:var(--success,oklch(0.51 0.154 150))\"></span><span class=\"ds-name\">api-gateway</span><span class=\"ds-n\">4</span></li><li class=\"ds-row\"><span class=\"ds-dot\" style=\"background:var(--success,oklch(0.51 0.154 150))\"></span><span class=\"ds-name\">worker</span><span class=\"ds-mark\">Update</span><span class=\"ds-n\">2</span></li><li class=\"ds-row\"><span class=\"ds-dot ds-ring\"></span><span class=\"ds-name\">staging-db</span><span class=\"ds-n\">1</span></li></ul>",
-      "css": ".ds-rows{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--border, oklch(0.94 0.003 97.3627))}.ds-row{display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;border-top:1px solid var(--border, oklch(0.94 0.003 97.3627));background:var(--background, oklch(0.9818 0.0054 95.0986));color:var(--foreground, oklch(0.1908 0.002 106.5859));font:600 14px Archivo, ui-sans-serif, system-ui, sans-serif;transition:background-color .15s}.ds-row:hover{background:var(--muted, oklch(0.9341 0.0153 90.239))}.ds-row.ds-open{background:var(--foreground, oklch(0.1908 0.002 106.5859));color:var(--background, oklch(0.9818 0.0054 95.0986))}.ds-dot{width:8px;height:8px;border-radius:9999px;flex:none}.ds-ring{box-shadow:inset 0 0 0 1.5px var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-mark{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-n{width:20px;text-align:right;font:400 12px 'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums;opacity:.7}"
+      "description": "44px row: state dot, semibold name, one marker and a service count; the open row inverts to ink.",
+      "html": "<ul class=\"ds-rows\"><li class=\"ds-row ds-open\"><span class=\"ds-dot\" style=\"background:var(--success, oklch(0.51 0.154 150))\"></span><span class=\"ds-name\">api-gateway</span><span class=\"ds-n\">4</span></li><li class=\"ds-row\"><span class=\"ds-dot\" style=\"background:var(--success, oklch(0.51 0.154 150))\"></span><span class=\"ds-name\">worker</span><span class=\"ds-mark\">Update</span><span class=\"ds-n\">2</span></li><li class=\"ds-row\"><span class=\"ds-dot ds-ring\"></span><span class=\"ds-name\">backup</span><span class=\"ds-n\">1</span></li></ul>",
+      "css": ".ds-rows{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--border, oklch(0.94 0.003 97.3627))}.ds-row{display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;border-top:1px solid var(--border, oklch(0.94 0.003 97.3627));background:var(--background, oklch(0.9818 0.0054 95.0986));color:var(--foreground, oklch(0.3438 0.0269 95.7226));font:600 14px 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;transition:background-color .15s}.ds-row:hover{background:var(--muted, oklch(0.9341 0.0153 90.239))}.ds-row.ds-open{background:var(--foreground, oklch(0.3438 0.0269 95.7226));color:var(--background, oklch(0.9818 0.0054 95.0986))}.ds-dot{width:8px;height:8px;border-radius:9999px;flex:none}.ds-ring{box-shadow:inset 0 0 0 1.5px var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-mark{font:500 11px/1.3 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--signal-ink, oklch(0.52 0.14 38.7559))}.ds-n{width:20px;text-align:right;font:400 12px 'JetBrains Mono', ui-monospace, monospace;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-open .ds-n{color:color-mix(in oklch,var(--background, oklch(0.9818 0.0054 95.0986)) 70%,transparent)}"
     },
     {
       "name": "Status Tag",
       "kind": "chip",
       "refersTo": "nav-link",
-      "description": "8px dot plus a mono-caps word; colour only on the dot, or on the word when attention is needed.",
-      "html": "<span class=\"ds-tag\"><i class=\"ds-d\" style=\"background:var(--success,oklch(0.51 0.154 150))\"></i>Running</span> <span class=\"ds-tag ds-bad\"><i class=\"ds-d\" style=\"background:var(--signal,oklch(0.6724 0.1308 38.7559))\"></i>Unhealthy</span>",
-      "css": ".ds-tag{display:inline-flex;align-items:center;gap:8px;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));white-space:nowrap}.ds-tag.ds-bad{color:var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-d{width:8px;height:8px;border-radius:9999px}"
+      "description": "An 8px dot plus a caps word; the word takes the state colour only when it asks for attention.",
+      "html": "<span class=\"ds-tag\"><i class=\"ds-d\" style=\"background:var(--success, oklch(0.51 0.154 150))\"></i>Running</span> <span class=\"ds-tag ds-bad\"><i class=\"ds-d\" style=\"background:var(--destructive, oklch(0.52 0.2078 25.3313))\"></i>Unhealthy</span>",
+      "css": ".ds-tag{display:inline-flex;align-items:center;gap:8px;font:500 11px/1.3 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));white-space:nowrap}.ds-tag.ds-bad{color:var(--destructive, oklch(0.52 0.2078 25.3313))}.ds-d{width:8px;height:8px;border-radius:9999px}"
     },
     {
       "name": "Count Strip",
       "kind": "custom",
       "refersTo": "list-row",
-      "description": "Rule on the left, hairline-separated cells: mono label above, stat figure below.",
+      "description": "Counters: a 1.5px rule on the left, cells split by hairlines, caps label over a stat figure.",
       "html": "<dl class=\"ds-strip\"><div><dt>Running</dt><dd>9</dd></div><div><dt class=\"ds-s\">Problems</dt><dd class=\"ds-s\">2</dd></div><div><dt>Total</dt><dd class=\"ds-m\">12</dd></div></dl>",
-      "css": ".ds-strip{display:flex;margin:0;border-left:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-strip>div{display:flex;flex-direction:column;gap:8px;padding:0 20px;border-right:1px solid var(--border, oklch(0.94 0.003 97.3627))}.ds-strip>div:last-child{border-right:0}.ds-strip dt{font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-strip dd{margin:0;font:800 36px/1 Archivo, ui-sans-serif, system-ui, sans-serif;font-variant-numeric:tabular-nums}.ds-strip .ds-s{color:var(--signal, oklch(0.6724 0.1308 38.7559))}.ds-strip .ds-m{color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}"
+      "css": ".ds-strip{display:flex;margin:0;border-left:1.5px solid var(--rule, oklch(0.1908 0.002 106.5859))}.ds-strip>div{display:flex;flex-direction:column;gap:8px;padding:0 20px;border-right:1px solid var(--border, oklch(0.94 0.003 97.3627))}.ds-strip>div:last-child{border-right:0}.ds-strip dt{font:500 11px/1.3 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-strip dd{margin:0;font:500 24px/1.1 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:-.025em;font-variant-numeric:tabular-nums}.ds-strip .ds-s{color:var(--signal-ink, oklch(0.52 0.14 38.7559))}.ds-strip .ds-m{color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}"
     },
     {
       "name": "Column Header",
       "kind": "custom",
-      "refersTo": "label",
-      "description": "Table column head: mono caps in Graphite over a hairline-divided body; the last column aligns right.",
+      "refersTo": "typography.label",
+      "description": "Caps column heads over hairline-divided rows; the last column aligns right.",
       "html": "<table class=\"ds-tbl\"><thead><tr><th>Service</th><th>Image</th><th class=\"ds-r\">Status</th></tr></thead><tbody><tr><td class=\"ds-hd\">api</td><td class=\"ds-img\">ghcr.io/acme/api:1.4.2</td><td class=\"ds-r\">Running</td></tr></tbody></table>",
-      "css": ".ds-tbl{width:100%;border-collapse:collapse;font:400 14px/1.5 Archivo, ui-sans-serif, system-ui, sans-serif;color:var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-tbl th{padding:12px 16px 12px 0;text-align:left;font:500 11px/1.3 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-tbl td{padding:14px 16px 14px 0;border-top:1px solid var(--border, oklch(0.94 0.003 97.3627));vertical-align:baseline}.ds-tbl .ds-hd{font:700 16px/1.35 Archivo, ui-sans-serif, system-ui, sans-serif;letter-spacing:-.025em}.ds-tbl .ds-img{font:400 12px 'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums}.ds-tbl .ds-r{text-align:right;padding-right:0}"
+      "css": ".ds-tbl{width:100%;border-collapse:collapse;font:400 14px/1.5 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;color:var(--foreground, oklch(0.3438 0.0269 95.7226))}.ds-tbl th{padding:12px 16px 12px 0;text-align:left;font:500 11px/1.3 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-tbl td{padding:14px 16px 14px 0;border-top:1px solid var(--border, oklch(0.94 0.003 97.3627));vertical-align:baseline}.ds-tbl .ds-hd{font:500 16px/1.4 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:-.025em}.ds-tbl .ds-img{font:400 12px 'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums}.ds-tbl .ds-r{text-align:right;padding-right:0}"
     },
     {
       "name": "Section Header",
       "kind": "custom",
-      "refersTo": "nav-link",
-      "description": "Optional Graphite number, section-role title and a muted mono note on a 1.5px ink rule.",
+      "refersTo": "typography.section",
+      "description": "Optional two-digit number, section title and a muted note, resting on a 1.5px rule.",
       "html": "<div class=\"ds-sec\"><span class=\"ds-num\">01</span><h2>Services</h2><span class=\"ds-note\">4 services</span></div>",
-      "css": ".ds-sec{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;padding-bottom:12px;border-bottom:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-sec h2{flex:1;margin:0;font:700 24px/1.15 Archivo, ui-sans-serif, system-ui, sans-serif;letter-spacing:-.02em}.ds-num{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-note{font:500 11px 'JetBrains Mono', ui-monospace, monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}"
+      "css": ".ds-sec{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;padding-bottom:12px;border-bottom:1.5px solid var(--rule, oklch(0.1908 0.002 106.5859))}.ds-sec h2{flex:1;margin:0;font:600 18px/1.3 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:-.025em}.ds-num,.ds-note{font:500 11px/1.3 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}"
     },
     {
       "name": "Code Block",
       "kind": "custom",
       "refersTo": "code-block",
-      "description": "Always-dark slab under a rule bar with a Copy button.",
+      "description": "A bar with label and Copy over a flat dark slab; dark in both themes.",
       "html": "<div class=\"ds-code\"><div class=\"ds-bar\"><span>POST /api/v0/deploy · redeploy</span><button>Copy</button></div><pre><code>curl -X POST https://cd.example.com/api/v0/deploy \\\n  -H \"x-api-key: $KEY\"</code></pre></div>",
-      "css": ".ds-code .ds-bar{display:flex;align-items:center;justify-content:space-between;min-height:36px;border-bottom:1.5px solid var(--foreground, oklch(0.1908 0.002 106.5859));font:400 12px 'JetBrains Mono', ui-monospace, monospace;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-code button{background:transparent;border:0;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));font:600 12px Archivo, ui-sans-serif, system-ui, sans-serif;cursor:pointer;height:24px;padding:0 8px}.ds-code button:hover{background:var(--muted, oklch(0.9341 0.0153 90.239));color:var(--foreground, oklch(0.1908 0.002 106.5859))}.ds-code pre{margin:0;padding:16px 20px;overflow-x:auto;background:oklch(0.17 0 0);color:oklch(0.95 0.004 100);font:400 12px/24px 'JetBrains Mono', ui-monospace, monospace}"
+      "css": ".ds-code .ds-bar{display:flex;align-items:center;justify-content:space-between;min-height:36px;border-bottom:1.5px solid var(--rule, oklch(0.1908 0.002 106.5859));font:400 12px 'JetBrains Mono', ui-monospace, monospace;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503))}.ds-code button{background:transparent;border:0;border-radius:4px;color:var(--muted-foreground, oklch(0.5341 0.0078 97.4503));font:500 12px 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;height:24px;padding:0 8px}.ds-code button:hover{background:var(--muted, oklch(0.9341 0.0153 90.239));color:var(--foreground, oklch(0.3438 0.0269 95.7226))}.ds-code pre{margin:0;padding:16px 20px;overflow-x:auto;background:oklch(0.17 0 0);color:oklch(0.95 0.004 100);font:400 12px/24px 'JetBrains Mono', ui-monospace, monospace}"
     }
   ],
   "narrative": {
     "northStar": "The Operations Bulletin",
-    "overview": "Komodo CD looks like a printed operations bulletin: a sheet of warm paper, dark ink, and heavy rules that open each page and each section the way a bulletin's mastheads do. Nothing is boxed. Hairlines separate rows, a thick ink rule closes every header, and the page reads top to bottom like a report handed over at the end of a shift. It is built for someone who arrives after a push, a failed deploy or an ntfy alert, often on a phone, and wants to know in one glance what is wrong and what to press.\n\nColour is rationed. The whole interface is ink on paper (paper on ink in the dark theme), and a single orange, Signal Orange, marks what needs action or orientation: a problem, an available update, the action that deploys something new, the active item. Because it appears so rarely, it is read at once. State never floods a surface; it lives in an 8px dot and in the word beside it.\n\nType does the composing. Only the page title takes Archivo's wide, heavy cut, so it carries the weight of a masthead; the rest of the type is plain Archivo. JetBrains Mono in small caps is kept for facts and chrome (counters, status words, navigation, every technical value), so those feel like entries in a log, and names are set in quiet sentence-case Archivo. Corners are square everywhere, there are no shadows at rest, and no card has a background; structure comes from lines and from the rhythm of the type scale.",
+    "overview": "\n**Creative North Star: \"The Operations Bulletin\"**\n\nKomodo CD looks like a printed operations bulletin: a sheet of warm, slightly olive paper, dark ink, and heavy rules that open each page and each section the way a bulletin's mastheads do. Nothing is boxed. Hairlines separate rows, a thick ink rule closes every header, and the page reads top to bottom like a report handed over at the end of a shift. It is built for someone who arrives after a push, a failed deploy or an ntfy alert, often on a phone, and wants to know in one glance what is wrong and what to press.\n\nThe palette, the type and the control shapes are shared with the sibling product garabato: the same paper and ink greys, the same brand orange, Schibsted Grotesk for words and JetBrains Mono for values, and the same softly rounded buttons. What stays Komodo's own is the composition: ruled blocks instead of cards, a page title that carries the weight of a masthead, and an underlined top navigation. Colour is rationed: the orange marks the action to take and the place you are, and state never floods a surface; it lives in an 8px dot and the word beside it.",
     "keyCharacteristics": [
-      "Paper and ink with one accent, Signal Orange, used only for what needs action or marks the current place.",
+      "Warm paper and ink with one orange, Signal, used for the main action, the current place and what needs attention.",
       "Rules instead of containers: a 1.5px ink rule opens and closes blocks, 1px hairlines divide what is inside them.",
-      "Square corners (radius 0) on every control, panel and badge; only status dots are round.",
-      "Archivo (wide and heavy for titles) paired with JetBrains Mono caps for labels and data.",
+      "Controls have 4px corners and a 3px focus ring; blocks, panels, inputs and lists stay square.",
+      "Schibsted Grotesk for words (the page title in extra-bold), JetBrains Mono for values and for navigation chrome.",
       "Both themes are first-class; secondary text passes 4.5:1 on its background in each.",
       "Dense but calm: 44px rows, short scannable lines, and the primary action always one click away."
     ],
     "rules": [
       {
         "name": "The One Signal Rule",
-        "body": "Signal Orange only appears where the reader needs to act or know where they are: a problem, an update, the deploy action, the current page. Section numbers are Graphite, not orange. If two things on a screen are orange and neither needs action, one of them is wrong.",
+        "body": "Signal Orange appears where the reader must act or knows where they are: the action button, the current page, a problem or an update. A screen carries a few orange marks, not a field of them. If two things on a screen are orange and neither needs action, one of them is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Fill-Not-Text Rule",
+        "body": "Brand orange is a fill or a stroke (3:1 against the paper). Orange text smaller than a heading is Signal Ink, never the brand orange. White on the brand orange is 3.1:1, so button labels stay 14px medium or heavier.",
         "section": "colors"
       },
       {
         "name": "The Dot-and-Word Rule",
-        "body": "State colour (green, amber, blue, orange) lives only in the 8px dot and in the status word beside it. Never fill a row, badge or panel with a state colour.",
+        "body": "State colour (green, amber, blue, red) lives only in the 8px dot and in the status word beside it. Never fill a row, badge or panel with a state colour.",
         "section": "colors"
       },
       {
@@ -593,12 +705,12 @@
       },
       {
         "name": "The Role-Not-Size Rule",
-        "body": "Type is chosen by role (display, section, stat, headline, body, meta, caption, label, data), through the shared `Text` component, never by composing size, weight and tracking locally. A new text is one of the existing roles or the scale gets a new role.",
+        "body": "Type is chosen by role (display, section, stat, headline, body, meta, caption, label, status, data), through the shared `Text` component, never by composing size, weight and tracking locally. A new text is one of the existing roles or the scale gets a new role.",
         "section": "typography"
       },
       {
         "name": "The Mono-for-Facts Rule",
-        "body": "Anything that is a value rather than a sentence (counts, ids, hashes, URLs, status words) is JetBrains Mono, tabular, with ligatures off. Prose never is, and neither is the name of a field or a block: that is a `caption`, not a tracked uppercase `label`.",
+        "body": "Anything that is a value rather than a sentence (ids, hashes, URLs, commits, snippets) is JetBrains Mono, tabular, with ligatures off. The navigation links and the bottom tab labels are also mono caps, as chrome. Prose is never mono, and neither is the name of a field or block: that is a `caption`, not a tracked uppercase `label`.",
         "section": "typography"
       },
       {
@@ -613,33 +725,34 @@
       },
       {
         "name": "The Flat-By-Default Rule",
-        "body": "Surfaces are flat at rest and have no shadow. A shadow is allowed only for something that floats above the page (a popover list, a toast, the sticky bulk bar), always with the 1.5px ink border, never to make a panel look raised.",
+        "body": "Surfaces are flat at rest. A shadow is allowed only for something that floats above the page (a dropdown list, a toast, the sticky bulk bar), never to make a panel look raised.",
         "section": "elevation"
       },
       {
         "name": "The Invert-To-Select Rule",
-        "body": "The selected row inverts to ink background with paper text (and a Signal checkbox); selection is shown by inversion and by `aria-current`, not by a tint or border.",
+        "body": "The selected row inverts to an ink background with paper text (and a Signal checkbox); selection is shown by inversion and by `aria-current`, not by a tint or border.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "**Do** build every block with a 1.5px ink top rule and 1px hairlines inside; let rules, not boxes, carry the structure.",
-      "**Do** spend Signal Orange only on what needs action, marks the current place, or launches a deploy; keep it to a few marks per screen.",
-      "**Do** choose type through the `Text` roles (display, section, stat, headline, body, meta, label, data) and set every value, id, count and status word in JetBrains Mono.",
-      "**Do** keep radius at 0 and strokes at 1.5px (rules and outlines) or 1px (hairlines).",
-      "**Do** give state as an 8px dot plus a word; show a failure or missing Komodo connection as an explicit state card with the next step.",
-      "**Do** keep both themes and both languages at parity, with secondary text at 4.5:1 or better.",
-      "**Do** keep 44px touch targets and put primary navigation at the bottom on phones.",
-      "**Do** compose the shared pieces (`PageHero`, `SectionHeader`, `StatStrip`, `Panel`, `StateCard`, `Segmented`, `CodeBlock`, `Button` with `icon` and `loading`) before writing a new one."
+      "Do build every block with a 1.5px ink top rule and 1px hairlines inside; let rules, not boxes, carry the structure.",
+      "Do spend Signal Orange on the main action, the current place and what needs attention; keep it to a few marks per screen, and use Signal Ink for orange text.",
+      "Do choose type through the `Text` roles (display, section, stat, headline, body, meta, caption, label, status, data) and set every value, id and snippet in JetBrains Mono.",
+      "Do keep blocks, inputs and lists square, controls at 4px, and strokes at 1.5px (rules, field underlines) or 1px (hairlines, control outlines).",
+      "Do give state as an 8px dot plus a word; show a failure or missing Komodo connection as an explicit state card with the next step.",
+      "Do keep both themes and both languages at parity, with secondary text at 4.5:1 or better.",
+      "Do keep 44px touch targets and put primary navigation at the bottom on phones.",
+      "Do compose the shared pieces (`PageHero`, `SectionHeader`, `StatStrip`, `Panel`, `StateCard`, `Segmented`, `CodeBlock`, `Button` with `icon` and `loading`) before writing a new one."
     ],
     "donts": [
-      "**Don't** wrap content in rounded, shadowed or tinted cards; a panel is a rule, not a container.",
-      "**Don't** fill rows, badges or alerts with state colours; no green, amber or red backgrounds.",
-      "**Don't** introduce another accent colour, a gradient, or a hard-coded colour, radius or font; use the tokens in `global.css`.",
-      "**Don't** use a generic SaaS metrics dashboard pattern: a grid of identical tiles with decorative KPIs.",
-      "**Don't** set text under 11px or hide meaning in colour alone; a state always has a word or an accessible name.",
-      "**Don't** use hover as the only way to reveal an action, and don't ship a layout that needs horizontal scrolling on a phone.",
-      "**Don't** add decorative motion; use the 0.2s page fade, colour transitions on controls and the circular theme reveal, and a pulse or spinner only for work in progress."
+      "Don't wrap content in rounded, shadowed or tinted cards; a panel is a rule, not a container.",
+      "Don't fill rows, badges or alerts with state colours; no green, amber or red backgrounds.",
+      "Don't use brand orange for small text, or introduce another accent colour, a gradient, or a hard-coded colour, radius or font; use the tokens in `global.css`.",
+      "Don't put a thick ink frame on a dropdown or a popover; a hairline and a soft shadow are enough.",
+      "Don't use a generic SaaS metrics dashboard pattern: a grid of identical tiles with decorative KPIs.",
+      "Don't set text under 11px or hide meaning in colour alone; a state always has a word or an accessible name.",
+      "Don't use hover as the only way to reveal an action, and don't ship a layout that needs horizontal scrolling on a phone.",
+      "Don't add decorative motion; use the 0.2s page fade, colour transitions on controls and the circular theme reveal, and a pulse or spinner only for work in progress."
     ]
   }
 }
