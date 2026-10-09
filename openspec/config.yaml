@@ -22,14 +22,14 @@ context: |
   src/<version>/router.ts; the package-root router.ts nests each version
   under its own key (v0: v0Router), so calls read
   orpc.v0.<feature>.<method>() and paths /rpc/v0/... and /api/v0/....
-  Komodo and ntfy services live in src/lib/. Throw errors only through the
-  errors.ts constructor map (errors.NOT_FOUND(), ...); Komodo failures go
-  through toKomodoError (502 Komodo error, 503 no connection).
+  Komodo, ntfy and Trivy services live in src/lib/. Throw errors only
+  through the errors.ts constructor map (errors.NOT_FOUND(), ...); Komodo
+  failures go through toKomodoError (502 Komodo error, 503 no connection).
 
   Access rules: protectedProcedure (session or x-api-key) for what CI needs
-  (deploy, stacks, history); sessionProcedure (session only, 403 for an API
-  key) for anything that reads or changes configuration or credentials
-  (Komodo connection, ntfy, API keys).
+  (deploy, stacks, history, image scans); sessionProcedure (session only,
+  403 for an API key) for anything that reads or changes configuration or
+  credentials (Komodo connection, ntfy, API keys).
 
   Imports: shared packages use Node subpath imports declared in their
   package.json ("#*": "./src/*.ts", e.g. #v0/deploy/handler, #lib/komodo);
