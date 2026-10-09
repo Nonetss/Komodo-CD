@@ -19,6 +19,9 @@ export default {
     credentials: "Conexión",
     apikeys: "API Keys",
     logout: "Cerrar sesión",
+    searchStack: "Buscar stack",
+    searchLoading: "Cargando stacks…",
+    searchNoMatch: "Ningún stack coincide",
   },
   login: {
     title: "Inicia sesión",

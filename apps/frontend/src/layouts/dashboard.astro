@@ -5,6 +5,7 @@ import {
   BottomNav,
   type NavItem,
   ShellControls,
+  StackSearch,
   TopNav,
 } from "@/features/app-shell"
 import Main from "@/layouts/main.astro"
@@ -55,8 +56,13 @@ const container = `mx-auto w-full max-w-6xl ${gutter}`
         <Wordmark />
       </a>
       <TopNav items={NAV} path={path} />
-      <div class="ml-auto flex shrink-0 items-center gap-0.5">
-        <ShellControls client:load lang={lang} />
+      <div class="ml-auto flex shrink-0 items-center gap-6">
+        <div class="hidden lg:block">
+          <StackSearch client:load lang={lang} />
+        </div>
+        <div class="flex items-center gap-0.5">
+          <ShellControls client:load lang={lang} />
+        </div>
       </div>
     </div>
   </header>

@@ -4,9 +4,11 @@ import { orpc } from "@/lib/orpc"
 
 export const stacksListKey = orpc.v0.stacks.list.queryKey()
 
-export const useStacks = () =>
+/** `enabled: false` aplaza la petición (p. ej. hasta que se usa el buscador) */
+export const useStacks = ({ enabled = true }: { enabled?: boolean } = {}) =>
   useHydratedQuery(
     orpc.v0.stacks.list.queryOptions({
       select: (data) => data.stacks as Stack[],
+      enabled,
     })
   )

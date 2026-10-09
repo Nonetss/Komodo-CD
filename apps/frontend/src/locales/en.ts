@@ -21,6 +21,9 @@ export default {
     credentials: "Connection",
     apikeys: "API Keys",
     logout: "Log out",
+    searchStack: "Search stacks",
+    searchLoading: "Loading stacks…",
+    searchNoMatch: "No stack matches",
   },
   login: {
     title: "Sign in",
