@@ -29,8 +29,14 @@ services:
       context: .
       dockerfile: apps/gateway/Dockerfile
 
+  trivy:
+    extends:
+      file: compose.yml
+      service: trivy
+
 networks:
   komodo_net:
 
 volumes:
   db_data:
+  trivy_cache:

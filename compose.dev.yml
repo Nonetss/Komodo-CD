@@ -6,6 +6,8 @@
 #   bun run dev:down   # borra los contenedores (-v también la base de datos)
 #   bun run dev:local  # lo mismo sin Docker, con turbo watch
 #
+# El backend escanea imágenes contra el servicio `trivy` (pestaña Seguridad).
+#
 # Como en producción, el gateway es el único que publica puerto:
 # http://localhost:4321, con el mismo routes.caddy que producción. El backend
 # y `astro dev` solo están en la red privada del stack. Las variables salen del
@@ -34,6 +36,7 @@ services:
         required: false
     environment:
       DATABASE_URL: file:/data/dev.db
+      TRIVY_SERVER_URL: http://trivy:4954
     expose:
       - "3000"
     volumes:
@@ -129,6 +132,19 @@ services:
           path: ./apps/gateway/Caddyfile
           target: /etc/caddy/Caddyfile
 
+  # El mismo servidor de Trivy que en producción (misma versión que
+  # TRIVY_VERSION en apps/backend/Dockerfile.dev). Su base de datos sobrevive
+  # a `dev:down` salvo con -v.
+  trivy:
+    image: aquasec/trivy:0.75.0
+    init: true
+    command: ["server", "--listen", "0.0.0.0:4954", "--cache-dir", "/var/lib/trivy"]
+    expose:
+      - "4954"
+    volumes:
+      - trivy_cache:/var/lib/trivy
+
 volumes:
   backend_data:
   frontend_vite_cache:
+  trivy_cache:

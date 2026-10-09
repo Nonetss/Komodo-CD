@@ -1,12 +1,19 @@
 # Igual que `packageManager` en el package.json raíz: mantenlos sincronizados
 ARG BUN_VERSION=1.4.0
 
+# Cliente de Trivy para escanear imágenes contra el servicio `trivy`. Cliente y
+# servidor tienen que ser la misma versión: mantén TRIVY_VERSION igual que la
+# imagen de `trivy` en compose.yml y compose.dev.yml.
+ARG TRIVY_VERSION=0.75.0
+FROM aquasec/trivy:${TRIVY_VERSION} AS trivy
+
 # Imagen de desarrollo para compose.dev.yml (`bun run dev`): corre el servidor
 # con recarga en caliente desde las fuentes. Los cambios llegan con
 # `docker compose watch` (sync), sin montar el repo, así que node_modules es
 # siempre el del contenedor.
 FROM oven/bun:${BUN_VERSION}-slim
 WORKDIR /app
+COPY --from=trivy /usr/local/bin/trivy /usr/local/bin/trivy
 
 # Solo manifests: la capa de install queda cacheada hasta que cambie un
 # package.json o el lockfile (entonces watch reconstruye la imagen).

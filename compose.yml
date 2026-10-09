@@ -12,6 +12,7 @@ services:
       SEED_ADMIN_EMAIL: "${SEED_ADMIN_EMAIL:-admin@example.com}"
       SEED_ADMIN_NAME: "${SEED_ADMIN_NAME:-Admin}"
       SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD is required}"
+      TRIVY_SERVER_URL: "${TRIVY_SERVER_URL:-http://trivy:4954}"
     healthcheck:
       test: ["CMD", "bun", "-e", "fetch('http://localhost:3000/health-check').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 10s
@@ -59,8 +60,31 @@ services:
     networks:
       - komodo_net
 
+  # Servidor de Trivy para la pestaña Seguridad: guarda la base de datos de
+  # vulnerabilidades (la descarga de Internet al arrancar y la mantiene al
+  # día) y el backend le manda los escaneos con el cliente `trivy`. Misma
+  # versión que TRIVY_VERSION en apps/backend/Dockerfile. El backend no lo
+  # espera: sin él, solo fallan los escaneos.
+  trivy:
+    image: aquasec/trivy:0.75.0
+    init: true
+    restart: unless-stopped
+    command: ["server", "--listen", "0.0.0.0:4954", "--cache-dir", "/var/lib/trivy"]
+    volumes:
+      - trivy_cache:/var/lib/trivy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:4954/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # La primera vez descarga la base de datos antes de escuchar
+      start_period: 120s
+    networks:
+      - komodo_net
+
 networks:
   komodo_net:
 
 volumes:
   db_data:
+  trivy_cache:

@@ -3,6 +3,12 @@
 # Igual que `packageManager` en el package.json raíz: mantenlos sincronizados
 ARG BUN_VERSION=1.4.0
 
+# Cliente de Trivy para escanear imágenes contra el servicio `trivy`. Cliente y
+# servidor tienen que ser la misma versión: mantén TRIVY_VERSION igual que la
+# imagen de `trivy` en compose.yml y compose.dev.yml.
+ARG TRIVY_VERSION=0.75.0
+FROM aquasec/trivy:${TRIVY_VERSION} AS trivy
+
 FROM oven/bun:${BUN_VERSION} AS base
 WORKDIR /app
 
@@ -31,6 +37,7 @@ FROM oven/bun:${BUN_VERSION}-slim AS release
 WORKDIR /app
 # Con el linker "isolated", los node_modules de cada workspace son symlinks a
 # /app/node_modules/.bun, así que se copia todo manteniendo el layout.
+COPY --from=trivy /usr/local/bin/trivy /usr/local/bin/trivy
 COPY --from=install /app/node_modules node_modules
 COPY --from=install /app/apps/backend/node_modules apps/backend/node_modules
 COPY --from=install /app/packages packages
