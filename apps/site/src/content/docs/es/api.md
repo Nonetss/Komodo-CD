@@ -15,7 +15,7 @@ Cada endpoint necesita una de estas dos cosas:
 
 Sin ninguna de las dos la respuesta es `401`. Una key actúa en nombre del usuario que la creó y queda en el historial como `API Key: <nombre>`.
 
-Una key puede listar los stacks, desplegar y leer el historial. La conexión con Komodo, los ajustes de ntfy y las propias API keys necesitan una sesión iniciada: con una key responden `403`, así que una key del CI filtrada no puede cambiarlos.
+Una key puede listar los stacks, desplegar, seguir los deploys en vivo y leer el historial. La conexión con Komodo, los ajustes de ntfy y las propias API keys necesitan una sesión iniciada: con una key responden `403`, así que una key del CI filtrada no puede cambiarlos.
 
 ## Referencia
 
@@ -27,6 +27,7 @@ El backend sirve una referencia OpenAPI interactiva, generada con Scalar, en `/s
 | --- | --- | --- |
 | `GET` | `/api/v0/stacks` | Lista los stacks de la instancia de Komodo, con su estado, servicios e imágenes. |
 | `POST` | `/api/v0/deploy` | Ejecuta `pull`, `redeploy` o `pull-redeploy` sobre un stack. Ver [Desplegar desde CI](../ci/). |
+| `GET` | `/api/v0/deploy/events` | Stream en vivo (SSE) de los deploys según empiezan y terminan. Ver [Seguir los deploys en vivo](#seguir-los-deploys-en-vivo). |
 | `GET` | `/api/v0/history` | Las últimas 100 acciones, de la más reciente a la más antigua. |
 | `GET` | `/api/v0/deploy/credentials` | La conexión con Komodo: id, nombre y URL, nunca la key ni el secret. |
 | `POST` | `/api/v0/deploy/credentials` | Guarda la conexión (`name`, `url`, `key`, `secret`) y sustituye la actual. |
@@ -57,4 +58,21 @@ Ver las últimas acciones fallidas:
 curl -s https://deploy.example.com/api/v0/history \
   -H "x-api-key: $KOMODO_API_KEY" \
   | jq '.history | map(select(.success == false)) | .[:5]'
+```
+
+## Seguir los deploys en vivo
+
+`GET /api/v0/deploy/events` mantiene la conexión abierta y envía [Server-Sent Events](https://developer.mozilla.org/es/docs/Web/API/Server-sent_events) con cada deploy, lo lance quien lo lance: el panel, otro usuario o un pipeline. El panel usa este mismo stream para refrescar solas las páginas de Stacks e Historial.
+
+El `data` de cada evento es un objeto JSON con un `type`:
+
+- `subscribed`, una sola vez al conectar, con `running`: los deploys en curso en ese momento.
+- `started`, con `run`: `id`, `stack`, `action`, `via` (`session` o `apiKey`), `actorName` y `startedAt`.
+- `finished`, con el mismo `run` más `success`, `message` y `finishedAt`.
+
+No se repiten eventos pasados: lo que ocurrió antes de conectar está en el historial. El stream vive en la memoria del backend, así que solo cubre los deploys que atiende esa instancia.
+
+```bash
+curl -N https://deploy.example.com/api/v0/deploy/events \
+  -H "x-api-key: $KOMODO_API_KEY"
 ```
