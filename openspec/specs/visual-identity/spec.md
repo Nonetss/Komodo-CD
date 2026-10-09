@@ -106,7 +106,7 @@ The visual identity SHALL live in the shadcn primitives in `src/components/ui/` 
 
 ### Requirement: Numbers only for ranked sections
 
-A section header SHALL show a number only when its sections are ranked in a meaningful order. The overview sections (needs attention, something new, running, stopped) are ranked by urgency and SHALL be numbered. The sections of a stack detail SHALL NOT be numbered.
+A section header SHALL show a number only when its sections are ranked in a meaningful order. The overview sections (stacks, security, deployment activity, running, stopped) follow a fixed reading order and SHALL be numbered. The sections of a stack detail SHALL NOT be numbered.
 
 #### Scenario: Overview sections
 
