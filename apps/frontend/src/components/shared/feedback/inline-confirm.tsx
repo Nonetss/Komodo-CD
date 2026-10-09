@@ -8,20 +8,23 @@ import { cn } from "@/lib/utils"
 /**
  * Confirmación en el sitio: la pregunta y los botones de confirmar y cancelar
  * sustituyen a los controles que la abren (barra de lote, "desplegar todos").
- * Quien la usa decide cuándo mostrarla. Para borrar con dos clics en el mismo
- * botón está `useConfirm`.
+ * Quien la usa decide cuándo mostrarla; `destructive` pinta el botón de
+ * confirmar como un borrado. Para borrar con dos clics en el mismo botón está
+ * `useConfirm`.
  */
 export function InlineConfirm({
   message,
   confirmLabel,
   onConfirm,
   onCancel,
+  destructive = false,
   className,
 }: {
   message: ReactNode
   confirmLabel: string
   onConfirm: () => void
   onCancel: () => void
+  destructive?: boolean
   className?: string
 }) {
   const { t } = useTranslation()
@@ -36,7 +39,11 @@ export function InlineConfirm({
         {message}
       </Text>
       <div className="flex shrink-0 items-center gap-1">
-        <Button size="sm" onClick={onConfirm}>
+        <Button
+          size="sm"
+          variant={destructive ? "destructive" : "default"}
+          onClick={onConfirm}
+        >
           {confirmLabel}
         </Button>
         <Button size="sm" variant="ghost" onClick={onCancel}>

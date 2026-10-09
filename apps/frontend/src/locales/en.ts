@@ -70,6 +70,14 @@ export default {
       done_other: "{{action}} triggered on {{count}} stacks",
       failed_one: "{{action}} failed on {{count}} of {{total}} stacks",
       failed_other: "{{action}} failed on {{count}} of {{total}} stacks",
+      confirmDelete_one:
+        "Delete {{count}} stack from Komodo? This cannot be undone.",
+      confirmDelete_other:
+        "Delete {{count}} stacks from Komodo? This cannot be undone.",
+      deleted_one: "{{count}} stack deleted from Komodo",
+      deleted_other: "{{count}} stacks deleted from Komodo",
+      deleteFailed_one: "Couldn't delete {{count}} of {{total}} stacks",
+      deleteFailed_other: "Couldn't delete {{count}} of {{total}} stacks",
     },
     stats: {
       running: "Running",

@@ -18,6 +18,7 @@ import {
   StackList,
 } from "@/features/stacks/components/stack-list"
 import { StacksBulkBar } from "@/features/stacks/components/stacks-bulk-bar"
+import { useStacksBulkDelete } from "@/features/stacks/hooks/use-stacks-bulk-delete"
 import type { DeployAction, Stack } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
 import { withIsland } from "@/providers/island"
@@ -34,6 +35,7 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
   const { t } = useTranslation()
   const stacksQuery = useStacks()
   const runner = useDeployRunner()
+  const bulkDelete = useStacksBulkDelete(openName)
   const stacks = stacksQuery.data ?? EMPTY_STACKS
 
   const [search, setSearch] = useState("")
@@ -98,8 +100,15 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
     setSelected((prev) => new Set([...prev].filter((n) => !succeeded.has(n))))
   }
 
+  const runBulkDelete = async () => {
+    const deleted = new Set(await bulkDelete.run([...selected]))
+    // Los que fallan siguen seleccionados para poder reintentarlos
+    setSelected((prev) => new Set([...prev].filter((n) => !deleted.has(n))))
+  }
+
   const bulkDisabled =
     runner.bulkAction !== null ||
+    bulkDelete.deleting ||
     [...selected].some((n) => runner.runningAction(n) !== null)
 
   const clearFilters = () => {
@@ -187,7 +196,8 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
         aria-label={t("stacks.title")}
         className={cn(
           "border-rule flex-col lg:sticky lg:top-14 lg:flex lg:h-[calc(100dvh-3.5rem)] lg:rule-r",
-          openName ? "hidden" : "flex"
+          openName ? "hidden" : "flex",
+          selected.size > 0 && "pb-24 lg:pb-0"
         )}
       >
         {stacksQuery.isSuccess ? (
@@ -209,18 +219,6 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
         ) : (
           <ListSkeleton />
         )}
-        {selected.size > 0 && (
-          <div className="px-3 pt-2 pb-3">
-            <StacksBulkBar
-              count={selected.size}
-              hidden={hiddenSelected}
-              runningAction={runner.bulkAction}
-              disabled={bulkDisabled}
-              onRun={runBulk}
-              onClear={() => setSelected(new Set())}
-            />
-          </div>
-        )}
       </section>
       <section
         aria-label={t("stacks.detailLabel")}
@@ -231,6 +229,19 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
       >
         {detail}
       </section>
+      {/* Flota abajo en el centro de la pantalla, fuera de la columna */}
+      {selected.size > 0 && (
+        <StacksBulkBar
+          count={selected.size}
+          hidden={hiddenSelected}
+          runningAction={runner.bulkAction}
+          deleting={bulkDelete.deleting}
+          disabled={bulkDisabled}
+          onRun={runBulk}
+          onDelete={runBulkDelete}
+          onClear={() => setSelected(new Set())}
+        />
+      )}
     </div>
   )
 }

@@ -68,6 +68,15 @@ export default {
       done_other: "{{action}} lanzado en {{count}} stacks",
       failed_one: "{{action}} falló en {{count}} de {{total}} stacks",
       failed_other: "{{action}} falló en {{count}} de {{total}} stacks",
+      confirmDelete_one:
+        "¿Eliminar {{count}} stack de Komodo? No se puede deshacer.",
+      confirmDelete_other:
+        "¿Eliminar {{count}} stacks de Komodo? No se puede deshacer.",
+      deleted_one: "{{count}} stack eliminado de Komodo",
+      deleted_other: "{{count}} stacks eliminados de Komodo",
+      deleteFailed_one: "No se pudo eliminar {{count}} de {{total}} stacks",
+      deleteFailed_other:
+        "No se pudieron eliminar {{count}} de {{total}} stacks",
     },
     stats: {
       running: "Running",

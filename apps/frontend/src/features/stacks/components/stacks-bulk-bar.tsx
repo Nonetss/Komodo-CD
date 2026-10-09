@@ -1,4 +1,4 @@
-import { X } from "lucide-react"
+import { Trash2, X } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -12,33 +12,52 @@ import {
 } from "@/entities/deploy-action"
 import type { DeployAction } from "@/lib/api-types"
 
+// Lo que se confirma en la barra: una acción de deploy o borrar los stacks
+type BulkChoice = DeployAction | "delete"
+
 /**
- * Barra de acciones sobre los stacks seleccionados. Elegir una acción pide
- * confirmación en la propia barra antes de lanzarla.
+ * Barra de acciones sobre los stacks seleccionados, flotando abajo en el
+ * centro de la pantalla (en móvil, sobre la navegación). Elegir una acción, o
+ * borrar, pide confirmación en la propia barra antes de lanzarla.
  */
 export function StacksBulkBar({
   count,
   hidden,
   runningAction,
+  deleting,
   disabled,
   onRun,
+  onDelete,
   onClear,
 }: {
   count: number
   hidden: number
   runningAction: DeployAction | null
+  deleting: boolean
   disabled: boolean
   onRun: (action: DeployAction) => void
+  onDelete: () => void
   onClear: () => void
 }) {
   const { t } = useTranslation()
-  const [confirming, setConfirming] = useState<DeployAction | null>(null)
+  const [confirming, setConfirming] = useState<BulkChoice | null>(null)
   const actionLabel = (a: DeployAction) =>
     t(`deploy.actions.${ACTION_I18N[a]}.label`)
 
   return (
-    <div className="bg-popover text-popover-foreground border-rule @container sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] z-10 flex flex-wrap items-center gap-x-3 gap-y-2 rule px-4 py-2.5 shadow-lg lg:bottom-3">
-      {confirming ? (
+    <div className="bg-popover text-popover-foreground fixed inset-x-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-30 mx-auto flex max-w-2xl flex-wrap items-center gap-x-8 gap-y-3 border px-5 py-3.5 shadow-lg lg:bottom-6">
+      {confirming === "delete" ? (
+        <InlineConfirm
+          message={t("stacks.bulk.confirmDelete", { count })}
+          confirmLabel={t("common.delete")}
+          destructive
+          onConfirm={() => {
+            setConfirming(null)
+            onDelete()
+          }}
+          onCancel={() => setConfirming(null)}
+        />
+      ) : confirming ? (
         <InlineConfirm
           message={t("stacks.bulk.confirm", {
             action: actionLabel(confirming),
@@ -66,28 +85,42 @@ export function StacksBulkBar({
               </Text>
             )}
           </Text>
-          <div className="flex shrink-0 items-center gap-1">
-            {DEPLOY_ACTIONS.map((action) => (
-              <Button
-                key={action}
-                size="sm"
-                variant="outline"
-                icon={ACTION_ICON[action]}
-                loading={runningAction === action}
-                disabled={disabled}
-                onClick={() => setConfirming(action)}
-                title={actionLabel(action)}
-                aria-label={actionLabel(action)}
-              >
-                <span className="hidden @lg:inline">{actionLabel(action)}</span>
-              </Button>
-            ))}
+          <div className="flex shrink-0 items-center gap-1.5">
+            <Button
+              size="icon-sm"
+              variant="outline"
+              icon={Trash2}
+              loading={deleting}
+              disabled={disabled}
+              onClick={() => setConfirming("delete")}
+              title={t("stacks.deleteHint")}
+              aria-label={t("common.delete")}
+            />
+            {DEPLOY_ACTIONS.map((action) => {
+              const main = action === "pull-redeploy"
+              // Solo la acción principal lleva texto; el resto, icono y tooltip
+              return (
+                <Button
+                  key={action}
+                  size={main ? "sm" : "icon-sm"}
+                  variant={main ? "signal" : "outline"}
+                  icon={ACTION_ICON[action]}
+                  loading={runningAction === action}
+                  disabled={disabled}
+                  onClick={() => setConfirming(action)}
+                  title={main ? undefined : actionLabel(action)}
+                  aria-label={actionLabel(action)}
+                >
+                  {main ? actionLabel(action) : null}
+                </Button>
+              )
+            })}
             <span aria-hidden className="bg-border mx-1 h-4 w-px" />
             <Button
               size="icon-sm"
               variant="ghost"
               onClick={onClear}
-              disabled={runningAction !== null}
+              disabled={runningAction !== null || deleting}
               title={t("stacks.bulk.clear")}
               aria-label={t("stacks.bulk.clear")}
             >
