@@ -9,8 +9,8 @@ const SHOWN = 5
 
 /**
  * Lista corta de un bloque del resumen: título, hasta cinco filas por columna
- * separadas por líneas finas y "y N más" con lo que no cabe, o una línea si
- * está vacía. Todas tienen el mismo tope de filas para que los bloques vecinos
+ * separadas por líneas finas y, debajo y sin línea propia, "y N más" con lo
+ * que no cabe, o una línea si está vacía. Todas tienen el mismo tope de filas para que los bloques vecinos
  * midan lo mismo; con `columns` las filas siguen en la columna de al lado
  * (lado a lado desde `sm`).
  */
@@ -61,17 +61,15 @@ export function ShortList<T>({
                   {renderItem(item)}
                 </li>
               ))}
-              {hidden > 0 && i === chunks.length - 1 ? (
-                <li className="py-2">
-                  <Text variant="meta-sm" tone="muted">
-                    {t("overview.more", { count: hidden })}
-                  </Text>
-                </li>
-              ) : null}
             </ul>
           ))}
         </div>
       )}
+      {hidden > 0 ? (
+        <Text as="p" variant="meta-sm" tone="muted">
+          {t("overview.more", { count: hidden })}
+        </Text>
+      ) : null}
     </div>
   )
 }
