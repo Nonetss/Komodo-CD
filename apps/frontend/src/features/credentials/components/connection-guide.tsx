@@ -25,7 +25,7 @@ export function ConnectionGuide() {
         {STEPS.map((step, i) => (
           <li key={step} className="flex min-w-0 gap-3 lg:flex-col">
             <span className="flex items-center gap-3">
-              <span className="border-signal text-signal flex size-7 shrink-0 items-center justify-center border-[1.5px] font-mono text-xs tabular-nums">
+              <span className="border-signal text-signal-ink flex size-7 shrink-0 items-center justify-center border-[1.5px] font-mono text-xs tabular-nums">
                 {i + 1}
               </span>
               {i < STEPS.length - 1 && (

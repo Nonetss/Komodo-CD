@@ -29,12 +29,10 @@ export default defineConfig({
   fonts: [
     {
       provider: fontsource,
-      name: "Archivo",
-      cssVariable: "--font-archivo",
-      // Con un rango, fontsource sirve el fichero variable con los ejes
-      // `wght` y `wdth`; el ancho se pide con `font-variation-settings`
-      // (utilidades `type-expanded` en global.css)
-      weights: ["100 900"],
+      name: "Schibsted Grotesk",
+      cssVariable: "--font-schibsted-grotesk",
+      // Con un rango, fontsource sirve el fichero variable del eje `wght`
+      weights: ["400 900"],
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],

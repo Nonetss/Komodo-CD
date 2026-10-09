@@ -117,10 +117,10 @@ export function StackCombobox({
         <div
           id={listId}
           role="listbox"
-          className="bg-popover animate-in fade-in-0 zoom-in-[0.98] absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rule border-rule p-1 shadow-md"
+          className="bg-background animate-in fade-in-0 absolute z-20 mt-1 max-h-64 w-full divide-y overflow-y-auto border shadow-md"
         >
           {matches.length === 0 ? (
-            <p className="text-muted-foreground px-2 py-3 text-center text-xs">
+            <p className="text-muted-foreground px-3 py-3 text-center text-xs">
               {t("deploy.noStacks")}
             </p>
           ) : (
@@ -134,12 +134,12 @@ export function StackCombobox({
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => select(s.name)}
                 className={cn(
-                  "flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm",
-                  i === highlight && "bg-accent"
+                  "flex h-10 w-full cursor-pointer items-center gap-2.5 px-3 text-left text-sm",
+                  i === highlight && "bg-muted"
                 )}
               >
                 <StackStateDot state={s.info.state} />
-                <span className="truncate">{s.name}</span>
+                <span className="truncate font-semibold">{s.name}</span>
                 <Text variant="status" tone="muted" className="ml-auto">
                   {t(`stacks.states.${s.info.state}`, {
                     defaultValue: s.info.state,

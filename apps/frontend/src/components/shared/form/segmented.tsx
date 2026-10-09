@@ -66,7 +66,7 @@ export function Segmented<T extends string>({
             />
             {o.label}
             {o.count !== undefined && (
-              <span className={cn("tabular-nums", alert && "text-signal")}>
+              <span className={cn("tabular-nums", alert && "text-signal-ink")}>
                 {o.count}
               </span>
             )}

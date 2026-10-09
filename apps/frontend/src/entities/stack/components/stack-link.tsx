@@ -17,7 +17,7 @@ export function StackLink({
       {...props}
       href={stackHref(name)}
       className={cn(
-        "hover:text-signal underline-offset-4 hover:underline",
+        "hover:text-signal-ink underline-offset-4 hover:underline",
         className
       )}
     >

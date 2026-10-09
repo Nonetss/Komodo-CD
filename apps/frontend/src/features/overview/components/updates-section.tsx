@@ -148,7 +148,7 @@ export function UpdatesSection({
                       <Text variant="data">
                         {info.deployed_hash ?? "—"}
                         {changed ? (
-                          <span className="text-signal">
+                          <span className="text-signal-ink">
                             {" "}
                             → {info.latest_hash}
                           </span>
@@ -170,7 +170,7 @@ export function UpdatesSection({
                           aria-label={`${actionLabel(action)} ${stack.name}`}
                           className={cn(
                             action === "pull-redeploy"
-                              ? "text-signal hover:text-signal"
+                              ? "text-signal-ink hover:text-signal-ink"
                               : "text-muted-foreground hover:text-foreground"
                           )}
                         />

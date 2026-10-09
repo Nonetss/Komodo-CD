@@ -203,7 +203,7 @@ function StackListItem({
       <AlertTriangle
         role="img"
         aria-label={t("stacks.stats.problems")}
-        className={cn("size-3.5 shrink-0", !open && "text-signal")}
+        className={cn("size-3.5 shrink-0", !open && "text-signal-ink")}
       />
     )
   } else if (update) {

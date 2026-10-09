@@ -65,7 +65,7 @@ function StackSearchContent() {
     <div className="relative w-48 xl:w-60">
       <Search
         aria-hidden
-        className="text-muted-foreground pointer-events-none absolute top-1/2 left-0 size-3.5 -translate-y-1/2"
+        className="text-muted-foreground pointer-events-none absolute top-1/2 left-2 size-3.5 -translate-y-1/2"
       />
       <Input
         type="search"
@@ -90,10 +90,10 @@ function StackSearchContent() {
         onBlur={close}
         onKeyDown={onKeyDown}
         placeholder={t("nav.searchStack")}
-        className="h-9 pl-6"
+        className="h-9 pl-8"
       />
       {expanded ? (
-        <div className="bg-background border-rule absolute inset-x-0 top-full z-40 mt-1 rule">
+        <div className="bg-background absolute inset-x-0 top-full z-40 mt-1 border shadow-md">
           {results.length > 0 ? (
             <div id={listId} role="listbox" className="divide-y">
               {results.map((stack, i) => (

@@ -94,7 +94,7 @@ const DeployPageContent = () => {
           method="post"
           onSubmit={form.handleSubmit(onSubmit)}
           noValidate
-          className="border-rule rule-t border-b"
+          className="border-b"
         >
           <div className="space-y-6 py-5">
             <FormField

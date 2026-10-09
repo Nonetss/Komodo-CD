@@ -5,27 +5,26 @@
 
 @theme inline {
   /* Variables generadas por la Fonts API de Astro (astro.config.mjs) */
-  --font-sans: var(--font-archivo);
+  --font-sans: var(--font-schibsted-grotesk);
   --font-mono: var(--font-jetbrains-mono);
 
   /*
    * Escala por rol: cada paso es un trabajo, no un tamaño. display (título
-   * de página, el único en ancho expandido) > stat (cifras de la franja de
-   * recuentos) > section (título de sección)
-   * > headline (nombre de fila, título de bloque) > body (prosa) > meta
-   * (descripciones, pistas) > caption (nombre de un campo o de un bloque,
-   * en Archivo) / label (mono en mayúsculas, solo para hechos y chrome) /
-   * meta-sm (metadatos en línea). 11px es el suelo legible. Se consumen con
-   * el componente `Text` (components/shared/brand/typography).
+   * de página) > section (título de sección) > stat (cifras de la franja de
+   * recuentos) > headline (nombre de fila, título de bloque) > body (prosa)
+   * > meta (descripciones, pistas) > caption (nombre de un campo) / label
+   * (micro-caps para chrome y cabeceras) / meta-sm (metadatos en línea).
+   * 11px es el suelo legible. Se consumen con el componente `Text`
+   * (components/shared/brand/typography).
    */
   --text-display: 2.75rem;
   --text-display--line-height: 0.95;
-  --text-section: 1.5rem;
-  --text-section--line-height: 1.15;
-  --text-stat: 2.25rem;
-  --text-stat--line-height: 1;
+  --text-section: 1.125rem;
+  --text-section--line-height: 1.3;
+  --text-stat: 1.5rem;
+  --text-stat--line-height: 1.1;
   --text-headline: 1rem;
-  --text-headline--line-height: 1.35;
+  --text-headline--line-height: 1.4;
   --text-body: 0.875rem;
   --text-body--line-height: 1.5;
   --text-meta: 0.8125rem;
@@ -37,20 +36,32 @@
   --text-label: 0.6875rem;
   --text-label--line-height: 1.3;
 
-  /* Esquinas rectas en todo: las líneas separan, no las cajas */
-  --radius-xs: 0;
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
-  --radius-xl: 0;
-  --radius-2xl: 0;
-  --radius-3xl: 0;
+  /* Esquinas de garabato: 6px de base y contenedores de lista de 12px */
+  --radius-xs: calc(var(--radius) - 4px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+
+  /* Sombras suaves de garabato */
+  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm:
+    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md:
+    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+  --shadow-lg:
+    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+  --shadow-xl:
+    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-surface: var(--surface);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
@@ -62,18 +73,21 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-sidebar: var(--sidebar);
 
-  /* Trazo grueso en tinta: bajo cabeceras de página, de sección y del menú */
+  /* Trazo grueso en tinta: bajo cabeceras de página y del menú */
   --color-rule: var(--rule);
 
-  /* Acento naranja: solo para lo que pide acción u orienta (problemas,
-     updates, la acción que despliega algo nuevo, el elemento activo) */
+  /* Naranja de marca: el mismo `primary`, con nombre propio para lo que pide
+     acción u orienta (problemas, updates, el elemento activo). `signal-ink`
+     es el mismo naranja ajustado para texto pequeño (4.5:1 sobre el papel) */
   --color-signal: var(--signal);
   --color-signal-foreground: var(--signal-foreground);
+  --color-signal-ink: var(--signal-ink);
 
   /* Estados (stacks, historial, conexión): puntos y microcopia */
   --color-success: var(--success);
@@ -93,50 +107,55 @@
 }
 
 /*
- * Paleta editorial: papel cálido y tinta con tinte, líneas finas entre
- * elementos y trazo grueso bajo las cabeceras, y un único acento naranja
- * para lo que pide acción. Los neutros y el naranja son los de garabato
- * (oklch con matiz ~95-107); los roles son los de esta app (primario =
- * tinta, naranja solo como `signal`). El texto secundario pasa 4.5:1 sobre
- * el fondo en los dos temas; el naranja de marca en claro (3:1) queda para
- * rellenos, trazos y texto grande o en negrita.
+ * Paleta, esquinas y sombras de garabato, valor por valor (papel cálido
+ * oliváceo, naranja de marca como primario, tarjetas con fondo propio y
+ * líneas finas). Se añaden los tokens que garabato no tiene: los estados
+ * (success, warning, info), el bloque de código y `signal-ink`.
  */
 :root {
-  --radius: 0;
+  --brand-orange: oklch(0.6724 0.1308 38.7559);
+  --radius: 0.375rem;
 
   --background: oklch(0.9818 0.0054 95.0986);
-  --foreground: oklch(0.1908 0.002 106.5859);
-  --card: var(--background);
-  --card-foreground: var(--foreground);
-  --surface: var(--background);
-  --popover: var(--background);
-  --popover-foreground: var(--foreground);
-  --primary: var(--foreground);
-  --primary-foreground: var(--background);
+  --foreground: oklch(0.3438 0.0269 95.7226);
+  --card: oklch(0.9665 0.0067 97.3521);
+  --card-foreground: oklch(0.1908 0.002 106.5859);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2671 0.0196 98.939);
+  --primary: var(--brand-orange);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.9245 0.0138 92.9892);
-  --secondary-foreground: var(--foreground);
+  --secondary-foreground: oklch(0.4334 0.0177 98.6048);
   --muted: oklch(0.9341 0.0153 90.239);
   --muted-foreground: oklch(0.5341 0.0078 97.4503);
   --accent: oklch(0.9245 0.0138 92.9892);
-  --accent-foreground: var(--foreground);
+  --accent-foreground: oklch(0.2671 0.0196 98.939);
+  /* Rojo del mismo matiz que el de garabato en oscuro: en claro garabato usa
+     la tinta, que aquí no distinguiría un borrado de un botón normal */
+  --destructive: oklch(0.52 0.2078 25.3313);
+  --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.94 0.003 97.3627);
-  --input: oklch(0.78 0.008 98.3528);
-  --rule: var(--foreground);
-  --sidebar: var(--background);
+  --input: oklch(0.92 0.004 98.3528);
+  --ring: var(--brand-orange);
+  --rule: var(--card-foreground);
+  --sidebar: oklch(0.9663 0.008 98.8792);
 
-  --signal: oklch(0.6724 0.1308 38.7559);
-  --signal-foreground: var(--background);
-  --ring: var(--signal);
-  --destructive: var(--signal);
+  --signal: var(--brand-orange);
+  --signal-foreground: oklch(1 0 0);
+  --signal-ink: oklch(0.52 0.14 38.7559);
 
   /* En claro los estados se oscurecen para que el texto pase 4.5:1 */
   --success: oklch(0.51 0.154 150);
   --warning: oklch(0.535 0.135 66);
-  --danger: var(--signal);
+  --danger: var(--destructive);
   --info: oklch(0.546 0.2 263);
 
   --code: oklch(0.17 0 0);
   --code-foreground: oklch(0.95 0.004 100);
+
+  /* Micro-caps de garabato: tracking de etiqueta y de estado */
+  --tracking-caps: 0.12em;
+  --tracking-eyebrow: 0.08em;
 
   color-scheme: light;
 }
@@ -146,25 +165,30 @@
 
   --background: oklch(0.2679 0.0036 106.6427);
   --foreground: oklch(0.9576 0.0027 106.4494);
+  --card: oklch(0.2928 0.0018 106.5092);
+  --card-foreground: oklch(0.9818 0.0054 95.0986);
   --popover: oklch(0.3085 0.0035 106.6039);
-  --primary: var(--foreground);
-  --primary-foreground: var(--background);
-  --secondary: oklch(0.2928 0.0018 106.5092);
-  --muted: oklch(0.2928 0.0018 106.5092);
+  --popover-foreground: oklch(0.9211 0.004 106.4781);
+  --secondary: oklch(0.9818 0.0054 95.0986);
+  --secondary-foreground: oklch(0.3085 0.0035 106.6039);
+  --muted: oklch(0.2213 0.0038 106.707);
   --muted-foreground: oklch(0.7713 0.0169 99.0657);
-  --accent: oklch(0.34 0.005 100.2195);
+  --accent: oklch(0.213 0.0078 95.4245);
+  --accent-foreground: oklch(0.9663 0.008 98.8792);
+  /* Un paso más claro que el de garabato para pasar 4.5:1 como texto */
+  --destructive: oklch(0.7 0.1978 25.3313);
   --border: oklch(0.31 0.004 106.8928);
-  --input: oklch(0.42 0.006 100.2195);
+  --input: oklch(0.34 0.005 100.2195);
+  --sidebar: oklch(0.2357 0.0024 67.7077);
 
-  --signal: oklch(0.6724 0.1308 38.7559);
-  --signal-foreground: var(--background);
+  --signal-ink: oklch(0.72 0.13 40);
 
   --success: oklch(0.78 0.17 152);
   --warning: oklch(0.82 0.15 85);
   --info: oklch(0.72 0.15 255);
 
-  /* Sobre el fondo de tinta, el bloque de código baja un paso más */
-  --code: oklch(0.12 0 0);
+  /* Sobre el fondo, el bloque de código baja un paso más */
+  --code: oklch(0.2 0 0);
 }
 
 /* Tonos de sintaxis: el bloque de código es oscuro en los dos temas */
@@ -177,21 +201,9 @@
   --syntax-placeholder: oklch(0.78 0.15 52);
 }
 
-/* Ancho de Archivo (eje `wdth` del fichero variable): el @font-face no
-   declara rango de `font-stretch`, así que se pide el eje directamente */
-@utility type-expanded {
-  font-variation-settings: "wdth" 125;
-}
-
-@utility type-semi-expanded {
-  font-variation-settings: "wdth" 112;
-}
-
 /*
- * Grosor del trazo de tinta que abre y cierra cada bloque (cabeceras, paneles,
- * barras). Solo fija el ancho: el color lo pone `border-rule` (o
- * `border-signal` en el aviso de problema) y el hilo fino interior sigue
- * siendo `border`.
+ * Grosor del trazo de tinta que abre y cierra la cabecera de página y la barra
+ * de navegación. Solo fija el ancho: el color lo pone `border-rule`.
  */
 @utility rule {
   border-width: 1.5px;

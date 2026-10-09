@@ -14,7 +14,7 @@ export interface StatStripItem {
 
 const VALUE_TONE = {
   default: "",
-  signal: "text-signal",
+  signal: "text-signal-ink",
   muted: "text-muted-foreground",
 }
 

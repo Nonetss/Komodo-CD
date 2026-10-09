@@ -20,7 +20,7 @@ export const LanguageSwitcherButton = () => {
       variant="ghost"
       size="icon-sm"
       onClick={toggle}
-      className="text-meta-sm font-mono font-bold"
+      className="text-meta-sm font-bold"
       aria-label={t("common.switchLanguage")}
       title={t("common.switchLanguage")}
     >

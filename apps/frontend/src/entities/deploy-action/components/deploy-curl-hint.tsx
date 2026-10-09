@@ -17,12 +17,12 @@ export function DeployCurlHint({ className }: { className?: string }) {
         i18nKey="stacks.ciHint"
         values={{ placeholder: API_KEY_PLACEHOLDER }}
         components={{
-          code: <code className="text-signal text-xs" />,
+          code: <code className="text-signal-ink text-xs" />,
           keys: (
             // biome-ignore lint/a11y/useAnchorContent: Trans inyecta el texto
             <a
               href="/keys"
-              className="text-foreground hover:text-signal decoration-signal underline underline-offset-4"
+              className="text-foreground hover:text-signal-ink decoration-signal underline underline-offset-4"
             />
           ),
         }}

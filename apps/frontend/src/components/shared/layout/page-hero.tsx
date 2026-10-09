@@ -4,9 +4,8 @@ import { Text } from "@/components/shared/brand/typography"
 import { cn } from "@/lib/utils"
 
 /**
- * Cabecera de toda página: el título en rol `display` (ancho expandido), la
- * descripción y, a la derecha, recuentos, estado y una única acción. Cierra
- * con el trazo grueso.
+ * Cabecera de toda página: el título en rol `display`, la descripción y, a la
+ * derecha, recuentos, estado y una única acción. Cierra con el trazo grueso.
  */
 export function PageHero({
   title,

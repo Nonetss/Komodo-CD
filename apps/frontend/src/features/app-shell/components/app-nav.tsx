@@ -25,7 +25,7 @@ export function TopNav({ items, path }: { items: NavItem[]; path: string }) {
             aria-current={active ? "page" : undefined}
             className={cn(
               textVariants({ role: "label" }),
-              "flex items-center whitespace-nowrap transition-colors",
+              "flex items-center font-mono whitespace-nowrap transition-colors",
               active
                 ? "text-foreground shadow-[inset_0_-2px_0_var(--color-signal)]"
                 : "text-muted-foreground hover:text-foreground"
@@ -80,7 +80,7 @@ export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
             >
               <Icon
                 aria-hidden
-                className={cn("size-4.5", active && "text-signal")}
+                className={cn("size-4.5", active && "text-signal-ink")}
               />
               <span className="max-w-full truncate">{item.label}</span>
             </a>
