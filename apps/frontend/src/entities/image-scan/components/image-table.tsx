@@ -311,8 +311,15 @@ export function ImageTable({
   const { t } = useTranslation()
   return (
     // Sin `overflow` en pantallas grandes: rompería la fila fija de la
-    // imagen abierta (y ahí la tabla ya cabe)
-    <div className={cn("overflow-x-auto", !stack && "lg:overflow-visible")}>
+    // imagen abierta (y ahí la tabla ya cabe). `relative` para que el scroll
+    // recorte también los `sr-only` (absolutos) de la tabla: si no, el de la
+    // última columna se sale y ensancha la página entera en móvil
+    <div
+      className={cn(
+        "relative overflow-x-auto",
+        !stack && "lg:overflow-visible"
+      )}
+    >
       <table className="w-full min-w-208 border-collapse">
         <thead>
           <tr className="text-left">
