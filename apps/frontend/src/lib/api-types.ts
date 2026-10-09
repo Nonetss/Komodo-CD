@@ -12,6 +12,10 @@ export type NtfyConfig = NonNullable<
 >
 export type HistoryItem = Outputs["history"]["list"]["history"][number]
 export type ApiKey = Outputs["apiKey"]["list"]["keys"][number]
+export type ImageSummary = Outputs["security"]["list"]["images"][number]
+export type ImageDetail = Outputs["security"]["get"]
+export type ImageVulnerability = ImageDetail["vulnerabilities"][number]
+export type VulnerabilitySeverity = ImageVulnerability["severity"]
 
 export type StackState =
   | "running"

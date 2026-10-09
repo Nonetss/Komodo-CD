@@ -55,7 +55,13 @@ export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
         viewTransitionName: "bottom-nav",
       }}
     >
-      <div className="mx-auto grid h-16 max-w-xl grid-cols-6">
+      {/* Una columna por superficie del registro, sin fijar cuántas son */}
+      <div
+        className="mx-auto grid h-16 max-w-xl"
+        style={{
+          gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`,
+        }}
+      >
         {items.map((item) => {
           const Icon = getAppSurface(item.key).icon
           const active = isActive(path, item.href)

@@ -1,0 +1,8 @@
+---
+import { SecurityPage } from "@/features/security"
+import DashboardLayout from "@/layouts/dashboard.astro"
+---
+
+<DashboardLayout surface="security">
+  <SecurityPage client:load lang={Astro.locals.lang} />
+</DashboardLayout>

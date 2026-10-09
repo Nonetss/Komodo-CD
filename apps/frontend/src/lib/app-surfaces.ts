@@ -6,6 +6,7 @@ import {
   type LucideIcon,
   Rocket,
   Server,
+  ShieldAlert,
 } from "lucide-react"
 
 export type SurfaceId =
@@ -13,6 +14,7 @@ export type SurfaceId =
   | "stacks"
   | "deploy"
   | "history"
+  | "security"
   | "credentials"
   | "apikeys"
 
@@ -33,6 +35,7 @@ export const APP_SURFACES: AppSurface[] = [
   { id: "stacks", path: "/stacks", icon: Layers },
   { id: "deploy", path: "/deploy", icon: Rocket },
   { id: "history", path: "/history", icon: History },
+  { id: "security", path: "/security", icon: ShieldAlert },
   { id: "credentials", path: "/credentials", icon: Server },
   { id: "apikeys", path: "/keys", icon: KeyRound },
 ]
