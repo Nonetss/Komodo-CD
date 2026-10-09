@@ -326,6 +326,17 @@ html.theme-transitioning::view-transition-new(root) {
   padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
 }
 
+/* Hueco de los toasts al borde inferior: por encima de la barra de
+   navegación inferior mientras se ve (hasta `lg`), y pegados al borde sin ella */
+:root {
+  --toast-offset-bottom: calc(5rem + env(safe-area-inset-bottom));
+}
+@media (width >= 64rem) {
+  :root {
+    --toast-offset-bottom: 1.5rem;
+  }
+}
+
 /* Textura de puntos plana para las pantallas de invitado (login, 404): un
    relleno enmascarado con el color del borde, sin degradados. */
 @utility bg-dot-grid {

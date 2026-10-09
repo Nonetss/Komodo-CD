@@ -23,13 +23,23 @@ export function Toaster() {
     <Sonner
       theme={theme}
       position="bottom-right"
-      offset={16}
-      mobileOffset={{ bottom: 88, left: 12, right: 12 }}
+      // El hueco inferior sale de `--toast-offset-bottom` (global.css): deja
+      // libre la barra de navegación inferior en todos los anchos donde se ve
+      offset={{ bottom: "var(--toast-offset-bottom)", right: 24 }}
+      mobileOffset={{
+        bottom: "var(--toast-offset-bottom)",
+        left: 12,
+        right: 12,
+      }}
       toastOptions={{
         classNames: {
           toast:
-            "!bg-popover !text-popover-foreground !border-border !rounded-lg !font-sans !shadow-lg",
+            "!bg-popover !text-popover-foreground !border-rule !rounded-lg !font-sans !shadow-lg",
           description: "!text-muted-foreground",
+          success: "[&_[data-icon]]:!text-success",
+          error: "[&_[data-icon]]:!text-destructive",
+          warning: "[&_[data-icon]]:!text-warning",
+          info: "[&_[data-icon]]:!text-info",
         },
       }}
     />

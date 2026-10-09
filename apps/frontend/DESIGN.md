@@ -247,7 +247,7 @@ Responsive behaviour is anchored at the `lg` breakpoint (1024px). Below it, the 
 
 ## Elevation & Depth
 
-Flat at rest. Hierarchy comes from the thick/thin rule vocabulary and from the type scale, not from layered surfaces: paper and blocks share one background. Only things that float over the page cast a soft, low shadow (garabato's scale): the dropdown lists (`shadow-md` over a 1px hairline border on Paper), toasts (`shadow-lg`, 1px border, 6px corners) and the sticky bulk-action bar (`shadow-lg` under a 1.5px ink border). Outline buttons carry `shadow-xs`. The active nav link has a 2px orange underline drawn as an inset shadow that sits on the bar's rule. In the dark theme popovers step up one tone (oklch(0.3085 0.0035 106.6039)). The only filled slab is the always-dark code block.
+Flat at rest. Hierarchy comes from the thick/thin rule vocabulary and from the type scale, not from layered surfaces: paper and blocks share one background. Only things that float over the page cast a soft, low shadow (garabato's scale): the dropdown lists (`shadow-md` over a 1px hairline border on Paper), toasts (`shadow-lg`, 1px ink border, 6px corners) and the sticky bulk-action bar (`shadow-lg` under a 1.5px ink border). Outline buttons carry `shadow-xs`. The active nav link has a 2px orange underline drawn as an inset shadow that sits on the bar's rule. In the dark theme popovers step up one tone (oklch(0.3085 0.0035 106.6039)). The only filled slab is the always-dark code block.
 
 ### Named Rules
 **The Flat-By-Default Rule.** Surfaces are flat at rest. A shadow is allowed only for something that floats above the page (a dropdown list, a toast, the sticky bulk bar), never to make a panel look raised.
@@ -300,7 +300,7 @@ Blocks are square; controls are soft. Panels, lists, rows, inputs (underlined, 0
 
 ### Feedback
 - **State card:** a full-width gap between two dashed rules with a 40px thin line icon, a headline, muted copy and a single action.
-- **Toasts:** report the outcome of a mutation through the shared toaster (Popover fill, 1px border, 6px corners); Komodo errors (502/503) are written out, never swallowed.
+- **Toasts:** report the outcome of a mutation through the shared toaster (Popover fill, 1px ink border so it holds on the dark paper, 6px corners, the icon in the outcome colour: Go Green, Danger Red, Warning, Info). They sit bottom-right, above the bottom nav wherever it shows (below `lg`); Komodo errors (502/503) are written out, never swallowed.
 
 ## Do's and Don'ts
 
