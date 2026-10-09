@@ -47,8 +47,12 @@ context: |
   primitives in components/ui/, reusable patterns in components/shared/.
   Data is read with useHydratedQuery over the orpc TanStack Query
   utilities; mutations invalidate the queries they affect. Feedback uses
-  toastMutation, useConfirm, QueryErrorCard, RefreshButton and the Button
-  icon/loading props. Search and reuse before creating.
+  toastMutation, useConfirm, InlineConfirm, QueryErrorCard, RefreshButton
+  and the Button icon/loading props; layout uses PageHero, SectionHeader
+  and StatStrip; deploy actions go through useDeployRunner. The visual
+  identity lives in the global.css tokens and the shared components:
+  features never hard-code colours, radii or fonts. Search and reuse
+  before creating.
 
   Language: identifiers are English, code comments are Spanish. UI copy
   goes through the i18n dictionaries (apps/frontend/src/locales/es.ts and
