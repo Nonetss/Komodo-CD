@@ -19,6 +19,7 @@
         "@komodo-cd/api": "workspace:*",
         "@komodo-cd/auth": "workspace:*",
         "@komodo-cd/db": "workspace:*",
+        "@komodo-cd/env": "workspace:*",
         "@komodo-cd/logger": "workspace:*",
         "@orpc/openapi": "catalog:",
         "@orpc/server": "catalog:",

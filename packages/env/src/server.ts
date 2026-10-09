@@ -21,7 +21,9 @@ export const env = createEnv({
     // Si no se define se toma APP_URL, la misma variable que compose le pasa.
     BETTER_AUTH_URL: z.url(),
     // Clave para firmar sesiones y tokens: openssl rand -base64 32
-    BETTER_AUTH_SECRET: z.string().min(1),
+    BETTER_AUTH_SECRET: z
+      .string()
+      .min(32, "debe tener al menos 32 caracteres: openssl rand -base64 32"),
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),

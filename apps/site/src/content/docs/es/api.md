@@ -15,6 +15,8 @@ Cada endpoint necesita una de estas dos cosas:
 
 Sin ninguna de las dos la respuesta es `401`. Una key actúa en nombre del usuario que la creó y queda en el historial como `API Key: <nombre>`.
 
+Una key puede listar los stacks, desplegar y leer el historial. La conexión con Komodo, los ajustes de ntfy y las propias API keys necesitan una sesión iniciada: con una key responden `403`, así que una key del CI filtrada no puede cambiarlos.
+
 ## Referencia
 
 El backend sirve una referencia OpenAPI interactiva, generada con Scalar, en `/scalar`, y el documento OpenAPI en `/doc`. Los dos están detrás del mismo Caddy que el panel, así que en una instalación normal están en `https://deploy.example.com/scalar` y `https://deploy.example.com/doc`.

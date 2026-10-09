@@ -15,6 +15,8 @@ Every endpoint requires one of:
 
 A request without either answers `401`. A key acts on behalf of the user who created it and is recorded in the history as `API Key: <name>`.
 
+A key can list stacks, deploy and read the history. The Komodo connection, the ntfy settings and the API keys themselves need a signed-in session: with a key they answer `403`, so a leaked CI key cannot change them.
+
 ## Reference
 
 The backend serves an interactive OpenAPI reference, rendered by Scalar, at `/scalar`, and the OpenAPI document itself at `/doc`. Both are behind the same Caddy as the dashboard, so on a default install they are at `https://deploy.example.com/scalar` and `https://deploy.example.com/doc`.

@@ -1,10 +1,10 @@
-import { protectedProcedure } from "#index"
+import { sessionProcedure } from "#index"
 import { credentialsHandler, ntfyHandler } from "#v0/credentials/handler"
 import { credentialsInput, ntfyInput } from "#v0/credentials/input"
 import { credentialsOutput, ntfyOutput } from "#v0/credentials/output"
 
 const ntfyRouter = {
-  get: protectedProcedure
+  get: sessionProcedure
     .route({
       method: "GET",
       path: "/v0/deploy/credentials/ntfy",
@@ -17,7 +17,7 @@ const ntfyRouter = {
     .output(ntfyOutput.get)
     .handler(() => ntfyHandler.get()),
 
-  save: protectedProcedure
+  save: sessionProcedure
     .route({
       method: "POST",
       path: "/v0/deploy/credentials/ntfy",
@@ -31,7 +31,7 @@ const ntfyRouter = {
     .output(ntfyOutput.save)
     .handler(({ input }) => ntfyHandler.save({ input })),
 
-  remove: protectedProcedure
+  remove: sessionProcedure
     .route({
       method: "DELETE",
       path: "/v0/deploy/credentials/ntfy",
@@ -41,7 +41,7 @@ const ntfyRouter = {
     .output(ntfyOutput.remove)
     .handler(() => ntfyHandler.remove()),
 
-  test: protectedProcedure
+  test: sessionProcedure
     .route({
       method: "POST",
       path: "/v0/deploy/credentials/ntfy/test",
@@ -56,7 +56,7 @@ const ntfyRouter = {
 }
 
 export const credentialsRouter = {
-  list: protectedProcedure
+  list: sessionProcedure
     .route({
       method: "GET",
       path: "/v0/deploy/credentials",
@@ -69,7 +69,7 @@ export const credentialsRouter = {
     .output(credentialsOutput.list)
     .handler(() => credentialsHandler.list()),
 
-  save: protectedProcedure
+  save: sessionProcedure
     .route({
       method: "POST",
       path: "/v0/deploy/credentials",
@@ -83,7 +83,7 @@ export const credentialsRouter = {
     .output(credentialsOutput.save)
     .handler(({ input }) => credentialsHandler.save({ input })),
 
-  remove: protectedProcedure
+  remove: sessionProcedure
     .route({
       method: "DELETE",
       path: "/v0/deploy/credentials",

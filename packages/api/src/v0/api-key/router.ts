@@ -1,10 +1,10 @@
-import { protectedProcedure } from "#index"
+import { sessionProcedure } from "#index"
 import { apiKeyHandler } from "#v0/api-key/handler"
 import { apiKeyInput } from "#v0/api-key/input"
 import { apiKeyOutput } from "#v0/api-key/output"
 
 export const apiKeyRouter = {
-  list: protectedProcedure
+  list: sessionProcedure
     .route({
       method: "GET",
       path: "/v0/apikeys",
@@ -14,7 +14,7 @@ export const apiKeyRouter = {
     .output(apiKeyOutput.list)
     .handler(({ context }) => apiKeyHandler.list({ context })),
 
-  create: protectedProcedure
+  create: sessionProcedure
     .route({
       method: "POST",
       path: "/v0/apikeys",
@@ -26,7 +26,7 @@ export const apiKeyRouter = {
     .output(apiKeyOutput.create)
     .handler(({ context, input }) => apiKeyHandler.create({ context, input })),
 
-  remove: protectedProcedure
+  remove: sessionProcedure
     .route({
       method: "DELETE",
       path: "/v0/apikeys",
