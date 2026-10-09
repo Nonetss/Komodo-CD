@@ -146,6 +146,9 @@ function ImageVulnerabilities({ image }: { image: ImageSummary }) {
       ) : null}
       <VulnerabilityTable
         image={image.image}
+        os={detail.data.os}
+        digest={detail.data.digest}
+        scannedAt={detail.data.scannedAt}
         vulnerabilities={detail.data.vulnerabilities}
       />
     </div>
@@ -171,11 +174,18 @@ function ImageRows({
   const panelId = useId()
   // Sin un escaneo correcto no hay cifras que enseñar
   const hasData = !!image.scannedAt
+  // Abierta, la fila se queda pegada bajo la barra superior (h-14) mientras
+  // se recorren sus vulnerabilidades, para saber siempre de qué imagen son
+  const cell = (padding: string) =>
+    cn(padding, open && "bg-muted border-rule sticky top-14 z-10 rule-b")
 
   return (
     <tbody className="border-t">
-      <tr className={cn("align-top", open && "bg-muted/40")}>
-        <th scope="row" className="max-w-0 py-3.5 pr-4 text-left font-normal">
+      <tr className={cn("align-top", !open && "hover:bg-muted/50")}>
+        <th
+          scope="row"
+          className={cell("max-w-0 py-3.5 pr-4 pl-2 text-left font-normal")}
+        >
           <div className="flex min-w-0 items-start gap-1.5">
             <button
               type="button"
@@ -217,13 +227,13 @@ function ImageRows({
           </div>
         </th>
         {SEVERITY_COLUMNS.map(({ key, severity }) => (
-          <td key={key} className="py-3.5 pr-4 text-right">
+          <td key={key} className={cell("py-3.5 pr-4 text-right")}>
             {hasData ? (
               <SeverityCount severity={severity} value={image.counts[key]} />
             ) : null}
           </td>
         ))}
-        <td className="py-3.5 pr-4 text-right">
+        <td className={cell("py-3.5 pr-4 text-right")}>
           {hasData ? (
             <Text
               variant="data"
@@ -234,10 +244,10 @@ function ImageRows({
             </Text>
           ) : null}
         </td>
-        <td className="py-3.5 pr-2 whitespace-nowrap">
+        <td className={cell("py-3.5 pr-2 whitespace-nowrap")}>
           <ScanStatus image={image} />
         </td>
-        <td className="py-2.5 text-right">
+        <td className={cell("py-2.5 pr-2 text-right")}>
           {canScan ? (
             <Button
               type="button"
@@ -256,8 +266,15 @@ function ImageRows({
       </tr>
       {open ? (
         <tr id={panelId}>
-          <td colSpan={COLUMN_COUNT} className="pt-1 pb-8 pl-6">
-            <ImageVulnerabilities image={image} />
+          <td colSpan={COLUMN_COUNT} className="pt-3 pb-10">
+            {/* Tarjeta propia: lo que va dentro es de esta imagen y su borde
+                marca dónde acaba antes de la siguiente */}
+            <section
+              aria-label={image.image}
+              className="bg-card text-card-foreground flex flex-col gap-4 rounded-lg border p-5 shadow-sm"
+            >
+              <ImageVulnerabilities image={image} />
+            </section>
           </td>
         </tr>
       ) : null}
@@ -288,7 +305,9 @@ export function ImageTable({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="border-rule overflow-x-auto rule-t">
+    // Sin `overflow` en pantallas grandes: rompería la fila fija de la
+    // imagen abierta (y ahí la tabla ya cabe)
+    <div className="overflow-x-auto lg:overflow-visible">
       <table className="w-full min-w-208 border-collapse">
         <thead>
           <tr className="text-left">

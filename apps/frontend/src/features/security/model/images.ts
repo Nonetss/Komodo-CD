@@ -81,3 +81,39 @@ export function groupVulnerabilities(
   }
   return [...byId.values()]
 }
+
+/** Paquetes de una CVE que comparten versión instalada, corregida y origen. */
+export type PackageGroup = {
+  names: string[]
+  installed: string
+  fixed: string | null
+  /** Fichero donde se encontró; `null` si es el sistema operativo de la imagen */
+  target: string | null
+}
+
+/**
+ * Junta los paquetes de una CVE que van en la misma versión: un paquete de
+ * Debian suele traer diez binarios (`libmagickcore-6.q16-6`, `-dev`…) con la
+ * misma "instalada → corregida", que se leen mejor en una sola línea.
+ */
+export function groupPackages(
+  packages: AffectedPackage[],
+  image: string
+): PackageGroup[] {
+  const groups = new Map<string, PackageGroup>()
+  for (const p of packages) {
+    // Trivy nombra el resultado del sistema "<imagen> (<distro>)"
+    const target = p.target.startsWith(image) ? null : p.target
+    const key = [p.installed, p.fixed ?? "", target ?? ""].join("\0")
+    const group = groups.get(key)
+    if (group) group.names.push(p.pkg)
+    else
+      groups.set(key, {
+        names: [p.pkg],
+        installed: p.installed,
+        fixed: p.fixed,
+        target,
+      })
+  }
+  return [...groups.values()]
+}

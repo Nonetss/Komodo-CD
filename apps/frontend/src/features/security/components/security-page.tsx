@@ -62,10 +62,62 @@ const SecurityPageContent = () => {
       return next
     })
 
+  // Buscador y filtro en el hueco del hero, a la izquierda de los recuentos
+  const toolbar =
+    imagesQuery.isSuccess && images.length > 0 ? (
+      <div className="flex max-w-xs flex-col gap-3">
+        <div className="relative w-full">
+          <Search
+            aria-hidden
+            className="text-muted-foreground pointer-events-none absolute top-1/2 left-0 size-4 -translate-y-1/2"
+          />
+          <Input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.key === "Escape" && setSearch("")}
+            placeholder={t("security.search")}
+            aria-label={t("security.search")}
+            className="pr-7 pl-6 [&::-webkit-search-cancel-button]:hidden"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              aria-label={t("security.clearSearch")}
+              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring absolute top-1/2 right-0 flex size-6 -translate-y-1/2 cursor-pointer items-center justify-center outline-none focus-visible:ring-2"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
+        </div>
+        <Segmented
+          value={filter}
+          onChange={setFilter}
+          aria-label={t("security.filter.label")}
+          options={[
+            { value: "all", label: t("security.filter.all") },
+            {
+              value: "urgent",
+              label: t("security.filter.urgent"),
+              count: totals.urgent,
+              alert: true,
+            },
+            {
+              value: "failed",
+              label: t("security.filter.failed"),
+              count: totals.failed,
+            },
+          ]}
+        />
+      </div>
+    ) : null
+
   const hero = (
     <PageHero
       title={t("security.title")}
       description={t("security.description")}
+      toolbar={toolbar}
       meta={
         imagesQuery.isSuccess && images.length > 0 ? (
           <StatStrip
@@ -149,53 +201,6 @@ const SecurityPageContent = () => {
         )}
 
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
-            <div className="relative w-full max-w-sm">
-              <Search
-                aria-hidden
-                className="text-muted-foreground pointer-events-none absolute top-1/2 left-0 size-4 -translate-y-1/2"
-              />
-              <Input
-                type="search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === "Escape" && setSearch("")}
-                placeholder={t("security.search")}
-                aria-label={t("security.search")}
-                className="pr-7 pl-6 [&::-webkit-search-cancel-button]:hidden"
-              />
-              {search && (
-                <button
-                  type="button"
-                  onClick={() => setSearch("")}
-                  aria-label={t("security.clearSearch")}
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring absolute top-1/2 right-0 flex size-6 -translate-y-1/2 cursor-pointer items-center justify-center outline-none focus-visible:ring-2"
-                >
-                  <X className="size-3.5" />
-                </button>
-              )}
-            </div>
-            <Segmented
-              value={filter}
-              onChange={setFilter}
-              aria-label={t("security.filter.label")}
-              options={[
-                { value: "all", label: t("security.filter.all") },
-                {
-                  value: "urgent",
-                  label: t("security.filter.urgent"),
-                  count: totals.urgent,
-                  alert: true,
-                },
-                {
-                  value: "failed",
-                  label: t("security.filter.failed"),
-                  count: totals.failed,
-                },
-              ]}
-            />
-          </div>
-
           {shown.length === 0 ? (
             <StateCard
               title={t("security.noMatch")}
