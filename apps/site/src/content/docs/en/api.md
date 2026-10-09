@@ -15,7 +15,7 @@ Every endpoint requires one of:
 
 A request without either answers `401`. A key acts on behalf of the user who created it and is recorded in the history as `API Key: <name>`.
 
-A key can list stacks, deploy, follow deploys live and read the history. The Komodo connection, the ntfy settings and the API keys themselves need a signed-in session: with a key they answer `403`, so a leaked CI key cannot change them.
+A key can list stacks, deploy, follow deploys live and read the history. Deleting a stack, the Komodo connection, the ntfy settings and the API keys themselves need a signed-in session: with a key they answer `403`, so a leaked CI key cannot change them.
 
 ## Reference
 
@@ -26,6 +26,7 @@ The backend serves an interactive OpenAPI reference, rendered by Scalar, at `/sc
 | Method | Path | Does |
 | --- | --- | --- |
 | `GET` | `/api/v0/stacks` | Lists the stacks of the Komodo instance, with their state, services and images. |
+| `DELETE` | `/api/v0/stacks/{stack}` | Deletes the stack in Komodo; if it is running, Komodo takes its containers down first. Session only. |
 | `POST` | `/api/v0/deploy` | Runs `pull`, `redeploy` or `pull-redeploy` on a stack. See [Deploy from CI](../ci/). |
 | `GET` | `/api/v0/deploy/events` | Live stream (SSE) of deploys as they start and finish. See [Follow deploys live](#follow-deploys-live). |
 | `GET` | `/api/v0/history` | The last 100 actions, newest first. |
