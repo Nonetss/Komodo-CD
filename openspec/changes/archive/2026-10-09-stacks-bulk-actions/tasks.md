@@ -30,4 +30,4 @@
 
 - [x] 6.1 Run `bun run check-types`, `bunx biome check .` and `bun run tailwind:check`
 - [x] 6.2 Run `bun run test` to confirm the backend suites are unaffected
-- [ ] 6.3 Ask the user to check the Stacks page in the browser (select, select all with filters, confirm/cancel, partial failure) and share a screenshot if anything looks off
+- [x] 6.3 Ask the user to check the Stacks page in the browser (select, select all with filters, confirm/cancel, partial failure) and share a screenshot if anything looks off
