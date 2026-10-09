@@ -1,0 +1,48 @@
+# Web Navigation
+
+## Purpose
+
+Defines the dashboard's page map and its shell: a sidebar on desktop and a bottom tab bar on mobile driven by one registry of surfaces, near-instant page changes with prefetching and view transitions, and the 404 page.
+
+## Requirements
+
+### Requirement: Page map
+
+The dashboard SHALL serve these routes: `/` (redirects to `/stacks`), `/stacks`, `/deploy`, `/history`, `/credentials`, `/keys`, `/login` and a 404 page for anything else. Every route except `/login` and the 404 page SHALL use the dashboard layout and require a session (see `authentication`).
+
+#### Scenario: Root URL
+
+- **WHEN** a signed-in user opens `/`
+- **THEN** they SHALL be redirected to `/stacks`
+
+#### Scenario: Unknown URL
+
+- **WHEN** a user opens a path that matches no page
+- **THEN** the 404 page SHALL be shown with a link back to `/stacks`
+
+### Requirement: Single surface registry
+
+`apps/frontend/src/lib/app-surfaces.ts` SHALL be the only list of navigable pages, in this order: stacks (`/stacks`), deploy (`/deploy`), history (`/history`), credentials (`/credentials`) and API keys (`/keys`), each with one icon. The sidebar, the bottom bar and each page's header SHALL read their path and icon from it, and their labels from the i18n key `nav.<id>`.
+
+#### Scenario: Change an icon
+
+- **WHEN** a surface's icon is changed in the registry
+- **THEN** the sidebar, the bottom bar and that page's header SHALL all show the new icon
+
+### Requirement: Responsive shell
+
+On large screens the dashboard SHALL show a fixed sidebar with the logo (linking to `/stacks`), the navigation, the signed-in user's initial, name and email, and the language, theme and log-out controls. On smaller screens it SHALL show a sticky top bar with the logo and the same controls, and a fixed bottom tab bar with the five surfaces that respects the device's safe-area inset. The active item SHALL be the one whose path equals or prefixes the current path, highlighted and marked with `aria-current="page"`. The navigation SHALL be rendered on the server.
+
+#### Scenario: Active item
+
+- **WHEN** the user is on `/history`
+- **THEN** the history item SHALL be highlighted and carry `aria-current="page"` in both the sidebar and the bottom bar
+
+### Requirement: Fast page changes
+
+The dashboard SHALL use Astro's client router with every link prefetched on hover (or touch). On navigation, only the page content SHALL fade (0.2 s); the sidebar, the mobile header and the bottom bar SHALL keep their own transition names so they swap without animating.
+
+#### Scenario: Navigate between pages
+
+- **WHEN** the user hovers and then clicks the history link
+- **THEN** the page SHALL already be prefetched and the content SHALL fade in while the navigation chrome stays still
