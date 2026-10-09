@@ -1,3 +1,4 @@
+import { apiKeyActorName } from "#actor"
 import { type AuthSession, type AuthUser, auth } from "#index"
 
 export type ResolvedSession = {
@@ -10,7 +11,8 @@ const anonymous: ResolvedSession = { user: null, session: null }
 /**
  * Resuelve quién hace la petición: primero por `x-api-key` (CI, GitHub
  * Actions) y si no por la cookie de sesión de Better Auth. Con API key no hay
- * sesión; el usuario se identifica como "API Key: <nombre>" en el historial.
+ * sesión; el usuario se identifica como "API Key: <nombre>" en el historial
+ * (ver actor.ts).
  */
 export async function resolveSession(
   headers: Headers
@@ -25,7 +27,7 @@ export async function resolveSession(
     return {
       user: {
         id: result.key.referenceId,
-        name: result.key.name ? `API Key: ${result.key.name}` : "API Key",
+        name: apiKeyActorName(result.key.name),
         email: "",
         emailVerified: false,
         image: null,

@@ -1,3 +1,4 @@
+import { parseActor } from "@komodo-cd/auth/actor"
 import { db } from "@komodo-cd/db"
 import { actionHistoryTable } from "@komodo-cd/db/schema"
 import { desc } from "drizzle-orm"
@@ -15,6 +16,7 @@ export const historyHandler = {
       userId: r.userId,
       userName: r.userName ?? null,
       userEmail: r.userEmail ?? null,
+      ...parseActor(r),
       stack: r.stack,
       action: r.action,
       success: r.success,

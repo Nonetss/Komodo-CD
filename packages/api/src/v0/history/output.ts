@@ -9,6 +9,9 @@ export const historyOutput = {
         userId: z.string(),
         userName: z.string().nullable(),
         userEmail: z.string().nullable(),
+        // Quién lo lanzó, deducido de lo guardado (ver @komodo-cd/auth/actor)
+        via: z.enum(["session", "apiKey"]),
+        actorName: z.string().nullable(),
         stack: z.string(),
         action: z.string(),
         success: z.boolean(),
