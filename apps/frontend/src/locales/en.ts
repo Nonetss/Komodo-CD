@@ -196,8 +196,6 @@ export default {
       failed: "Failed",
       exposed: "Most exposed images",
       noneExposed: "No image has critical or high vulnerabilities.",
-      failedTitle: "Failed scans",
-      noneFailed: "Every image was scanned successfully.",
     },
     activity: {
       title: "Deployments",

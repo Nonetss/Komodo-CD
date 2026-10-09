@@ -34,8 +34,8 @@ const mostExposed = (images: ImageSummary[]) =>
 
 /**
  * 02 · Seguridad: las CVEs por severidad (sumadas imagen a imagen), cuántas
- * imágenes hay escaneadas y cuántas piden acción, las más expuestas y las que
- * no se pudieron escanear. Sus cuatro hijos son las filas que comparte con el
+ * imágenes hay escaneadas y cuántas piden acción y las más expuestas, en dos
+ * columnas. Sus cuatro hijos son las filas que comparte con el
  * bloque de stacks (ver `overview-page`).
  */
 export function SecurityBlock({ className }: { className?: string }) {
@@ -63,9 +63,7 @@ export function SecurityBlock({ className }: { className?: string }) {
     const scanned = images.filter((i) => i.scannedAt)
     const critical = images.filter((i) => i.counts.critical > 0).length
     const fixable = images.filter((i) => isUrgent(i) && i.fixable > 0).length
-    const failed = images
-      .filter((i) => i.status === "failed")
-      .sort((a, b) => a.image.localeCompare(b.image))
+    const failed = images.filter((i) => i.status === "failed").length
 
     content = (
       <>
@@ -101,53 +99,33 @@ export function SecurityBlock({ className }: { className?: string }) {
             { label: t("overview.security.fixable"), value: fixable },
             {
               label: t("overview.security.failed"),
-              value: failed.length,
+              value: failed,
               tone: "muted",
             },
           ]}
         />
-        <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-          <ShortList
-            title={t("overview.security.exposed")}
-            items={mostExposed(images)}
-            empty={t("overview.security.noneExposed")}
-            itemKey={(i) => i.image}
-            renderItem={(image) => (
-              <>
-                <ImageRef image={image.image} nameOnly className="text-sm" />
-                <span
-                  className="flex shrink-0 gap-2"
-                  title={`${t("security.severity.critical")}: ${image.counts.critical} · ${t("security.severity.high")}: ${image.counts.high}`}
-                >
-                  <SeverityCount
-                    severity="CRITICAL"
-                    value={image.counts.critical}
-                  />
-                  <SeverityCount severity="HIGH" value={image.counts.high} />
-                </span>
-              </>
-            )}
-          />
-          <ShortList
-            title={t("overview.security.failedTitle")}
-            items={failed}
-            empty={t("overview.security.noneFailed")}
-            itemKey={(i) => i.image}
-            renderItem={(image) => (
-              <>
-                <ImageRef image={image.image} nameOnly className="text-sm" />
-                <Text
-                  variant="status"
-                  tone="destructive"
-                  className="shrink-0"
-                  title={image.error ?? undefined}
-                >
-                  {t(`security.failure.${image.errorKind ?? "other"}`)}
-                </Text>
-              </>
-            )}
-          />
-        </div>
+        <ShortList
+          title={t("overview.security.exposed")}
+          items={mostExposed(images)}
+          empty={t("overview.security.noneExposed")}
+          itemKey={(i) => i.image}
+          columns={2}
+          renderItem={(image) => (
+            <>
+              <ImageRef image={image.image} nameOnly className="text-sm" />
+              <span
+                className="flex shrink-0 gap-2"
+                title={`${t("security.severity.critical")}: ${image.counts.critical} · ${t("security.severity.high")}: ${image.counts.high}`}
+              >
+                <SeverityCount
+                  severity="CRITICAL"
+                  value={image.counts.critical}
+                />
+                <SeverityCount severity="HIGH" value={image.counts.high} />
+              </span>
+            </>
+          )}
+        />
       </>
     )
   }

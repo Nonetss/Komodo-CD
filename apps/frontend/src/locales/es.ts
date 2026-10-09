@@ -195,8 +195,6 @@ export default {
       failed: "Fallidas",
       exposed: "Imágenes más expuestas",
       noneExposed: "Ninguna imagen tiene vulnerabilidades críticas ni altas.",
-      failedTitle: "Escaneos fallidos",
-      noneFailed: "Todas las imágenes se escanearon bien.",
     },
     activity: {
       title: "Despliegues",

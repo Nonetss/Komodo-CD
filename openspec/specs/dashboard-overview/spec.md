@@ -40,7 +40,7 @@ The second block SHALL summarise `v0.security.list`:
 
 - the CVEs of the scanned images per severity (critical, high, medium, low), summed image by image, as a stacked bar in the severity tones with a legend;
 - how many images have a successful scan out of the total, how many have critical vulnerabilities (signal accent when greater than zero), how many urgent ones are fixable and how many scans failed;
-- the images with the most critical, then high, vulnerabilities, and the images whose scan failed with the short reason, both by image name only (the full reference in the tooltip) and with the same five-row lists as the stacks block.
+- the images with the most critical, then high, vulnerabilities, by image name only (the full reference in the tooltip), in two columns of five rows (side by side from `sm`, the second continuing the first) so they match the height of the stacks block lists.
 
 On wide screens the stacks and security blocks SHALL sit side by side and share their rows (header, bar, figures, lists), so both blocks have the same height and their rows line up. The block header SHALL link to `/security`. With scanning disabled it SHALL say so in place of the bar, and with no images it SHALL show a one-line message. A failed query SHALL show the backend message inside the block without hiding the other blocks.
 
