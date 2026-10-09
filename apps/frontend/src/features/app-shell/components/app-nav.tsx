@@ -63,7 +63,7 @@ export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "text-meta-sm relative flex min-w-0 flex-col items-center justify-center gap-1.5 font-mono font-medium tracking-[0.04em] uppercase transition-colors",
+                "text-meta-sm relative flex min-w-0 flex-col items-center justify-center gap-1.5 font-mono font-medium tracking-tight uppercase transition-colors",
                 "after:absolute after:inset-x-2 after:top-0 after:h-0.5",
                 active
                   ? "text-foreground after:bg-signal"
@@ -74,7 +74,7 @@ export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
                 aria-hidden
                 className={cn("size-4.5", active && "text-signal")}
               />
-              <span className="max-w-full truncate px-0.5">{item.label}</span>
+              <span className="max-w-full truncate">{item.label}</span>
             </a>
           )
         })}
