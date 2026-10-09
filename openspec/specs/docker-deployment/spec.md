@@ -8,7 +8,7 @@ Packages Komodo CD as three images (backend, frontend, gateway) published to GHC
 
 ### Requirement: Compose stack
 
-`compose.yml` SHALL run the services `backend`, `frontend` and `gateway` from `ghcr.io/nonetss/komodo-cd-{backend,frontend,gateway}:latest` on one private network, each with `init: true` and `restart: unless-stopped`. Only `gateway` SHALL publish a port (`${PORT:-80}:80`). The backend SHALL get `DATABASE_URL=file:/data/db.sqlite` on the `db_data` volume, `BETTER_AUTH_URL` from `APP_URL` and the seed admin variables; compose SHALL refuse to start without `APP_URL`, `BETTER_AUTH_SECRET` and `SEED_ADMIN_PASSWORD`. The frontend SHALL reach the backend at `http://backend:3000`.
+`compose.yml` SHALL run the services `backend`, `frontend` and `gateway` from `ghcr.io/nonetss/komodo-cd-{backend,frontend,gateway}:latest`, and `trivy` from `aquasec/trivy` pinned to the same version the backend image ships, all on one private network, each with `init: true` and `restart: unless-stopped`. Only `gateway` SHALL publish a port (`${PORT:-80}:80`). The backend SHALL get `DATABASE_URL=file:/data/db.sqlite` on the `db_data` volume, `BETTER_AUTH_URL` from `APP_URL`, the seed admin variables and `TRIVY_SERVER_URL` (default `http://trivy:4954`); compose SHALL refuse to start without `APP_URL`, `BETTER_AUTH_SECRET` and `SEED_ADMIN_PASSWORD`. The frontend SHALL reach the backend at `http://backend:3000`. The `trivy` service SHALL run `trivy server` on `0.0.0.0:4954` with its vulnerability database cached on the `trivy_cache` volume.
 
 #### Scenario: Missing secret
 
@@ -17,27 +17,39 @@ Packages Komodo CD as three images (backend, frontend, gateway) published to GHC
 
 #### Scenario: Backend not exposed
 
-- **WHEN** the stack runs and a client outside the Docker network connects to port `3000` or `4321` on the host
+- **WHEN** the stack runs and a client outside the Docker network connects to port `3000`, `4321` or `4954` on the host
 - **THEN** the connection SHALL fail, because only the gateway publishes a port
 
+#### Scenario: Trivy database kept across restarts
+
+- **WHEN** the `trivy` container is recreated
+- **THEN** it SHALL reuse the vulnerability database from the `trivy_cache` volume instead of downloading it again
 ### Requirement: Health-ordered startup
 
-The backend SHALL be healthy when `GET /health-check` succeeds, the frontend when `GET /login` succeeds, and the gateway when its `/health` answers. The frontend SHALL start only once the backend is healthy, and the gateway only once both are healthy.
+The backend SHALL be healthy when `GET /health-check` succeeds, the frontend when `GET /login` succeeds, the gateway when its `/health` answers, and `trivy` when its `/healthz` answers. The frontend SHALL start only once the backend is healthy, and the gateway only once both are healthy. The backend SHALL NOT wait for `trivy`: scanning is optional and fails per scan while the server is not ready.
 
 #### Scenario: Slow first boot
 
 - **WHEN** the backend is still applying migrations
 - **THEN** the frontend and the gateway SHALL wait for it to become healthy before starting
 
+#### Scenario: Trivy still downloading its database
+
+- **WHEN** the `trivy` server is not ready yet
+- **THEN** the backend, frontend and gateway SHALL start and serve the dashboard
 ### Requirement: Images
 
-All images SHALL be built with the monorepo root as context. The backend image SHALL install production dependencies for the backend workspace only, run the TypeScript sources with Bun as the non-root `bun` user, expose `3000` and own the `/data` directory. The frontend image SHALL build Astro with every dependency bundled into `dist/server` and run only `dist/server/entry.mjs` on `0.0.0.0:4321` as `bun`, without `node_modules`. The gateway image SHALL be `caddy:2-alpine` with `Caddyfile` and `routes.caddy`, exposing `80`. The Bun version in the Dockerfiles SHALL match `packageManager` in the root `package.json`. `compose.build.yml` SHALL extend `compose.yml` to build the same three images locally.
+All images SHALL be built with the monorepo root as context. The backend image SHALL install production dependencies for the backend workspace only, ship the `trivy` CLI copied from the `aquasec/trivy` image at a pinned version (the same as the `trivy` service in compose), run the TypeScript sources with Bun as the non-root `bun` user, expose `3000` and own the `/data` directory. The frontend image SHALL build Astro with every dependency bundled into `dist/server` and run only `dist/server/entry.mjs` on `0.0.0.0:4321` as `bun`, without `node_modules`. The gateway image SHALL be `caddy:2-alpine` with `Caddyfile` and `routes.caddy`, exposing `80`. The Bun version in the Dockerfiles SHALL match `packageManager` in the root `package.json`. `compose.build.yml` SHALL extend `compose.yml` to build the same three images locally.
 
 #### Scenario: Local build
 
 - **WHEN** a developer runs `bun run docker:up`
 - **THEN** compose SHALL build the three images from the checkout and start them like the published stack
 
+#### Scenario: Trivy client in the backend
+
+- **WHEN** the backend image is built
+- **THEN** `trivy --version` inside it SHALL report the version pinned for the `trivy` service
 ### Requirement: Interactive installer
 
 `scripts/bootstrap.sh` (also reachable through `scripts/start.sh` and `curl … | bash`) SHALL, in the current directory: require `docker` with Compose v2, `openssl`, `curl` and a terminal; abort before asking anything if `.env` already exists; ask for the host port (1–65535, read as decimal), the public URL (default derived from the port, `http(s)://` required, trailing slash removed, with a warning for plain HTTP on a non-local host), the admin name, email and password (at least 8 characters); show a summary and ask for confirmation; download `compose.yml` from the `KCD_REF` ref (default `main`) when missing, before writing anything else; write `.env` atomically with mode `600` and a random `BETTER_AUTH_SECRET`, quoting values so Compose reads them verbatim; and optionally pull and start the stack.

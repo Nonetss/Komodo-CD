@@ -11,7 +11,7 @@ The dashboard SHALL serve these routes:
 
 - `/`, the overview;
 - `/stacks` and `/stacks/<name>`;
-- `/deploy`, `/history`, `/credentials`, `/keys`;
+- `/deploy`, `/history`, `/security`, `/credentials`, `/keys`;
 - `/login`;
 - a 404 page for anything else.
 
@@ -27,11 +27,15 @@ Every route except `/login` and the 404 page SHALL use the dashboard layout and 
 - **WHEN** a signed-in user opens `/stacks/web`
 - **THEN** the Stacks page SHALL be shown with `web` open in the detail pane
 
+#### Scenario: Security URL
+
+- **WHEN** a signed-in user opens `/security`
+- **THEN** the Security page SHALL be shown
+
 #### Scenario: Unknown URL
 
 - **WHEN** a user opens a path that matches no page
 - **THEN** the 404 page SHALL be shown with a link back to `/`
-
 ### Requirement: Single surface registry
 
 `apps/frontend/src/lib/app-surfaces.ts` SHALL be the only list of navigable pages, in this order, each with one icon:
@@ -40,8 +44,9 @@ Every route except `/login` and the 404 page SHALL use the dashboard layout and 
 2. stacks (`/stacks`);
 3. deploy (`/deploy`);
 4. history (`/history`);
-5. credentials (`/credentials`);
-6. API keys (`/keys`).
+5. security (`/security`);
+6. credentials (`/credentials`);
+7. API keys (`/keys`).
 
 The top bar and the bottom bar SHALL read their paths from it, the bottom bar also its icons, and their labels from the i18n key `nav.<id>`. Each dashboard page SHALL pass its surface id to the dashboard layout, which SHALL build the document title as `<nav.<id>> · Komodo CD` in the request's language.
 
@@ -54,7 +59,6 @@ The top bar and the bottom bar SHALL read their paths from it, the bottom bar al
 
 - **WHEN** the credentials page is opened in English
 - **THEN** the document title SHALL be the English `nav.credentials` label followed by ` · Komodo CD`
-
 ### Requirement: Responsive shell
 
 The dashboard SHALL show one sticky top bar on every screen size, closed by a heavy ink rule. It SHALL contain:
@@ -64,7 +68,7 @@ The dashboard SHALL show one sticky top bar on every screen size, closed by a he
 - on large screens, a stack search field (see "Stack search in the top bar");
 - the language, theme and log-out controls, rendered as a single island.
 
-On smaller screens, the top bar SHALL keep only the wordmark and the controls, and a fixed bottom tab bar SHALL show the six surfaces, respecting the device's safe-area inset.
+On smaller screens, the top bar SHALL keep only the wordmark and the controls, and a fixed bottom tab bar SHALL show the seven surfaces, respecting the device's safe-area inset, without horizontal scrolling at a 360 px viewport.
 
 The active item SHALL be the one whose path equals the current path or, for every surface except the overview, prefixes it. It SHALL be marked by a signal underline and `aria-current="page"`. The navigation SHALL be rendered on the server.
 
@@ -83,6 +87,10 @@ The active item SHALL be the one whose path equals the current path or, for ever
 - **WHEN** a dashboard page is rendered
 - **THEN** the top bar SHALL contain exactly one island with the language, theme and log-out controls
 
+#### Scenario: Seven tabs on a phone
+
+- **WHEN** the dashboard is opened on a 360 px wide screen
+- **THEN** the bottom tab bar SHALL show all seven surfaces without scrolling horizontally
 ### Requirement: Fast page changes
 
 The dashboard SHALL use Astro's client router with every link prefetched on hover (or touch). On navigation, the whole page SHALL fade (0.2 s) the same way on every route, without animating the size or position of the content, also between the full-width Stacks pages and the centred ones. The top bar and the bottom bar SHALL keep their own transition names so they swap without animating.

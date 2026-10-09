@@ -8,13 +8,17 @@ Defines the oRPC contract shared by the dashboard and CI: one versioned router i
 
 ### Requirement: Versioned router
 
-`packages/api/src/router.ts` SHALL export `appRouter` nesting each API version under its own key; today only `v0` (`packages/api/src/v0/router.ts`) with the features `deploy`, `credentials` (and its nested `ntfy`), `stacks`, `history` and `apiKey`. Client calls SHALL therefore read `v0.<feature>.<method>` and RPC paths `/rpc/v0/<feature>/<method>`. A new version SHALL be a new `src/<version>/` folder plus one new key in `appRouter`, leaving existing versions untouched.
+`packages/api/src/router.ts` SHALL export `appRouter` nesting each API version under its own key; today only `v0` (`packages/api/src/v0/router.ts`) with the features `deploy`, `credentials` (and its nested `ntfy`), `stacks`, `history`, `security` and `apiKey`. Client calls SHALL therefore read `v0.<feature>.<method>` and RPC paths `/rpc/v0/<feature>/<method>`. A new version SHALL be a new `src/<version>/` folder plus one new key in `appRouter`, leaving existing versions untouched.
 
 #### Scenario: Typed client call
 
 - **WHEN** the frontend calls `client.v0.stacks.list()`
 - **THEN** the request SHALL go to `/rpc/v0/stacks/list` and its result SHALL be typed from `AppRouter`
 
+#### Scenario: Security feature
+
+- **WHEN** the frontend calls `client.v0.security.list()`
+- **THEN** the request SHALL go to `/rpc/v0/security/list`
 ### Requirement: Feature folder layout
 
 Each feature SHALL live in `packages/api/src/<version>/<feature>/` split into `input.ts` (zod input schemas, `<feature>Input`), `output.ts` (zod output schemas, `<feature>Output`), `handler.ts` (business logic, `<feature>Handler`, methods taking one options object) and `router.ts` (oRPC wiring only: tier → `.route()` → `.input()` → `.output()` → `.handler()` calling the handler). Services that talk to Komodo or ntfy SHALL live in `packages/api/src/lib/`. Inside the package, modules SHALL be imported through the `#` subpath imports (`#*` → `./src/*.ts`, `#tests/*` → `./tests/*.ts`).

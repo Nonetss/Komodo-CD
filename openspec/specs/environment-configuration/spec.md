@@ -24,7 +24,8 @@ The repository SHALL have a single env file, the root `.env`, with `.env.example
 - `BETTER_AUTH_SECRET`: required, at least 32 characters;
 - `NODE_ENV`: `development`, `production` or `test`, default `development`;
 - `LOG_LEVEL`: `fatal`, `error`, `warn`, `info`, `debug` or `trace`, default `info`;
-- `SEED_ADMIN_EMAIL` (optional email), `SEED_ADMIN_NAME` (default `Admin`), `SEED_ADMIN_PASSWORD` (optional, at least 8 characters).
+- `SEED_ADMIN_EMAIL` (optional email), `SEED_ADMIN_NAME` (default `Admin`), `SEED_ADMIN_PASSWORD` (optional, at least 8 characters);
+- `TRIVY_SERVER_URL`: optional URL of the Trivy server; image scanning is disabled when unset.
 
 Empty strings SHALL count as unset. Validation SHALL be skippable only with `SKIP_ENV_VALIDATION`.
 
@@ -38,6 +39,15 @@ Empty strings SHALL count as unset. Validation SHALL be skippable only with `SKI
 - **WHEN** only `APP_URL` is set
 - **THEN** `BETTER_AUTH_URL` SHALL take its value
 
+#### Scenario: No Trivy server
+
+- **WHEN** the backend starts with `TRIVY_SERVER_URL` unset or empty
+- **THEN** validation SHALL pass and image scanning SHALL be disabled
+
+#### Scenario: Invalid Trivy URL
+
+- **WHEN** the backend starts with `TRIVY_SERVER_URL=trivy:4954`
+- **THEN** validation SHALL fail because it is not a URL
 ### Requirement: Frontend environment
 
 The frontend SHALL declare `BACKEND_URL` (server-only secret, read at runtime, default `http://localhost:3000`), used by the SSR session check and the dev proxy, and `PUBLIC_APP_URL` (public, optional, embedded at build time) for the URL in the `curl` snippets.

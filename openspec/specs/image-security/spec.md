@@ -1,0 +1,156 @@
+# Image Security
+
+## Purpose
+
+Scanning the images of the Komodo stacks with Trivy: a Trivy client in the backend that talks to a Trivy server, the stored result per image, the scan queue and automatic scans, the procedures to list images, read their vulnerabilities and request scans, and the Security page at `/security`.
+
+## Requirements
+### Requirement: Trivy client against a Trivy server
+
+The backend SHALL scan images with the `trivy` CLI in client mode against the server at `TRIVY_SERVER_URL`, reading each image from its registry (`--image-src remote`), scanning vulnerabilities only (`--scanners vuln`), with JSON output, an in-memory client cache and a 10-minute Trivy timeout; the backend SHALL kill a scan that is still running after 11 minutes. Scanning SHALL be enabled only when `TRIVY_SERVER_URL` is set. A failed scan SHALL be classified from Trivy's error output as `unauthorized` (the registry denied access), `not-found` (the image or tag does not exist), `unavailable` (the Trivy server or binary cannot be reached) or `other`, keeping the last non-empty error line (at most 500 characters) as its message.
+
+#### Scenario: Private image without access
+
+- **WHEN** a scan of `ghcr.io/acme/private:1.0` fails because the registry answers `UNAUTHORIZED`
+- **THEN** the scan SHALL be recorded as failed with kind `unauthorized` and Trivy's message, and the other queued images SHALL still be scanned
+
+#### Scenario: Scanning disabled
+
+- **WHEN** the backend runs without `TRIVY_SERVER_URL`
+- **THEN** no scan SHALL be started by any trigger
+
+### Requirement: Stored scan results
+
+The latest result of every scanned image SHALL be stored in the `image_scan` table, keyed by the image reference exactly as Komodo reports it, with its status (`queued`, `scanning`, `done`, `failed`), the OS and digest reported by Trivy, the counts per severity (`critical`, `high`, `medium`, `low`, `unknown`) and the number of vulnerabilities that have a fixed version — both counting distinct vulnerability ids, so a CVE found in several packages counts once, at its most severe level —, and the list of vulnerabilities (one entry per affected package) (`id`, `severity`, `pkg`, `installed`, `fixed`, `title`, `url`, `target`), deduplicated and sorted by severity then id. A successful scan SHALL replace the previous result and clear any error. A failed scan SHALL keep the previous result and its scan time and record the error, its kind and the attempt time.
+
+#### Scenario: Rescan fails after a success
+
+- **WHEN** an image scanned successfully yesterday is rescanned and the scan fails
+- **THEN** its status SHALL be `failed` with the error, and yesterday's counts, vulnerabilities and scan time SHALL still be returned
+
+#### Scenario: Same CVE in several packages
+
+- **WHEN** a scan reports `CVE-2022-37454` (critical) in `python3.9` and in `libpython3.9-stdlib`
+- **THEN** the image SHALL count one critical vulnerability and store both affected packages
+
+#### Scenario: Results survive a restart
+
+- **WHEN** the backend restarts
+- **THEN** the results of every image scanned before SHALL still be returned by `v0.security.list`
+
+### Requirement: Scan queue
+
+Scans SHALL run in the backend through an in-memory queue with at most two scans at a time. Queuing an image that is already queued or scanning SHALL do nothing. Queuing SHALL mark the image `queued` (creating its row if needed) without discarding its previous result. On shutdown, running scans SHALL be stopped before the HTTP server drains; images left `queued` or `scanning` SHALL be queued again by the missing-information trigger.
+
+#### Scenario: Duplicate request
+
+- **WHEN** the same image is requested twice while its first scan is running
+- **THEN** only one scan of that image SHALL run
+
+### Requirement: Automatic scans
+
+When scanning is enabled, the system SHALL queue scans without user action:
+
+- **missing information**: every time `v0.security.list` runs, every image used by a Komodo stack that has no stored row, or whose row is `queued` or `scanning` without being in the in-memory queue, SHALL be queued before the response is built;
+- **after a deploy**: after every successful `v0.deploy.trigger` (any action), the non-empty images of that stack SHALL be queued, without delaying, changing or failing the deploy response. A failed deploy SHALL queue nothing.
+
+#### Scenario: New image appears
+
+- **WHEN** a stack starts using `redis:7.4` and the Security page lists the images
+- **THEN** `redis:7.4` SHALL be returned with status `queued` (or `scanning` if its scan already started) and a scan SHALL start
+
+#### Scenario: Deploy queues a rescan
+
+- **WHEN** CI runs `pull-redeploy` on stack `web` successfully
+- **THEN** the deploy SHALL answer as before and the images of `web` SHALL be queued for scanning
+
+#### Scenario: Komodo lookup fails after a deploy
+
+- **WHEN** reading the stack's images from Komodo fails after a successful deploy
+- **THEN** the error SHALL be logged and the deploy response SHALL be unaffected
+
+### Requirement: List scanned images
+
+The system SHALL expose `v0.security.list` as a `protectedProcedure` (`GET /api/v0/security/images`, tag `Security`) returning `{ enabled, images }`. `images` SHALL contain every distinct non-empty image used by a non-template Komodo stack, each with the sorted names of the stacks using it, its status (`none` when scanning is disabled and the image was never scanned), the last scan and attempt times, the severity counts, the fixable count, the OS, and the error and its kind. Images SHALL be sorted by critical, high, medium and low counts (descending), then failed before the rest, then by name. Komodo errors SHALL become `502` and a missing connection `503` (`toKomodoError`).
+
+#### Scenario: CI reads the results
+
+- **WHEN** a request with a valid `x-api-key` calls `GET /api/v0/security/images`
+- **THEN** the system SHALL answer `200` with every image and its scan summary
+
+#### Scenario: Image shared by two stacks
+
+- **WHEN** stacks `web` and `worker` both run `ghcr.io/acme/app:2.1`
+- **THEN** that image SHALL appear once with stacks `["web", "worker"]`
+
+### Requirement: Image vulnerabilities
+
+The system SHALL expose `v0.security.get` as a `protectedProcedure` (`GET /api/v0/security/image?image=<ref>`, tag `Security`) returning the image summary plus its digest and its list of vulnerabilities. It SHALL fail with `NOT_FOUND` when the image is not used by any Komodo stack or has never been queued.
+
+#### Scenario: Read the CVEs of an image
+
+- **WHEN** the dashboard asks for `nginx:1.27` after a successful scan
+- **THEN** the response SHALL contain its vulnerabilities with id, severity, package, installed and fixed versions, title and link
+
+### Requirement: Request scans
+
+The system SHALL expose `v0.security.scan` as a `protectedProcedure` (`POST /api/v0/security/scan`, tag `Security`) with input `{ images? }`. Without `images` it SHALL queue every image used by a Komodo stack; with `images` it SHALL queue those, failing with `BAD_REQUEST` naming every image that no Komodo stack uses, without queuing any. It SHALL return `{ queued }` with the images actually queued (those not already queued or running). When scanning is disabled it SHALL fail with `SERVICE_UNAVAILABLE`.
+
+#### Scenario: Rescan one image
+
+- **WHEN** the user rescans `nginx:1.27`, which is used by a stack and not queued
+- **THEN** the response SHALL be `{ queued: ["nginx:1.27"] }` and its status SHALL become `queued`
+
+#### Scenario: Arbitrary image rejected
+
+- **WHEN** a caller asks to scan `evil.example.com/x:1`, which no stack uses
+- **THEN** the call SHALL fail with `BAD_REQUEST` and nothing SHALL be queued
+
+#### Scenario: Trivy not configured
+
+- **WHEN** `v0.security.scan` is called without `TRIVY_SERVER_URL`
+- **THEN** it SHALL fail with `SERVICE_UNAVAILABLE`
+
+### Requirement: Security page
+
+The dashboard SHALL provide a Security page at `/security` showing:
+
+- in the page header, a strip that counts images, not vulnerabilities (images with critical vulnerabilities, images with high ones, images with critical or high vulnerabilities that have a fix, failed scans and the total of images) and a button that scans every image, with a text search on the image reference and a filter (all, urgent — with critical or high —, failed) to their left;
+- a table with one row per image and column headers: the image reference with its stacks (linking to `/stacks/<name>`) below it, one column per severity (critical, high, medium, low) with the count in its tone or a muted dash for zero, the fixable count, the last scan (queued, scanning, failed with a readable reason — "no access to the registry" for `unauthorized` —, or the time since the last successful scan) and a rescan button.
+
+Expanding a row SHALL keep that image's row pinned under the top bar on large screens while its details are on screen, and show the details in a card of their own, so it is always clear which image they belong to and where the next image starts. The card SHALL show the OS and digest and a table with one row per vulnerability id (id linking to its advisory, severity, the affected packages — packages with the same installed version, fixed version and origin on one line, the first three names and an "and N more" that reveals the rest, the file it was found in when it is not the image's OS —, title), with a severity filter, a "fixable only" toggle and a button that copies the vulnerabilities matching the filters as a Markdown report (image, OS, digest, scan date, filter, counts and a table with one line per vulnerability and package version). The table SHALL have a maximum height with its own scroll and sticky column headers, render 25 rows at first and the next 25 each time the user scrolls near its end, and show how many of the matching vulnerabilities are rendered. Severities SHALL be shown with the theme's status tones (critical as danger, high as signal, medium as warning, low and unknown muted). While any image is queued or scanning, the page SHALL refresh the list every 3 seconds and stop when none is; an expanded image whose scan finishes SHALL reload its vulnerabilities. When scanning is disabled the page SHALL explain that `TRIVY_SERVER_URL` is not set; Komodo errors SHALL be shown with a retry; with no images it SHALL show an empty state. All copy SHALL come from the i18n dictionaries.
+
+#### Scenario: Scans in progress
+
+- **WHEN** the page shows two images as `scanning`
+- **THEN** the list SHALL refresh every 3 seconds until both are `done` or `failed`
+
+#### Scenario: One row per CVE
+
+- **WHEN** the user expands an image where `CVE-2022-37454` affects four packages
+- **THEN** the table SHALL show one row for `CVE-2022-37454` listing the four packages
+
+#### Scenario: Where an image ends
+
+- **WHEN** the user expands an image and scrolls through its vulnerabilities
+- **THEN** the image's row SHALL stay visible at the top and its card SHALL end before the next image's row
+
+#### Scenario: Copy the analysis
+
+- **WHEN** the user filters an expanded image by critical and presses the copy button
+- **THEN** the clipboard SHALL hold a Markdown report of every critical vulnerability of that image, including those not rendered yet
+
+#### Scenario: Infinite scroll
+
+- **WHEN** an image has 7549 vulnerabilities and the user scrolls to the end of its table
+- **THEN** the next 25 SHALL be rendered without pressing any button
+
+#### Scenario: Only fixable vulnerabilities
+
+- **WHEN** the user expands an image and turns on "fixable only"
+- **THEN** the table SHALL list only vulnerabilities with a fixed version in at least one affected package
+
+#### Scenario: Scanning disabled
+
+- **WHEN** the backend has no `TRIVY_SERVER_URL`
+- **THEN** the page SHALL list the images without scans, explain how to enable Trivy, and offer no scan buttons

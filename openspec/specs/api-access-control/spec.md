@@ -33,7 +33,7 @@ The `401` check SHALL run before the session check, so an anonymous call to a `s
 
 ### Requirement: Tier per procedure
 
-What CI needs SHALL use `protectedProcedure`: `v0.deploy.trigger`, `v0.deploy.watch`, `v0.stacks.list` and `v0.history.list`. Everything that reads or changes configuration or credentials SHALL use `sessionProcedure`: every `v0.credentials.*` procedure (Komodo connection and ntfy) and every `v0.apiKey.*` procedure. `v0.stacks.remove` SHALL also use `sessionProcedure`: deleting a Komodo resource is not something CI needs. A new procedure SHALL pick its tier by the same rule.
+What CI needs SHALL use `protectedProcedure`: `v0.deploy.trigger`, `v0.deploy.watch`, `v0.stacks.list`, `v0.history.list`, `v0.history.activity`, `v0.security.list`, `v0.security.get` and `v0.security.scan`. Everything that reads or changes configuration or credentials SHALL use `sessionProcedure`: every `v0.credentials.*` procedure (Komodo connection and ntfy) and every `v0.apiKey.*` procedure. `v0.stacks.remove` SHALL also use `sessionProcedure`: deleting a Komodo resource is not something CI needs. A new procedure SHALL pick its tier by the same rule.
 
 #### Scenario: CI cannot mint keys
 
@@ -50,9 +50,13 @@ What CI needs SHALL use `protectedProcedure`: `v0.deploy.trigger`, `v0.deploy.wa
 - **WHEN** a request authenticated with `x-api-key` calls `v0.deploy.watch`
 - **THEN** the call SHALL be authorized and stream deploy events
 
+#### Scenario: CI gates on vulnerabilities
+
+- **WHEN** a request authenticated with `x-api-key` calls `v0.security.list` or `v0.security.scan`
+- **THEN** the call SHALL be authorized
 ### Requirement: Shared error map
 
-Procedures SHALL throw errors only through the constructor map in `packages/api/src/errors.ts`, which defines `BAD_REQUEST` (400), `UNAUTHORIZED` (401), `FORBIDDEN` (403), `NOT_FOUND` (404), `INTERNAL_SERVER_ERROR` (500), `BAD_GATEWAY` (502, Komodo failed or is unreachable) and `SERVICE_UNAVAILABLE` (503, no Komodo connection). The same codes and statuses SHALL apply over oRPC and over the REST API.
+Procedures SHALL throw errors only through the constructor map in `packages/api/src/errors.ts`, which defines `BAD_REQUEST` (400), `UNAUTHORIZED` (401), `FORBIDDEN` (403), `NOT_FOUND` (404), `INTERNAL_SERVER_ERROR` (500), `BAD_GATEWAY` (502, Komodo failed or is unreachable) and `SERVICE_UNAVAILABLE` (503, no Komodo connection, or no Trivy server configured for a scan). The same codes and statuses SHALL apply over oRPC and over the REST API.
 
 #### Scenario: Status over REST
 
