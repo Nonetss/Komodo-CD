@@ -18,7 +18,7 @@ export function ConnectionGuide() {
   const { t } = useTranslation()
   return (
     <section aria-labelledby="connection-guide" className="space-y-3">
-      <Text as="h2" id="connection-guide" variant="label" tone="muted">
+      <Text as="h2" id="connection-guide" variant="caption">
         {t("credentials.howTitle")}
       </Text>
       <ol className="border-rule grid grid-cols-1 gap-x-6 gap-y-4 border-t-[1.5px] border-b py-5 sm:grid-cols-2 lg:grid-cols-4">

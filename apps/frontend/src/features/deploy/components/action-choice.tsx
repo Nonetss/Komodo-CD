@@ -20,7 +20,7 @@ export function ActionChoice({
   const { t } = useTranslation()
   return (
     <fieldset className="space-y-2">
-      <Text as="legend" variant="label" tone="muted" className="mb-2">
+      <Text as="legend" variant="caption" tone="muted" className="mb-2">
         {t("deploy.actionLabel")}
       </Text>
       <div className="grid gap-2 sm:grid-cols-3">

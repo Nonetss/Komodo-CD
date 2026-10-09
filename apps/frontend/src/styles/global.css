@@ -10,12 +10,13 @@
 
   /*
    * Escala por rol: cada paso es un trabajo, no un tamaño. display (título
-   * de página, en ancho expandido) > stat (cifras de la franja de recuentos)
-   * > section (título de sección numerada)
+   * de página, el único en ancho expandido) > stat (cifras de la franja de
+   * recuentos) > section (título de sección)
    * > headline (nombre de fila, título de bloque) > body (prosa) > meta
-   * (descripciones, pistas) > label (etiqueta mono en mayúsculas) / meta-sm
-   * (metadatos en línea). 11px es el suelo legible. Se consumen con el
-   * componente `Text` (components/shared/brand/typography).
+   * (descripciones, pistas) > caption (nombre de un campo o de un bloque,
+   * en Archivo) / label (mono en mayúsculas, solo para hechos y chrome) /
+   * meta-sm (metadatos en línea). 11px es el suelo legible. Se consumen con
+   * el componente `Text` (components/shared/brand/typography).
    */
   --text-display: 2.75rem;
   --text-display--line-height: 0.95;
@@ -29,6 +30,8 @@
   --text-body--line-height: 1.5;
   --text-meta: 0.8125rem;
   --text-meta--line-height: 1.45;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
   --text-meta-sm: 0.6875rem;
   --text-meta-sm--line-height: 1.4;
   --text-label: 0.6875rem;
@@ -90,41 +93,42 @@
 }
 
 /*
- * Paleta editorial: papel y tinta, líneas finas entre elementos y trazo
- * grueso bajo las cabeceras, y un único acento naranja para lo que pide
- * acción. El texto secundario pasa 4.5:1 sobre el fondo en los dos temas.
+ * Paleta editorial: papel cálido y tinta con tinte, líneas finas entre
+ * elementos y trazo grueso bajo las cabeceras, y un único acento naranja
+ * para lo que pide acción. El texto secundario pasa 4.5:1 sobre el fondo
+ * en los dos temas.
  */
 :root {
   --radius: 0;
 
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.17 0 0);
+  --background: oklch(0.985 0.006 85);
+  --foreground: oklch(0.19 0.01 70);
   --card: var(--background);
   --card-foreground: var(--foreground);
   --surface: var(--background);
-  --popover: oklch(1 0 0);
+  --popover: var(--background);
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.17 0 0);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.965 0.004 100);
+  --primary: var(--foreground);
+  --primary-foreground: var(--background);
+  --secondary: oklch(0.955 0.008 85);
   --secondary-foreground: var(--foreground);
-  --muted: oklch(0.965 0.004 100);
-  --muted-foreground: oklch(0.48 0.006 100);
-  --accent: oklch(0.965 0.004 100);
+  --muted: oklch(0.955 0.008 85);
+  --muted-foreground: oklch(0.46 0.012 75);
+  --accent: oklch(0.955 0.008 85);
   --accent-foreground: var(--foreground);
-  --border: oklch(0.915 0.005 100);
-  --input: oklch(0.8 0.006 100);
+  --border: oklch(0.91 0.01 85);
+  --input: oklch(0.78 0.012 80);
   --rule: var(--foreground);
   --sidebar: var(--background);
 
   --signal: oklch(0.553 0.195 38.4);
-  --signal-foreground: oklch(1 0 0);
+  --signal-foreground: var(--background);
   --ring: var(--signal);
   --destructive: var(--signal);
 
   /* En claro los estados se oscurecen para que el texto pase 4.5:1 */
-  --success: oklch(0.527 0.154 150);
-  --warning: oklch(0.554 0.135 66);
+  --success: oklch(0.51 0.154 150);
+  --warning: oklch(0.535 0.135 66);
   --danger: var(--signal);
   --info: oklch(0.546 0.2 263);
 
@@ -137,20 +141,20 @@
 .dark {
   color-scheme: dark;
 
-  --background: oklch(0.165 0.002 100);
-  --foreground: oklch(0.955 0.005 100);
-  --popover: oklch(0.21 0.002 100);
-  --primary: oklch(0.955 0.005 100);
-  --primary-foreground: oklch(0.165 0.002 100);
-  --secondary: oklch(0.23 0.003 100);
-  --muted: oklch(0.23 0.003 100);
-  --muted-foreground: oklch(0.72 0.008 100);
-  --accent: oklch(0.25 0.003 100);
-  --border: oklch(0.29 0.003 100);
-  --input: oklch(0.4 0.004 100);
+  --background: oklch(0.17 0.006 70);
+  --foreground: oklch(0.95 0.008 85);
+  --popover: oklch(0.215 0.007 70);
+  --primary: var(--foreground);
+  --primary-foreground: var(--background);
+  --secondary: oklch(0.235 0.007 70);
+  --muted: oklch(0.235 0.007 70);
+  --muted-foreground: oklch(0.72 0.012 80);
+  --accent: oklch(0.255 0.007 70);
+  --border: oklch(0.3 0.007 70);
+  --input: oklch(0.42 0.008 70);
 
   --signal: oklch(0.75 0.17 52);
-  --signal-foreground: oklch(0.165 0.002 100);
+  --signal-foreground: var(--background);
 
   --success: oklch(0.78 0.17 152);
   --warning: oklch(0.82 0.15 85);

@@ -7,14 +7,14 @@ const textVariants = cva("", {
   variants: {
     role: {
       display:
-        "text-display type-expanded font-black tracking-[-0.035em] wrap-anywhere",
-      section:
-        "text-section type-semi-expanded font-extrabold tracking-[-0.02em]",
-      stat: "text-stat type-semi-expanded font-extrabold tabular-nums",
+        "text-display type-semi-expanded font-extrabold tracking-[-0.03em] wrap-anywhere",
+      section: "text-section font-bold tracking-[-0.02em]",
+      stat: "text-stat font-extrabold tabular-nums",
       headline: "text-headline font-bold tracking-tight",
       body: "text-body",
       meta: "text-meta leading-relaxed",
       "meta-sm": "text-meta-sm",
+      caption: "text-caption font-medium",
       label: "font-mono text-label font-medium tracking-widest uppercase",
       status: "font-mono text-label font-medium tracking-widest uppercase",
       data: "font-mono text-xs tabular-nums",

@@ -10,7 +10,7 @@ const NotFoundPageContent = () => {
   return (
     <div className="bg-dot-grid relative flex min-h-dvh items-center justify-center px-6">
       <div className="bg-background border-rule relative max-w-sm space-y-5 border-y-[1.5px] px-8 py-10 text-center">
-        <p className="text-signal type-expanded text-6xl font-black tracking-tight">
+        <p className="text-signal type-semi-expanded text-6xl font-extrabold tracking-tight">
           404
         </p>
         <div className="space-y-1">

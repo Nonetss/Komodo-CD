@@ -4,9 +4,11 @@ import { Text } from "@/components/shared/brand/typography"
 import { cn } from "@/lib/utils"
 
 /**
- * Cabecera de sección numerada ("01 Servicios"): el número en el acento, el
- * título en rol `section`, una nota a la derecha y, opcionalmente, una acción.
- * Se apoya en el trazo grueso; lo que sigue se separa con líneas finas.
+ * Cabecera de sección ("01 Servicios"): el título en rol `section`, una nota
+ * a la derecha y, opcionalmente, una acción. El número solo se pasa cuando las
+ * secciones van ordenadas por algo (el resumen, por urgencia) y va en tono
+ * apagado: el acento se queda para lo que pide acción. Se apoya en el trazo
+ * grueso; lo que sigue se separa con líneas finas.
  */
 export function SectionHeader({
   number,
@@ -34,7 +36,7 @@ export function SectionHeader({
       )}
     >
       {number !== undefined ? (
-        <Text variant="label" tone="signal" aria-hidden>
+        <Text variant="label" tone="muted" aria-hidden>
           {String(number).padStart(2, "0")}
         </Text>
       ) : null}

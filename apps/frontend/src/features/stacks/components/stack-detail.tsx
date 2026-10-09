@@ -153,7 +153,6 @@ export function StackDetail({
 
       <section aria-labelledby="stack-services" className="flex flex-col">
         <SectionHeader
-          number={1}
           as="h3"
           id="stack-services"
           title={t("stacks.servicesTitle")}
@@ -211,7 +210,6 @@ export function StackDetail({
 
       <section aria-labelledby="stack-ci" className="flex flex-col gap-4">
         <SectionHeader
-          number={2}
           as="h3"
           id="stack-ci"
           title={t("stacks.ciTitle")}

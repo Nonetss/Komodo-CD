@@ -163,7 +163,7 @@ const DeployPageContent = () => {
 
       <section aria-labelledby="deploy-ci" className="mt-4 space-y-3">
         <div>
-          <Text as="h2" id="deploy-ci" variant="label" tone="muted">
+          <Text as="h2" id="deploy-ci" variant="caption">
             {t("deploy.ciTitle")}
           </Text>
           <Text as="p" variant="meta" tone="muted" className="mt-1 text-pretty">

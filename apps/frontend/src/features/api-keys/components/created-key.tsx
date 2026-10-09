@@ -41,7 +41,7 @@ export function CreatedKey({
       </div>
 
       <div className="space-y-2">
-        <Text as="p" variant="label" tone="muted">
+        <Text as="p" variant="caption" tone="muted">
           {t("apikeys.useInGithubActions")}
         </Text>
         <CodeBlock
