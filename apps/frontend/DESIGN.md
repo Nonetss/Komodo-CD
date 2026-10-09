@@ -312,7 +312,7 @@ Blocks are square; controls are soft. Panels, lists, rows, inputs (underlined, 0
 - **Do** give state as an 8px dot plus a word; show a failure or missing Komodo connection as an explicit state card with the next step.
 - **Do** keep both themes and both languages at parity, with secondary text at 4.5:1 or better.
 - **Do** keep 44px touch targets and put primary navigation at the bottom on phones.
-- **Do** compose the shared pieces (`PageHero`, `SectionHeader`, `StatStrip`, `Panel`, `StateCard`, `Segmented`, `CodeBlock`, `Button` with `icon` and `loading`) before writing a new one.
+- **Do** compose the shared pieces (`PageHero`, `SectionHeader`, `StatStrip`, `Panel`, `StateCard`, `Segmented`, `CodeBlock`, `RelativeTime`, `Button` with `icon` and `loading`) before writing a new one.
 
 ### Don't:
 - **Don't** wrap content in rounded, shadowed or tinted cards; a panel is a rule, not a container.

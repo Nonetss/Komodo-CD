@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-
 import { Text, textVariants } from "@/components/shared/brand/typography"
+import { RelativeTime } from "@/components/shared/data-display/relative-time"
 import { BlockLink } from "@/components/shared/layout/block-link"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { StatStrip } from "@/components/shared/layout/stat-strip"
@@ -158,15 +158,7 @@ export function ActivityBlock({
                     <Text variant="meta-sm" tone="muted" className="flex-1">
                       {actionLabel(e.action)}
                     </Text>
-                    <Text
-                      as="time"
-                      variant="data"
-                      tone="muted"
-                      dateTime={e.createdAt}
-                      className="shrink-0"
-                    >
-                      {relativeTime(new Date(e.createdAt), i18n.language)}
-                    </Text>
+                    <RelativeTime date={e.createdAt} className="shrink-0" />
                   </li>
                 ))}
               </ul>

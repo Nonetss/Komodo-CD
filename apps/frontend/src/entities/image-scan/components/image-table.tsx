@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
 import { ColumnHeader } from "@/components/shared/data-display/column-header"
+import { RelativeTime } from "@/components/shared/data-display/relative-time"
 import { StatusTag } from "@/components/shared/data-display/status-dot"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -15,7 +16,6 @@ import { isScanPending } from "@/entities/image-scan/model/images"
 import { ImageRef, StackLink } from "@/entities/stack"
 import type { ImageSummary, VulnerabilitySeverity } from "@/lib/api-types"
 import { getErrorMessage, orpc } from "@/lib/orpc"
-import { relativeTime } from "@/lib/relative-time"
 import { cn } from "@/lib/utils"
 
 // Columnas de cifras, de más grave a menos (la desconocida queda en el detalle)
@@ -34,21 +34,9 @@ const COLUMN_COUNT = SEVERITY_COLUMNS.length + 4
 
 /** Estado del escaneo: en curso, fallido (con el motivo) o cuándo se hizo. */
 function ScanStatus({ image }: { image: ImageSummary }) {
-  const { t, i18n } = useTranslation()
-  const scannedAt = image.scannedAt ? new Date(image.scannedAt) : null
-  const scanned = scannedAt ? (
-    <Text
-      as="time"
-      variant="data"
-      tone="muted"
-      dateTime={image.scannedAt ?? undefined}
-      title={new Intl.DateTimeFormat(i18n.language, {
-        dateStyle: "full",
-        timeStyle: "medium",
-      }).format(scannedAt)}
-    >
-      {relativeTime(scannedAt, i18n.language)}
-    </Text>
+  const { t } = useTranslation()
+  const scanned = image.scannedAt ? (
+    <RelativeTime date={image.scannedAt} />
   ) : null
 
   switch (image.status) {

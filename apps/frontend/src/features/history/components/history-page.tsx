@@ -3,6 +3,7 @@ import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
+import { RelativeTime } from "@/components/shared/data-display/relative-time"
 import { QueryErrorCard } from "@/components/shared/feedback/query-error-card"
 import { StateCard } from "@/components/shared/feedback/state-card"
 import { RefreshButton } from "@/components/shared/form/refresh-button"
@@ -12,7 +13,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ACTION_I18N, useDeployEvents } from "@/entities/deploy-action"
 import { useHistory } from "@/features/history/hooks/use-history"
 import type { HistoryItem } from "@/lib/api-types"
-import { relativeTime } from "@/lib/relative-time"
 import { cn } from "@/lib/utils"
 import { withIsland } from "@/providers/island"
 
@@ -50,7 +50,7 @@ function Actor({ item }: { item: HistoryItem }) {
 }
 
 function HistoryEntry({ item }: { item: HistoryItem }) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const date = new Date(item.createdAt)
   const actionKey = ACTION_I18N[item.action as keyof typeof ACTION_I18N]
 
@@ -77,19 +77,7 @@ function HistoryEntry({ item }: { item: HistoryItem }) {
           <span className="text-muted-foreground text-meta-sm inline-flex items-center rounded-md border px-1.5 py-0.5 leading-none font-medium whitespace-nowrap">
             {actionKey ? t(`deploy.actions.${actionKey}.label`) : item.action}
           </span>
-          <Text
-            as="time"
-            variant="data"
-            tone="muted"
-            className="ml-auto whitespace-nowrap"
-            dateTime={item.createdAt}
-            title={new Intl.DateTimeFormat(i18n.language, {
-              dateStyle: "full",
-              timeStyle: "medium",
-            }).format(date)}
-          >
-            {relativeTime(date, i18n.language)}
-          </Text>
+          <RelativeTime date={date} className="ml-auto whitespace-nowrap" />
         </div>
         {item.message && (
           <Text
