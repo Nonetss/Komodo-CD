@@ -64,4 +64,4 @@
 
 - [x] 9.1 Run `bun run check-types`, `bunx biome check .` and `bun run tailwind:check`
 - [x] 9.2 Run `bun run test`
-- [ ] 9.3 Ask the user to check every page in the browser in both languages and both themes (titles, delete confirmations, error and empty states, Deploy and API key forms, History actors, shell controls on desktop and mobile, bulk actions) and to share a screenshot if anything looks off
+- [x] 9.3 Ask the user to check every page in the browser in both languages and both themes (titles, delete confirmations, error and empty states, Deploy and API key forms, History actors, shell controls on desktop and mobile, bulk actions) and to share a screenshot if anything looks off
