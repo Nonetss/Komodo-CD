@@ -25,7 +25,7 @@ The first block SHALL summarise the stacks:
 
 - a stacked bar with the stacks running without a problem (`running`, `deploying`), the stacks with a problem (a danger state — `unhealthy`, `dead`, `removing` —, `unknown`, `project_missing` or missing files) and the rest, each segment in its status tone and named with its count in a legend;
 - the number of services, of services with a newer image and of stacks whose deployed commit differs from the latest one, the last two in the signal accent when greater than zero;
-- the stacks that need attention, with their state, and the stacks without a problem that have something new, with how many images and whether the commit changed. Each list SHALL be sorted by name, show at most six names followed by "and N more", and show a one-line message when empty.
+- the stacks that need attention, with the short reason (the missing project, the missing files, or else the state), and the stacks without a problem that have something new, with how many images and whether the commit changed. Each list SHALL be sorted by name, show at most five rows followed by "and N more", and show a one-line message when empty.
 
 Every stack name SHALL link to `/stacks/<name>` and the block header SHALL link to `/stacks`.
 
@@ -36,7 +36,13 @@ Every stack name SHALL link to `/stacks/<name>` and the block header SHALL link 
 
 ### Requirement: Security block
 
-The second block SHALL summarise `v0.security.list`: how many images have a successful scan out of the total, how many have critical vulnerabilities (signal accent when greater than zero), how many urgent ones are fixable and how many scans failed; the CVEs of the scanned images per severity (critical, high, medium, low), summed image by image, as horizontal bars in the severity tones; and the five images with the most critical, then high, vulnerabilities. The block header SHALL link to `/security`. With scanning disabled it SHALL say so, and with no images it SHALL show a one-line message. A failed query SHALL show the backend message inside the block without hiding the other blocks.
+The second block SHALL summarise `v0.security.list`:
+
+- the CVEs of the scanned images per severity (critical, high, medium, low), summed image by image, as a stacked bar in the severity tones with a legend;
+- how many images have a successful scan out of the total, how many have critical vulnerabilities (signal accent when greater than zero), how many urgent ones are fixable and how many scans failed;
+- the images with the most critical, then high, vulnerabilities, and the images whose scan failed with the short reason, both by image name only (the full reference in the tooltip) and with the same five-row lists as the stacks block.
+
+On wide screens the stacks and security blocks SHALL sit side by side and share their rows (header, bar, figures, lists), so both blocks have the same height and their rows line up. The block header SHALL link to `/security`. With scanning disabled it SHALL say so in place of the bar, and with no images it SHALL show a one-line message. A failed query SHALL show the backend message inside the block without hiding the other blocks.
 
 #### Scenario: Scanning disabled
 
