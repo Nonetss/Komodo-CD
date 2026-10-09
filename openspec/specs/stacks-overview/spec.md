@@ -125,10 +125,11 @@ The selection SHALL be kept by stack name across search, group and open-stack ch
 
 ### Requirement: Run an action on the selected stacks
 
-While at least one stack is selected, the Stacks page SHALL show a bulk action bar with:
+While at least one stack is selected, the Stacks page SHALL show a bulk action bar floating at the bottom centre of the viewport (above the bottom navigation on small screens), outside the list pane, with:
 
 - the number of selected stacks, and how many of them the current filters hide when any;
 - one button per action (`pull`, `redeploy`, `pull-redeploy`);
+- a delete button;
 - a button that clears the selection.
 
 Clicking an action SHALL first ask for an inline confirmation naming the action and the number of stacks; cancelling SHALL do nothing. On confirmation, the page SHALL call `v0.deploy.trigger` once per selected stack with that action, at most three calls at a time. While its call runs, each stack SHALL show its running indicator and, when it is the open stack, the spinner and disabled buttons exactly as for a single action.
@@ -166,6 +167,20 @@ When every call has settled, the page SHALL show one summary toast instead of on
 
 - **WHEN** `web` and `api` are selected and a pipeline starts a deploy of `api`
 - **THEN** the bulk actions SHALL be disabled until that deploy finishes
+
+### Requirement: Delete the selected stacks
+
+The bulk bar's delete button SHALL first ask for an inline confirmation naming the number of stacks and warning that it cannot be undone, with a destructive confirm button; cancelling SHALL do nothing. On confirmation, the page SHALL call `v0.stacks.remove` once per selected stack, at most three calls at a time, while the bulk actions stay disabled. When every call has settled, it SHALL show one summary toast (success, or an error naming the stacks that failed), deleted stacks SHALL leave the selection and failed ones SHALL stay selected, and the stacks query SHALL be refreshed. When the open stack is among the deleted ones, the page SHALL navigate to `/stacks` before refreshing.
+
+#### Scenario: Delete two stacks
+
+- **WHEN** `web` and `api` are selected and the user clicks delete and confirms
+- **THEN** the page SHALL call `v0.stacks.remove` for `web` and for `api`, show one success toast and clear the selection
+
+#### Scenario: Delete the open stack
+
+- **WHEN** the open stack is `web`, it is selected with `api`, and both are deleted
+- **THEN** the page SHALL navigate to `/stacks`
 
 ### Requirement: Empty and error states
 

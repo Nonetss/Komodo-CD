@@ -8,12 +8,17 @@ Turns a request from a person or a CI pipeline into a pull and/or redeploy of a 
 
 ### Requirement: Trigger a deploy action on a stack
 
-The system SHALL expose `v0.deploy.trigger` as a `protectedProcedure`, reachable over oRPC and as `POST /api/v0/deploy`. Its input SHALL be `{ stack, action }`, where `stack` is a non-empty Komodo stack name and `action` is one of `pull`, `redeploy` or `pull-redeploy`. `pull` SHALL run Komodo's `PullStack`, `redeploy` SHALL run `DeployStack`, and `pull-redeploy` SHALL run `PullStack` and then, only if the pull succeeded, `DeployStack`. On success it SHALL return `{ success: true, message, stack, action }`, where `message` names the action and the stack.
+The system SHALL expose `v0.deploy.trigger` as a `protectedProcedure`, reachable over oRPC and as `POST /api/v0/deploy`. Its input SHALL be `{ stack, action }`, where `stack` is a non-empty Komodo stack name and `action` is one of `pull`, `redeploy` or `pull-redeploy`. `pull` SHALL run Komodo's `PullStack`, `redeploy` SHALL run `DeployStack`, and `pull-redeploy` SHALL run `PullStack` and then, only if the pull succeeded, `DeployStack`. Komodo only queues these tasks, so the system SHALL wait for each one to complete (polling its `Update`) before running the next step or answering, and the HTTP server SHALL NOT close the request for inactivity while it waits. On success it SHALL return `{ success: true, message, stack, action }`, where `message` names the action and the stack.
 
 #### Scenario: CI pulls and redeploys a stack
 
 - **WHEN** a request with a valid `x-api-key` sends `POST /api/v0/deploy` with `{"stack":"web","action":"pull-redeploy"}`
 - **THEN** the system SHALL pull the `web` stack, then redeploy it, and answer `200` with `success: true`
+
+#### Scenario: The answer waits for Komodo
+
+- **WHEN** a `pull-redeploy` of `web` is triggered and Komodo takes a minute to pull and redeploy
+- **THEN** the call SHALL answer only after Komodo has completed both tasks, so a stack list read afterwards reflects the new deployment
 
 #### Scenario: Pull only
 
@@ -32,12 +37,17 @@ The system SHALL expose `v0.deploy.trigger` as a `protectedProcedure`, reachable
 
 ### Requirement: Komodo failures map to gateway errors
 
-When Komodo answers with an error or cannot be reached, `v0.deploy.trigger` SHALL fail with `BAD_GATEWAY` (`502`) whose message is Komodo's own error text (`result.error` of the `komodo_client` failure, or the `Error` message). When no Komodo connection is configured, it SHALL fail with `SERVICE_UNAVAILABLE` (`503`). Both conversions SHALL go through `toKomodoError` in `packages/api/src/lib/komodo.ts`.
+When Komodo answers with an error or cannot be reached, `v0.deploy.trigger` SHALL fail with `BAD_GATEWAY` (`502`) whose message is Komodo's own error text (`result.error` of the `komodo_client` failure, or the `Error` message). A task that Komodo completes with `success: false` SHALL fail the same way, with the stage and output (`stderr`, else `stdout`) of its first failed log as the message. When no Komodo connection is configured, it SHALL fail with `SERVICE_UNAVAILABLE` (`503`). Both conversions SHALL go through `toKomodoError` in `packages/api/src/lib/komodo.ts`.
 
 #### Scenario: Komodo rejects the stack
 
 - **WHEN** Komodo answers the pull with `{ status: 404, result: { error: "stack not found" } }`
 - **THEN** the call SHALL fail with `BAD_GATEWAY` and the message `stack not found`
+
+#### Scenario: Komodo completes the pull with a failure
+
+- **WHEN** the `PullStack` task of a `pull-redeploy` completes with `success: false` and a failed `Pull Stack` log whose `stderr` is `manifest unknown`
+- **THEN** the call SHALL fail with `BAD_GATEWAY` and the message `Pull Stack: manifest unknown`, and SHALL NOT run `DeployStack`
 
 #### Scenario: No connection configured
 
