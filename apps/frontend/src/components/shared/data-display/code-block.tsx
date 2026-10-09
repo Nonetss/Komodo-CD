@@ -33,6 +33,8 @@ export function CodeBlock({
         {body}
         <CopyButton
           value={code}
+          withLabel
+          size="sm"
           className="text-code-foreground/70 hover:bg-code-foreground/10 hover:text-code-foreground absolute top-2 right-2"
         />
       </div>
