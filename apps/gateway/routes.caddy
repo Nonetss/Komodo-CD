@@ -1,7 +1,23 @@
 # Enrutado del gateway. En desarrollo el proxy de Vite hace lo mismo
 # (apps/frontend/astro.config.mjs): si cambias una ruta, cámbiala en los dos.
 
-encode zstd gzip
+# Tipos comprimibles uno a uno, en lugar del `text/*` por defecto, para dejar
+# fuera `text/event-stream`: el stream de deploys (v0.deploy.watch) tiene que
+# llegar evento a evento, sin pasar por el compresor.
+encode zstd gzip {
+	match {
+		header Content-Type text/html*
+		header Content-Type text/css*
+		header Content-Type text/plain*
+		header Content-Type text/javascript*
+		header Content-Type text/xml*
+		header Content-Type application/javascript*
+		header Content-Type application/json*
+		header Content-Type application/xml*
+		header Content-Type application/manifest+json*
+		header Content-Type image/svg+xml*
+	}
+}
 
 # Cabeceras de seguridad que no rompen nada de lo que hace la app. HSTS es
 # cosa del proxy que termina TLS delante, y una CSP necesitaría antes una fase
