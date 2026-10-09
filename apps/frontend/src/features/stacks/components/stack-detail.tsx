@@ -25,6 +25,7 @@ import {
 } from "@/entities/stack"
 import { StackDelete } from "@/features/stacks/components/stack-delete"
 import { StackProblem } from "@/features/stacks/components/stack-problem"
+import { StackSecurity } from "@/features/stacks/components/stack-security"
 import { useAppUrl } from "@/hooks/use-app-url"
 import type { DeployAction, Stack } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
@@ -47,9 +48,9 @@ export function BackToList() {
 }
 
 /**
- * Ficha de un stack: cabecera con el nombre y las acciones, el problema si lo
- * hay, los commits, los servicios con su imagen, el `curl` para CI y el
- * borrado en Komodo.
+ * Ficha de un stack: cabecera con el nombre y las acciones (borrar incluido),
+ * el problema si lo hay, los commits, los servicios con su imagen, sus
+ * vulnerabilidades y el `curl` para CI.
  */
 export function StackDetail({
   stack,
@@ -115,20 +116,24 @@ export function StackDetail({
             <StackStateTag state={info.state} className="mt-4" />
           </div>
           <div className="flex flex-wrap gap-2">
+            <StackDelete name={stack.name} disabled={runningAction !== null} />
             {DEPLOY_ACTIONS.map((action) => {
               const main = action === "pull-redeploy"
+              // Solo la acción principal lleva texto; el resto, icono y tooltip
               return (
                 <Button
                   key={action}
                   type="button"
                   variant={main ? (pending ? "signal" : "default") : "outline"}
+                  size={main ? "default" : "icon"}
                   icon={ACTION_ICON[action]}
                   loading={runningAction === action}
                   disabled={runningAction !== null}
                   onClick={() => onAction(action)}
+                  title={main ? undefined : actionLabel(action)}
                   aria-label={`${actionLabel(action)} ${stack.name}`}
                 >
-                  {actionLabel(action)}
+                  {main ? actionLabel(action) : null}
                 </Button>
               )
             })}
@@ -205,6 +210,8 @@ export function StackDetail({
         </div>
       </section>
 
+      <StackSecurity stack={stack} />
+
       <section aria-labelledby="stack-ci" className="flex flex-col gap-4">
         <SectionHeader
           as="h3"
@@ -228,8 +235,6 @@ export function StackDetail({
         />
         <DeployCurlHint />
       </section>
-
-      <StackDelete name={stack.name} disabled={runningAction !== null} />
     </article>
   )
 }

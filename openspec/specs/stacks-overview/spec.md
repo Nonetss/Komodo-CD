@@ -75,12 +75,12 @@ The detail pane SHALL show the stack named in the URL:
 
 - its name, state and service count;
 - the repository (linked when Komodo gives a link) and branch;
-- the action buttons;
+- the action buttons, led by the delete button (see "Delete a stack"); Pull + Redeploy carries its label, while Pull, Redeploy and delete show only their icon, with the label as tooltip and accessible name;
 - the problem message (missing project, or the list of missing files) when there is one;
 - for a stack backed by a git repository, the deployed commit and the latest commit, the latter marked when it differs (Komodo gives no commits for other stacks, so they are omitted);
 - a table with every service: its name, its image reference (registry dimmed, name, tag or a shortened digest; the full reference in the tooltip) and whether a newer image is available;
-- the CI `curl` snippet with a selector for the action;
-- a last section to delete the stack from Komodo (see "Delete a stack").
+- a security section with the stack's images as on the Security page: their vulnerability counts per severity, how many are fixable, the scan state, a rescan button when scanning is enabled, and each image expandable in place into its CVEs. Other stacks that share an image are linked from its row; the open stack is not repeated. The section links to `/security` and is omitted when the stack declares no image;
+- the CI `curl` snippet with a selector for the action.
 
 When the name in the URL matches no stack of `v0.stacks.list`, the detail pane SHALL show a not-found state with a link to `/stacks`.
 
@@ -204,7 +204,7 @@ The outcome of an action started from this page SHALL be reported with a success
 
 The system SHALL expose `v0.stacks.remove` as a `sessionProcedure` (`DELETE /api/v0/stacks/{stack}`, tag `Stacks`) that calls Komodo's `DeleteStack` with the stack name and returns `{ success, stack, message }`. Komodo errors SHALL become `502` and a missing connection `503` (`toKomodoError`).
 
-The detail pane SHALL end with a section to delete the open stack from Komodo, explaining that Komodo takes the containers down first when the stack is running and that it cannot be undone. Its button SHALL ask for confirmation with a second click and SHALL be disabled while an action runs on the stack. On success the page SHALL navigate to `/stacks`, refresh the stacks query and show a success toast; on failure it SHALL stay on the stack and show an error toast with the backend message.
+The detail pane SHALL place a delete button first in the row of action buttons, its tooltip explaining that Komodo takes the containers down first when the stack is running and that it cannot be undone. The button SHALL ask for confirmation with a second click and SHALL be disabled while an action runs on the stack. On success the page SHALL navigate to `/stacks`, refresh the stacks query and show a success toast; on failure it SHALL stay on the stack and show an error toast with the backend message.
 
 #### Scenario: Delete from the detail pane
 

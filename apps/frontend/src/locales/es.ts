@@ -93,6 +93,8 @@ export default {
     services_one: "{{count}} servicio",
     services_other: "{{count}} servicios",
     servicesTitle: "Servicios",
+    securityTitle: "Seguridad",
+    securityAll: "Ver todas",
     ciTitle: "Llamar desde CI",
     ciHint:
       "Sustituye <code>{{placeholder}}</code> por una key de <keys>API Keys</keys>.",
@@ -100,7 +102,6 @@ export default {
     updateTag: "update",
     deployed: "Desplegado",
     latestCommit: "Último commit",
-    deleteTitle: "Eliminar de Komodo",
     deleteHint:
       "Borra el stack en Komodo; si está en marcha, Komodo baja antes sus contenedores. No se puede deshacer.",
     deleteLabel: "Eliminar {{name}} de Komodo",
@@ -245,6 +246,7 @@ export default {
     scanAll: "Escanear todo",
     rescan: "Reescanear",
     rescanImage: "Reescanear {{image}}",
+    alsoIn: "También en",
     expand: "Ver vulnerabilidades de {{image}}",
     collapse: "Ocultar vulnerabilidades de {{image}}",
     // Recuentos de imágenes, no de vulnerabilidades

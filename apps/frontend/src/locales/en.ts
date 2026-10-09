@@ -95,6 +95,8 @@ export default {
     services_one: "{{count}} service",
     services_other: "{{count}} services",
     servicesTitle: "Services",
+    securityTitle: "Security",
+    securityAll: "See all",
     ciTitle: "Call from CI",
     ciHint:
       "Replace <code>{{placeholder}}</code> with a key from <keys>API Keys</keys>.",
@@ -102,7 +104,6 @@ export default {
     updateTag: "update",
     deployed: "Deployed",
     latestCommit: "Latest commit",
-    deleteTitle: "Delete from Komodo",
     deleteHint:
       "Deletes the stack in Komodo; if it is running, Komodo takes its containers down first. This cannot be undone.",
     deleteLabel: "Delete {{name}} from Komodo",
@@ -246,6 +247,7 @@ export default {
     scanAll: "Scan all",
     rescan: "Rescan",
     rescanImage: "Rescan {{image}}",
+    alsoIn: "Also in",
     expand: "Show vulnerabilities of {{image}}",
     collapse: "Hide vulnerabilities of {{image}}",
     counts: {
