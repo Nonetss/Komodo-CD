@@ -38,9 +38,13 @@ function BrandPanel() {
       <Wordmark className="relative text-lg" />
 
       <div className="relative max-w-md space-y-8">
-        <p className="type-semi-expanded text-4xl leading-[1.02] font-extrabold tracking-[-0.03em] text-balance xl:text-5xl">
+        <Text
+          as="p"
+          variant="display"
+          className="text-4xl text-balance xl:text-5xl"
+        >
           {t("login.subtitle")}
-        </p>
+        </Text>
 
         <div className="bg-code text-code-foreground overflow-hidden">
           <div className="border-code-foreground/15 flex items-center gap-1.5 border-b px-3 py-2">

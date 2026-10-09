@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { Text } from "@/components/shared/brand/typography"
+import { Text, textVariants } from "@/components/shared/brand/typography"
 import { CodeBlock } from "@/components/shared/data-display/code-block"
 import { Segmented } from "@/components/shared/form/segmented"
 import { SectionHeader } from "@/components/shared/layout/section-header"
@@ -25,6 +25,7 @@ import {
 import { StackProblem } from "@/features/stacks/components/stack-problem"
 import { useAppUrl } from "@/hooks/use-app-url"
 import type { DeployAction, Stack } from "@/lib/api-types"
+import { cn } from "@/lib/utils"
 
 /** Enlace de vuelta a la lista; solo en pantallas pequeñas, donde no se ve */
 export function BackToList() {
@@ -32,7 +33,10 @@ export function BackToList() {
   return (
     <a
       href="/stacks"
-      className="text-label text-muted-foreground hover:text-foreground inline-flex w-fit items-center gap-2 py-2 font-mono font-medium tracking-widest uppercase lg:hidden"
+      className={cn(
+        textVariants({ role: "label", tone: "muted" }),
+        "hover:text-foreground inline-flex w-fit items-center gap-2 py-2 lg:hidden"
+      )}
     >
       <ArrowLeft aria-hidden className="size-3.5" />
       {t("stacks.back")}
@@ -159,7 +163,7 @@ export function StackDetail({
           aside={info.services.length}
         />
         <div className="overflow-x-auto">
-          <table className="w-full min-w-136 border-collapse text-sm">
+          <table className="w-full min-w-136 border-collapse">
             <thead>
               <tr className="text-left">
                 <th scope="col" className="py-3 pr-4 font-normal">
@@ -184,9 +188,9 @@ export function StackDetail({
                 <tr key={svc.service} className="border-t">
                   <th
                     scope="row"
-                    className="py-3.5 pr-4 text-left align-baseline font-bold"
+                    className="py-3.5 pr-4 text-left align-baseline"
                   >
-                    {svc.service}
+                    <Text variant="headline">{svc.service}</Text>
                   </th>
                   <td className="max-w-0 py-3.5 pr-4 align-baseline">
                     <ImageRef image={svc.image} />

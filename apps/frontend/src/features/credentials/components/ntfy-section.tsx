@@ -176,14 +176,14 @@ function NtfySummary({
           )}
         </MetadataCell>
         <MetadataCell label={t("ntfy.urlLabel")}>
-          <span className="block truncate font-mono text-xs tracking-tight">
+          <Text variant="data" className="block truncate">
             {config.url}
-          </span>
+          </Text>
         </MetadataCell>
         <MetadataCell label={t("ntfy.topicLabel")}>
-          <span className="block truncate font-mono text-xs tracking-tight">
+          <Text variant="data" className="block truncate">
             {config.topic}
-          </span>
+          </Text>
         </MetadataCell>
         <MetadataCell label={t("ntfy.tokenLabel")}>
           {config.hasToken ? t("ntfy.tokenSet") : t("ntfy.tokenNone")}

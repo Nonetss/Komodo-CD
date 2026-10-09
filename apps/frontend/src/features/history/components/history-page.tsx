@@ -2,6 +2,7 @@ import { Check, History as HistoryIcon, KeyRound, User, X } from "lucide-react"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
+import { Text } from "@/components/shared/brand/typography"
 import { QueryErrorCard } from "@/components/shared/feedback/query-error-card"
 import { StateCard } from "@/components/shared/feedback/state-card"
 import { RefreshButton } from "@/components/shared/form/refresh-button"
@@ -47,9 +48,13 @@ function Actor({ item }: { item: HistoryItem }) {
   return (
     <span className="inline-flex min-w-0 items-center gap-1">
       <Icon className="size-3 shrink-0" />
-      <span className={cn("truncate", viaKey && "text-meta-sm font-mono")}>
+      <Text
+        variant={viaKey ? "data" : "meta"}
+        tone="muted"
+        className="truncate"
+      >
         {label}
-      </span>
+      </Text>
     </span>
   )
 }
@@ -78,34 +83,37 @@ function HistoryEntry({ item }: { item: HistoryItem }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="text-sm font-medium">{item.stack}</span>
+          <Text variant="headline">{item.stack}</Text>
           <span className="text-muted-foreground text-meta-sm inline-flex items-center rounded-md border px-1.5 py-0.5 leading-none font-medium whitespace-nowrap">
             {actionKey ? t(`deploy.actions.${actionKey}.label`) : item.action}
           </span>
-          <time
+          <Text
+            as="time"
+            variant="data"
+            tone="muted"
+            className="ml-auto whitespace-nowrap"
             dateTime={item.createdAt}
             title={new Intl.DateTimeFormat(i18n.language, {
               dateStyle: "full",
               timeStyle: "medium",
             }).format(date)}
-            className="text-muted-foreground ml-auto text-xs whitespace-nowrap tabular-nums"
           >
             {relativeTime(date, i18n.language)}
-          </time>
+          </Text>
         </div>
         {item.message && (
-          <p
-            className={cn(
-              "mt-1 text-xs wrap-break-word",
-              item.success ? "text-muted-foreground" : "text-danger/90"
-            )}
+          <Text
+            as="p"
+            variant="meta"
+            tone={item.success ? "muted" : "destructive"}
+            className="mt-1 wrap-break-word"
           >
             {item.message}
-          </p>
+          </Text>
         )}
-        <p className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
+        <div className="mt-1 flex items-center gap-1">
           <Actor item={item} />
-        </p>
+        </div>
       </div>
     </li>
   )
@@ -203,16 +211,21 @@ const HistoryPageContent = () => {
           />
 
           {groups.length === 0 && (
-            <p className="text-muted-foreground py-8 text-center text-sm">
+            <Text as="p" tone="muted" className="py-8 text-center">
               {t("history.empty")}
-            </p>
+            </Text>
           )}
 
           {groups.map(({ group, items }) => (
             <section key={group}>
-              <h2 className="text-muted-foreground mb-1 text-xs font-medium">
+              <Text
+                as="h2"
+                variant="caption"
+                tone="muted"
+                className="mb-1 block"
+              >
                 {groupLabel[group]}
-              </h2>
+              </Text>
               <ol className="relative before:bg-border before:absolute before:top-4 before:bottom-4 before:left-3 before:w-px">
                 {items.map((item) => (
                   <HistoryEntry key={item.id} item={item} />

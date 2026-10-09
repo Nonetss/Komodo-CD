@@ -92,7 +92,7 @@ export function UpdatesSection({
         </Text>
       ) : (
         <div className="overflow-x-auto border-b">
-          <table className="w-full min-w-176 border-collapse text-sm">
+          <table className="w-full min-w-176 border-collapse">
             <thead>
               <tr className="text-left">
                 {COLUMNS.map(({ key, width }) => (
@@ -121,16 +121,15 @@ export function UpdatesSection({
                 const services = info.services.filter((s) => s.update_available)
                 return (
                   <tr key={stack.id} className="border-t align-top">
-                    <th
-                      scope="row"
-                      className="py-4 pr-4 text-left text-base font-bold"
-                    >
-                      <a
-                        href={stackHref(stack.name)}
-                        className="hover:text-signal underline-offset-4 hover:underline"
-                      >
-                        {stack.name}
-                      </a>
+                    <th scope="row" className="py-4 pr-4 text-left">
+                      <Text variant="headline">
+                        <a
+                          href={stackHref(stack.name)}
+                          className="hover:text-signal underline-offset-4 hover:underline"
+                        >
+                          {stack.name}
+                        </a>
+                      </Text>
                     </th>
                     <td className="max-w-0 py-4 pr-4">
                       {services.length === 0 ? (

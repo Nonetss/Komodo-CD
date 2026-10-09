@@ -1,3 +1,4 @@
+import { textVariants } from "@/components/shared/brand/typography"
 import { getAppSurface, type SurfaceId } from "@/lib/app-surfaces"
 import { cn } from "@/lib/utils"
 
@@ -23,7 +24,8 @@ export function TopNav({ items, path }: { items: NavItem[]; path: string }) {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "text-label flex items-center font-mono font-medium tracking-widest whitespace-nowrap uppercase transition-colors",
+              textVariants({ role: "label" }),
+              "flex items-center whitespace-nowrap transition-colors",
               active
                 ? "text-foreground shadow-[inset_0_-2px_0_var(--color-signal)]"
                 : "text-muted-foreground hover:text-foreground"

@@ -217,6 +217,10 @@ html.theme-transitioning::view-transition-new(root) {
     scrollbar-color: var(--border) transparent;
   }
   html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Un solo archivo variable por familia: sin negritas ni cursivas falsas */
+    font-synthesis: none;
     -webkit-tap-highlight-color: transparent;
     /* Sin saltos horizontales cuando aparece o desaparece la barra */
     scrollbar-gutter: stable;
@@ -256,6 +260,19 @@ html.theme-transitioning::view-transition-new(root) {
   :where(.font-mono, code, kbd, pre) {
     font-variant-numeric: tabular-nums;
     font-variant-ligatures: none;
+  }
+  /* Títulos sin viudas ni líneas cortas; prosa sin última palabra suelta */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  /* Texto claro sobre fondo oscuro se ve más fino: un toque de tracking */
+  .dark body {
+    letter-spacing: 0.008em;
   }
   ::selection {
     @apply bg-primary text-primary-foreground;

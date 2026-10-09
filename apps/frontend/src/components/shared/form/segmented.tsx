@@ -1,5 +1,6 @@
 import { useId } from "react"
 
+import { textVariants } from "@/components/shared/brand/typography"
 import { cn } from "@/lib/utils"
 
 type SegmentedOption<T extends string> = {
@@ -47,7 +48,8 @@ export function Segmented<T extends string>({
           <label
             key={o.value}
             className={cn(
-              "has-focus-visible:ring-ring text-label relative flex cursor-pointer items-center justify-center gap-1.5 font-mono font-medium tracking-widest whitespace-nowrap uppercase transition-colors has-focus-visible:ring-2",
+              textVariants({ role: "label" }),
+              "has-focus-visible:ring-ring relative flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap transition-colors has-focus-visible:ring-2",
               "h-9 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:transition-colors",
               active
                 ? "text-foreground after:bg-signal"
