@@ -1,0 +1,134 @@
+# Stack de desarrollo en Docker: cada app corre su servidor con recarga en
+# caliente desde las fuentes y `docker compose watch` sincroniza los cambios
+# en los contenedores (sin bind mounts: node_modules es el de cada contenedor).
+#
+#   bun run dev        # construye, arranca y vigila (Ctrl+C para)
+#   bun run dev:down   # borra los contenedores (-v también la base de datos)
+#   bun run dev:local  # lo mismo sin Docker, con turbo watch
+#
+# Como en producción, el gateway es el único que publica puerto:
+# http://localhost:4321, con el mismo routes.caddy que producción. El backend
+# y `astro dev` solo están en la red privada del stack. Las variables salen del
+# .env de la raíz; aquí solo se cambian las que apuntan a localhost.
+#
+# La base de datos SQLite vive en el volumen backend_data, no en
+# apps/backend/dev.db (la de `bun run dev:local`). Para empezar con la tuya:
+#   docker compose -f compose.dev.yml cp apps/backend/dev.db backend:/data/dev.db
+# y reinicia el backend.
+name: komodo-cd-dev
+
+x-node-ignore: &node-ignore
+  - node_modules/
+  - dist/
+  - .astro/
+  - .turbo/
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile.dev
+    init: true
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: file:/data/dev.db
+    expose:
+      - "3000"
+    volumes:
+      - backend_data:/data
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/backend/src
+          target: /app/apps/backend/src
+          ignore: *node-ignore
+        - action: sync
+          path: ./packages/api/src
+          target: /app/packages/api/src
+        - action: sync
+          path: ./packages/auth/src
+          target: /app/packages/auth/src
+        - action: sync
+          path: ./packages/db/src
+          target: /app/packages/db/src
+        - action: sync
+          path: ./packages/env/src
+          target: /app/packages/env/src
+        - action: sync
+          path: ./packages/logger/src
+          target: /app/packages/logger/src
+        - action: rebuild
+          path: ./bun.lock
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./apps/backend/package.json
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile.dev
+    init: true
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      BACKEND_URL: http://backend:3000
+    expose:
+      - "4321"
+    depends_on:
+      - backend
+    # La caché de dependencias optimizadas de Vite sobrevive a recrear el
+    # contenedor, así que un `bun run dev` nuevo no recarga la primera página.
+    # `bun run dev:down -v` la vacía.
+    volumes:
+      - frontend_vite_cache:/app/apps/frontend/node_modules/.vite
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/frontend/src
+          target: /app/apps/frontend/src
+          ignore: *node-ignore
+        - action: sync
+          path: ./apps/frontend/public
+          target: /app/apps/frontend/public
+        # Los tipos del router oRPC
+        - action: sync
+          path: ./packages/api/src
+          target: /app/packages/api/src
+        - action: sync+restart
+          path: ./apps/frontend/astro.config.mjs
+          target: /app/apps/frontend/astro.config.mjs
+        - action: rebuild
+          path: ./bun.lock
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./apps/frontend/package.json
+
+  # La única entrada: http://localhost:4321 → /rpc, /api, /doc y /scalar al
+  # backend y el resto a `astro dev` (también el websocket de HMR).
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+    init: true
+    ports:
+      - "4321:80"
+    depends_on:
+      - backend
+      - frontend
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./apps/gateway/routes.caddy
+          target: /etc/caddy/routes.caddy
+        - action: sync+restart
+          path: ./apps/gateway/Caddyfile
+          target: /etc/caddy/Caddyfile
+
+volumes:
+  backend_data:
+  frontend_vite_cache:

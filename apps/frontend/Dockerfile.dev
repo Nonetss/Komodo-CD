@@ -1,0 +1,37 @@
+# Igual que `packageManager` en el package.json raíz: mantenlos sincronizados
+ARG BUN_VERSION=1.4.0
+
+# Imagen de desarrollo para compose.dev.yml (`bun run dev`): corre el servidor
+# con recarga en caliente desde las fuentes. Los cambios llegan con
+# `docker compose watch` (sync), sin montar el repo, así que node_modules es
+# siempre el del contenedor.
+FROM oven/bun:${BUN_VERSION}-slim
+WORKDIR /app
+
+# Solo manifests: la capa de install queda cacheada hasta que cambie un
+# package.json o el lockfile (entonces watch reconstruye la imagen).
+COPY package.json bun.lock bunfig.toml ./
+COPY apps/backend/package.json apps/backend/
+COPY apps/frontend/package.json apps/frontend/
+COPY apps/site/package.json apps/site/
+COPY packages/api/package.json packages/api/
+COPY packages/auth/package.json packages/auth/
+COPY packages/config/package.json packages/config/
+COPY packages/db/package.json packages/db/
+COPY packages/env/package.json packages/env/
+COPY packages/logger/package.json packages/logger/
+# Todo el workspace, no solo esta app: Vite resuelve el tsconfig de la raíz,
+# que extiende @komodo-cd/config (una devDependency de la raíz).
+# sharing=locked: backend y frontend se construyen a la vez y no pueden
+# extraer en la misma caché al mismo tiempo.
+RUN --mount=type=cache,target=/root/.bun/install/cache,sharing=locked \
+    bun install --frozen-lockfile
+
+COPY . .
+
+EXPOSE 4321
+
+WORKDIR /app/apps/frontend
+# En todas las interfaces para que el gateway llegue por la red de compose;
+# solo el gateway publica puerto (http://localhost:4321)
+CMD ["bun", "run", "dev", "--host", "0.0.0.0", "--port", "4321"]

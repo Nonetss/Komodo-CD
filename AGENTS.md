@@ -19,8 +19,13 @@ Komodo CD: a thin layer between people, CI pipelines and a [Komodo](https://komo
 - `apps/backend` — Hono on Bun, HTTP `:3000`. Mounts Better Auth (`/api/auth/*`), oRPC (`/rpc/*`), the REST API (`/api/v0/*`) and the OpenAPI docs (`/doc`, `/scalar`). On boot it applies migrations, seeds the admin and connects to Komodo; it shuts down in order on SIGTERM.
 - `apps/frontend` — Astro 7 SSR + React 19 islands + Tailwind v4 + shadcn/ui, `:4321`. In dev, Vite proxies the backend routes; in Docker it sits behind the gateway.
 - `apps/gateway` — Caddy (Docker assets only, not a workspace). The only published port: `routes.caddy` sends backend routes to the backend and the rest to the frontend. Keep it in sync with the Vite proxy in `apps/frontend/astro.config.mjs`.
-- `apps/site` — the static project website (Astro, English + Spanish docs), published to GitHub Pages. Not part of the running app; `bun run dev` leaves it out (`bun run dev:site`).
+- `apps/site` — the static project website (Astro, English + Spanish docs), published to GitHub Pages. Not part of the running app; no dev command starts it except `bun run dev:site`.
 - `packages/api` (oRPC routers and handlers, Komodo and ntfy services, tests), `packages/auth` (Better Auth + session resolver: cookie or `x-api-key`), `packages/db` (Drizzle schema, migrations, seed), `packages/env` (validated server env), `packages/logger` (pino), `packages/config` (tsconfig).
+
+## Development
+
+- `bun run dev` is the Docker dev stack (`compose.dev.yml`): each app runs its hot-reload server from source, `docker compose watch` syncs edits, and the gateway publishes `http://localhost:4321` with the production `routes.caddy`. Its SQLite lives in the `backend_data` volume. `bun run dev:local` runs the same natively with turbo (database `apps/backend/dev.db`).
+- A new workspace `package.json` goes into the manifest `COPY` lines of every Dockerfile (`Dockerfile` and `Dockerfile.dev`), or `--frozen-lockfile` fails.
 
 ## Environment
 

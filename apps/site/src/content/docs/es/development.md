@@ -29,12 +29,14 @@ Necesita [Bun](https://bun.sh) 1.4 o posterior.
 bun install
 bun run setup:dev   # escribe .env con un secreto y una contraseña de admin aleatorios
 
-bun run dev            # backend (:3000) + frontend (:4321) con turbo watch, sin la web
-bun run dev:backend    # solo el backend
-bun run dev:frontend   # solo el frontend
+bun run dev            # stack de desarrollo en Docker en http://localhost:4321 (recarga en caliente, Ctrl+C lo para)
+bun run dev:down       # borra sus contenedores (-v también su base de datos)
+bun run dev:local      # lo mismo sin Docker: backend (:3000) + frontend (:4321) con turbo watch
+bun run dev:backend    # solo el backend, sin Docker
+bun run dev:frontend   # solo el frontend, sin Docker
 ```
 
-En desarrollo el servidor de Vite reenvía `/api`, `/rpc`, `/doc` y `/scalar` al backend, el mismo enrutado que hace el gateway en producción (`apps/gateway/routes.caddy`).
+`bun run dev` pone el gateway de producción (`apps/gateway/routes.caddy`) delante de las dos apps, así que el enrutado en desarrollo es el de producción. Usa su propia base de datos SQLite en un volumen de Docker, aparte de `apps/backend/dev.db`. Sin Docker, el servidor de Vite reenvía `/api`, `/rpc`, `/doc` y `/scalar` al backend de la misma forma.
 
 ## Scripts
 

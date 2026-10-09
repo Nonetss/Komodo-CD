@@ -29,12 +29,14 @@ Requires [Bun](https://bun.sh) 1.4 or newer.
 bun install
 bun run setup:dev   # writes .env with a random secret and admin password
 
-bun run dev            # backend (:3000) + frontend (:4321) with turbo watch, without the site
-bun run dev:backend    # only the backend
-bun run dev:frontend   # only the frontend
+bun run dev            # Docker dev stack on http://localhost:4321 (hot reload, Ctrl+C stops)
+bun run dev:down       # remove its containers (-v also drops its database)
+bun run dev:local      # the same without Docker: backend (:3000) + frontend (:4321) with turbo watch
+bun run dev:backend    # only the backend, without Docker
+bun run dev:frontend   # only the frontend, without Docker
 ```
 
-In development the Vite dev server proxies `/api`, `/rpc`, `/doc` and `/scalar` to the backend, the same routing the gateway does in production (`apps/gateway/routes.caddy`).
+`bun run dev` puts the production gateway (`apps/gateway/routes.caddy`) in front of both apps, so routing in development is the one in production. It keeps its own SQLite database in a Docker volume, separate from `apps/backend/dev.db`. Without Docker, the Vite dev server proxies `/api`, `/rpc`, `/doc` and `/scalar` to the backend the same way.
 
 ## Scripts
 

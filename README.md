@@ -278,9 +278,11 @@ bun install
 
 bun run setup:dev   # writes .env with a random secret and admin password
 
-bun run dev            # backend (:3000) + frontend (:4321) with turbo watch, without the site
-bun run dev:backend    # only backend
-bun run dev:frontend   # only frontend
+bun run dev            # Docker dev stack on http://localhost:4321 (hot reload, Ctrl+C stops)
+bun run dev:down       # remove its containers (-v also drops its database)
+bun run dev:local      # the same without Docker: backend (:3000) + frontend (:4321) with turbo watch
+bun run dev:backend    # only backend, without Docker
+bun run dev:frontend   # only frontend, without Docker
 bun run dev:site       # only the project website (:4322)
 ```
 

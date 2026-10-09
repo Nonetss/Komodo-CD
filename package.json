@@ -32,7 +32,9 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "turbo watch dev --filter=!site",
+    "dev": "docker compose -f compose.dev.yml up --build --watch",
+    "dev:down": "docker compose -f compose.dev.yml down",
+    "dev:local": "turbo watch dev --filter=!site",
     "dev:backend": "turbo watch -F backend dev",
     "dev:frontend": "turbo watch -F frontend dev",
     "dev:site": "turbo watch -F site dev",

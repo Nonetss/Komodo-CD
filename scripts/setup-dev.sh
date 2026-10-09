@@ -100,7 +100,7 @@ fi
 echo ""
 echo "✓ Done. Next:"
 echo "  bun install"
-echo "  bun run dev   # backend :3000 + frontend $APP_URL"
+echo "  bun run dev   # Docker dev stack on $APP_URL (or dev:local without Docker)"
 echo "  # the backend applies migrations and seeds the admin on boot"
 echo ""
 echo "  Admin credentials (created on first backend boot, idempotent):"
