@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query"
 import { ChevronRight, RotateCw } from "lucide-react"
-import { useEffect, useId, useRef } from "react"
+import { type MouseEvent, useEffect, useId, useRef } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
@@ -173,10 +173,19 @@ function ImageRows({
       open && "bg-muted border-rule rule-b",
       open && !stack && "sticky top-14 z-10"
     )
+  // Toda la fila despliega; los controles que lleva dentro (chevron, stacks,
+  // reescanear) atienden su propio clic sin abrirla
+  const onRowClick = (event: MouseEvent<HTMLTableRowElement>) => {
+    if ((event.target as Element).closest("a, button")) return
+    onToggle()
+  }
 
   return (
     <tbody className="border-t">
-      <tr className={cn("align-top", !open && "hover:bg-muted/50")}>
+      <tr
+        onClick={onRowClick}
+        className={cn("cursor-pointer align-top", !open && "hover:bg-muted/50")}
+      >
         <th
           scope="row"
           className={cell("max-w-0 py-3.5 pr-4 pl-2 text-left font-normal")}
@@ -201,14 +210,7 @@ function ImageRows({
               />
             </button>
             <div className="flex min-w-0 flex-col gap-1">
-              <button
-                type="button"
-                onClick={onToggle}
-                tabIndex={-1}
-                className="min-w-0 cursor-pointer text-left"
-              >
-                <ImageRef image={image.image} className="text-sm" />
-              </button>
+              <ImageRef image={image.image} className="min-w-0 text-sm" />
               {stacks.length > 0 ? (
                 <Text
                   variant="meta-sm"
