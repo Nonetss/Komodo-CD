@@ -7,10 +7,10 @@ type ShikiTheme = Exclude<ShikiConfig["theme"], string>
 // porque Shiki los escribe tal cual en línea. El fondo es el de la terminal,
 // para que siga al tema de la página.
 const ink = {
-  fg: "#f1eee9",
+  fg: "#f1f1ef",
   bg: "var(--terminal-bg)",
-  muted: "#a9a49c",
-  subtle: "#75716b",
+  muted: "#b7b5a9",
+  subtle: "#7b7a74",
   flag: "#bface4",
   keyword: "#eaba83",
   url: "#8ac9dd",

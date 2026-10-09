@@ -2,60 +2,62 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Misma paleta que apps/frontend/src/styles/global.css: papel cálido y
-   tinta con tinte, con el naranja `signal` como único acento (lo que orienta
-   o pide acción: prompt de instalación, parada activa, enlaces). `strong` es
-   la tinta de títulos (el `foreground` de la app) y `foreground` la de la
-   prosa, un paso más suave. `border` es un paso más fuerte que `hairline`
-   (el `border` de la app). El juego `terminal` es el tema oscuro de la app:
-   enmarca las capturas (todas en oscuro) y los bloques de código. */
+/* Misma paleta que apps/frontend/src/styles/global.css (la de garabato):
+   papel cálido y tinta con tinte, con el naranja `signal` como único acento
+   (lo que orienta o pide acción: prompt de instalación, parada activa,
+   enlaces). `strong` es la tinta de títulos (el `foreground` de la app) y
+   `foreground` la de la prosa, un paso más suave. `border` es un paso más
+   fuerte que `hairline` (el `border` de la app). El juego `terminal` es el
+   tema oscuro de la app: enmarca las capturas (todas en oscuro) y los
+   bloques de código. */
 :root {
-  --background: oklch(0.985 0.006 85);
-  --foreground: oklch(0.3 0.012 72);
-  --strong: oklch(0.19 0.01 70);
+  --background: oklch(0.9818 0.0054 95.0986);
+  --foreground: oklch(0.3438 0.0269 95.7226);
+  --strong: oklch(0.1908 0.002 106.5859);
   --card: var(--background);
-  --primary: oklch(0.553 0.195 38.4);
+  --primary: oklch(0.6724 0.1308 38.7559);
   --primary-foreground: var(--background);
-  /* Naranja para texto sobre el fondo, el mismo que usa la app */
+  /* Naranja para texto sobre el fondo: el de marca, un paso más oscuro para
+     pasar 4.5:1 en claro (en oscuro es el mismo que `primary`) */
   --primary-ink: oklch(0.553 0.195 38.4);
-  --muted: oklch(0.955 0.008 85);
-  --muted-foreground: oklch(0.46 0.012 75);
-  --accent: oklch(0.955 0.008 85);
-  --border: oklch(0.86 0.011 82);
-  --hairline: oklch(0.91 0.01 85);
-  --ring: oklch(0.553 0.195 38.4);
+  --muted: oklch(0.9341 0.0153 90.239);
+  --muted-foreground: oklch(0.5341 0.0078 97.4503);
+  --accent: oklch(0.9245 0.0138 92.9892);
+  --border: oklch(0.86 0.008 98.3528);
+  --hairline: oklch(0.94 0.003 97.3627);
+  --ring: oklch(0.6724 0.1308 38.7559);
 
-  --terminal-bg: oklch(0.17 0.006 70);
-  --terminal-surface: oklch(0.215 0.007 70);
-  --terminal-raised: oklch(0.255 0.007 70);
-  --terminal-border: oklch(0.3 0.007 70);
-  --terminal-fg: oklch(0.95 0.008 85);
-  --terminal-muted: oklch(0.72 0.012 80);
-  --terminal-subtle: oklch(0.55 0.01 75);
-  /* El acento sobre superficie terminal: el naranja del tema oscuro */
-  --terminal-accent: oklch(0.75 0.17 52);
+  --terminal-bg: oklch(0.2679 0.0036 106.6427);
+  --terminal-surface: oklch(0.2928 0.0018 106.5092);
+  --terminal-raised: oklch(0.3085 0.0035 106.6039);
+  --terminal-border: oklch(0.34 0.005 100.2195);
+  --terminal-fg: oklch(0.9576 0.0027 106.4494);
+  --terminal-muted: oklch(0.7713 0.0169 99.0657);
+  --terminal-subtle: oklch(0.58 0.01 100);
+  /* El acento sobre superficie terminal: el naranja de marca */
+  --terminal-accent: oklch(0.6724 0.1308 38.7559);
 
   --header-height: 3.6rem;
   color-scheme: light;
 }
 
 .dark {
-  --background: oklch(0.17 0.006 70);
-  --foreground: oklch(0.86 0.009 82);
-  --strong: oklch(0.95 0.008 85);
-  --primary: oklch(0.75 0.17 52);
-  --primary-ink: oklch(0.75 0.17 52);
-  --muted: oklch(0.235 0.007 70);
-  --muted-foreground: oklch(0.72 0.012 80);
-  --accent: oklch(0.255 0.007 70);
-  --border: oklch(0.3 0.007 70);
-  --hairline: oklch(0.255 0.007 70);
-  --ring: oklch(0.75 0.17 52);
+  --background: oklch(0.2679 0.0036 106.6427);
+  --foreground: oklch(0.9211 0.004 106.4781);
+  --strong: oklch(0.9576 0.0027 106.4494);
+  --primary: oklch(0.6724 0.1308 38.7559);
+  --primary-ink: oklch(0.6724 0.1308 38.7559);
+  --muted: oklch(0.2928 0.0018 106.5092);
+  --muted-foreground: oklch(0.7713 0.0169 99.0657);
+  --accent: oklch(0.34 0.005 100.2195);
+  --border: oklch(0.31 0.004 106.8928);
+  --hairline: oklch(0.2928 0.0018 106.5092);
+  --ring: oklch(0.6724 0.1308 38.7559);
 
   /* Sobre fondo oscuro el marco se separa por el borde y baja un paso,
      como el bloque de código de la app */
-  --terminal-bg: oklch(0.13 0.004 70);
-  --terminal-surface: oklch(0.185 0.006 70);
+  --terminal-bg: oklch(0.2213 0.0038 106.707);
+  --terminal-surface: oklch(0.2679 0.0036 106.6427);
   color-scheme: dark;
 }
 
