@@ -247,12 +247,22 @@ export default {
     rescanImage: "Reescanear {{image}}",
     expand: "Ver vulnerabilidades de {{image}}",
     collapse: "Ocultar vulnerabilidades de {{image}}",
+    // Recuentos de imágenes, no de vulnerabilidades
     counts: {
+      critical: "Con críticas",
+      high: "Con altas",
+      fixable: "Arreglables",
+      failed: "Fallidas",
+      images: "Imágenes",
+    },
+    columns: {
+      image: "Imagen",
       critical: "Críticas",
       high: "Altas",
+      medium: "Medias",
+      low: "Bajas",
       fixable: "Con fix",
-      failed: "Fallidos",
-      images: "Imágenes",
+      scanned: "Último escaneo",
     },
     filter: {
       label: "Filtrar imágenes",
@@ -264,7 +274,6 @@ export default {
       queued: "En cola",
       scanning: "Escaneando",
       none: "Sin escanear",
-      scannedAgo: "Escaneada {{when}}",
     },
     failure: {
       unauthorized: "Sin acceso al registry",
@@ -279,13 +288,6 @@ export default {
       low: "Baja",
       unknown: "Desconocida",
     },
-    severityShort: {
-      critical: "C",
-      high: "A",
-      medium: "M",
-      low: "B",
-      unknown: "?",
-    },
     vulns: {
       none: "Trivy no ha encontrado vulnerabilidades en esta imagen.",
       notYet: "Todavía no hay resultados: el escaneo está en marcha.",
@@ -299,8 +301,7 @@ export default {
       columns: {
         id: "Vulnerabilidad",
         severity: "Severidad",
-        package: "Paquete",
-        version: "Instalada → corregida",
+        packages: "Paquetes · instalada → corregida",
         title: "Descripción",
       },
     },

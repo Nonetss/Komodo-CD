@@ -10,7 +10,7 @@ import { StatStrip } from "@/components/shared/layout/stat-strip"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ImageRow } from "@/features/security/components/image-row"
+import { ImageTable } from "@/features/security/components/image-table"
 import { useImages, useScan } from "@/features/security/hooks/use-security"
 import {
   type ImageFilter,
@@ -39,11 +39,12 @@ const SecurityPageContent = () => {
   const images = imagesQuery.data?.images ?? EMPTY_IMAGES
   const enabled = imagesQuery.data?.enabled ?? false
 
+  // Cuántas imágenes hay que mirar, no cuántos pares paquete × CVE suman
   const totals = useMemo(
     () => ({
-      critical: images.reduce((n, i) => n + i.counts.critical, 0),
-      high: images.reduce((n, i) => n + i.counts.high, 0),
-      fixable: images.reduce((n, i) => n + i.fixable, 0),
+      critical: images.filter((i) => i.counts.critical > 0).length,
+      high: images.filter((i) => i.counts.high > 0).length,
+      fixable: images.filter((i) => isUrgent(i) && i.fixable > 0).length,
       urgent: images.filter(isUrgent).length,
       failed: images.filter((i) => i.status === "failed").length,
     }),
@@ -211,19 +212,14 @@ const SecurityPageContent = () => {
               }
             />
           ) : (
-            <ul className="border-rule rule-t">
-              {shown.map((image) => (
-                <ImageRow
-                  key={image.image}
-                  image={image}
-                  open={open.has(image.image)}
-                  onToggle={() => toggle(image.image)}
-                  canScan={enabled}
-                  scanning={scanning === image.image}
-                  onScan={() => scan(image.image)}
-                />
-              ))}
-            </ul>
+            <ImageTable
+              images={shown}
+              open={open}
+              onToggle={toggle}
+              canScan={enabled}
+              scanning={scanning}
+              onScan={(image) => scan(image)}
+            />
           )}
         </div>
       </div>

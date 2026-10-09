@@ -249,11 +249,20 @@ export default {
     expand: "Show vulnerabilities of {{image}}",
     collapse: "Hide vulnerabilities of {{image}}",
     counts: {
-      critical: "Critical",
-      high: "High",
+      critical: "With critical",
+      high: "With high",
       fixable: "Fixable",
       failed: "Failed",
       images: "Images",
+    },
+    columns: {
+      image: "Image",
+      critical: "Critical",
+      high: "High",
+      medium: "Medium",
+      low: "Low",
+      fixable: "Fixable",
+      scanned: "Last scan",
     },
     filter: {
       label: "Filter images",
@@ -265,7 +274,6 @@ export default {
       queued: "Queued",
       scanning: "Scanning",
       none: "Not scanned",
-      scannedAgo: "Scanned {{when}}",
     },
     failure: {
       unauthorized: "No registry access",
@@ -280,13 +288,6 @@ export default {
       low: "Low",
       unknown: "Unknown",
     },
-    severityShort: {
-      critical: "C",
-      high: "H",
-      medium: "M",
-      low: "L",
-      unknown: "?",
-    },
     vulns: {
       none: "Trivy found no vulnerabilities in this image.",
       notYet: "No results yet: the scan is running.",
@@ -300,8 +301,7 @@ export default {
       columns: {
         id: "Vulnerability",
         severity: "Severity",
-        package: "Package",
-        version: "Installed → fixed",
+        packages: "Packages · installed → fixed",
         title: "Description",
       },
     },
