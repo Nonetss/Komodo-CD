@@ -18,7 +18,7 @@ COPY packages/config/package.json packages/config/
 COPY packages/db/package.json packages/db/
 COPY packages/env/package.json packages/env/
 COPY packages/logger/package.json packages/logger/
-RUN --mount=type=cache,target=/root/.bun/install/cache \
+RUN --mount=type=cache,target=/root/.bun/install/cache,sharing=locked \
     bun install --frozen-lockfile --filter frontend
 
 # packages/ solo aporta tipos (el cliente oRPC importa AppRouter como type).
