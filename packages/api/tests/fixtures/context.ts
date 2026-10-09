@@ -49,6 +49,7 @@ export const sessionContext = (): Context => ({
 /** `x-api-key` válida: hay usuario pero no sesión (ver resolveSession). */
 export const apiKeyContext = (): Context => ({
   ...base,
-  user: { ...testUser, name: "API Key: ci" },
+  // Igual que resolveSession: nombre de la key y sin email
+  user: { ...testUser, name: "API Key: ci", email: "" },
   session: null,
 })
