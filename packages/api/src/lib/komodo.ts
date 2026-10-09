@@ -29,6 +29,17 @@ export function toKomodoError(err: unknown) {
   return errors.BAD_GATEWAY({ message: komodoErrorMessage(err), cause: err })
 }
 
+/**
+ * Error de una tarea de Komodo que terminó mal (`Update.success: false`). El
+ * mensaje es la salida del paso que falló, para el historial y el toast.
+ */
+export function failedUpdateError(update: Types.Update): Error {
+  const failed = update.logs.find((log) => !log.success)
+  const output = (failed?.stderr || failed?.stdout || "").trim()
+  const detail = output || "sin detalles"
+  return new Error(failed ? `${failed.stage}: ${detail}` : detail)
+}
+
 type KomodoCredentials = {
   name: string
   url: string
@@ -85,12 +96,28 @@ class KomodoService {
     return this.client
   }
 
-  async pullImage(stackName: string) {
+  /**
+   * `execute` solo encola la tarea y responde al momento; esto espera a que
+   * Komodo la termine (consulta el `Update` cada segundo) y lanza si acabó mal.
+   * Sin esperar, el deploy se daba por hecho antes de que cambiara nada.
+   */
+  private async executeAndWait(
+    type: "PullStack" | "DeployStack",
+    stackName: string
+  ) {
     const client = this.ensureClient()
+    const update = (await client.execute_and_poll(type, {
+      stack: stackName,
+    })) as Types.Update
+    if (!update.success) throw failedUpdateError(update)
+    return update
+  }
+
+  async pullImage(stackName: string) {
     logger.info(`📥 Pulling stack: ${stackName}`)
 
     try {
-      const result = await client.execute("PullStack", { stack: stackName })
+      const result = await this.executeAndWait("PullStack", stackName)
       logger.info(`✅ Pull completed for stack: ${stackName}`)
       return result
     } catch (err) {
@@ -100,11 +127,10 @@ class KomodoService {
   }
 
   async redeploy(stackName: string) {
-    const client = this.ensureClient()
     logger.info(`🚀 Redeploying stack: ${stackName}`)
 
     try {
-      const result = await client.execute("DeployStack", { stack: stackName })
+      const result = await this.executeAndWait("DeployStack", stackName)
       logger.info(`✅ Stack redeployed: ${stackName}`)
       return result
     } catch (err) {

@@ -50,6 +50,14 @@ app.use(
 
 app.get("/health-check", (c) => c.json({ message: "API is running" }))
 
+// Un deploy responde cuando Komodo termina (pull y redeploy pueden durar
+// minutos) sin mandar nada mientras tanto: sin esto, Bun cortaría la conexión
+// a los 10 s de inactividad (`idleTimeout` por defecto).
+app.on("POST", ["/rpc/v0/deploy/trigger", "/api/v0/deploy"], (c, next) => {
+  globalThis.__backendServer?.timeout(c.req.raw, 0)
+  return next()
+})
+
 app.route("/", authRouter)
 app.use("*", sessionMiddleware)
 app.route("/", rpcRouter)
