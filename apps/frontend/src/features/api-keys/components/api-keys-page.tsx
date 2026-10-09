@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next"
 import { SoftCardList } from "@/components/shared/data-display/soft-card-list"
 import { QueryErrorCard } from "@/components/shared/feedback/query-error-card"
 import { StateCard } from "@/components/shared/feedback/state-card"
-import { HeroCount, PageHero } from "@/components/shared/layout/page-hero"
+import { PageHero } from "@/components/shared/layout/page-hero"
+import { StatStrip } from "@/components/shared/layout/stat-strip"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ApiKeyRow } from "@/features/api-keys/components/api-key-row"
@@ -68,9 +69,11 @@ const ApiKeysPageContent = () => {
         title={t("apikeys.title")}
         description={t("apikeys.description")}
         meta={
-          <HeroCount
-            segments={[{ count: keys.length, label: t("apikeys.count") }]}
-          />
+          keys.length > 0 && (
+            <StatStrip
+              items={[{ label: t("apikeys.count"), value: keys.length }]}
+            />
+          )
         }
         action={
           !showForm && (

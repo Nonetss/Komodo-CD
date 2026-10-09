@@ -4,16 +4,14 @@ import { LogOutButton } from "@/features/app-shell/components/log-out-button"
 import { withIsland } from "@/providers/island"
 
 /**
- * Idioma, tema y cerrar sesión en una sola isla. Se monta una vez en la barra
- * lateral y otra en la cabecera móvil; el contenedor lo pone el layout (la
- * isla de Astro es `display: contents`). En la barra lateral, cerrar sesión
- * va al otro extremo.
+ * Idioma, tema y cerrar sesión en una sola isla, al final de la barra
+ * superior. El contenedor lo pone el layout (la isla de Astro es
+ * `display: contents`).
  */
-const ShellControlsContent = ({ layout }: { layout: "sidebar" | "bar" }) => (
+const ShellControlsContent = () => (
   <>
     <LanguageSwitcherButton />
     <ThemeToggle />
-    {layout === "sidebar" && <div className="flex-1" />}
     <LogOutButton />
   </>
 )

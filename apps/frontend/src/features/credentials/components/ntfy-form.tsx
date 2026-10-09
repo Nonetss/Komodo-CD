@@ -121,7 +121,7 @@ export function NtfyForm({
           </>
         }
       >
-        <div className="grid gap-4 p-5 sm:grid-cols-2">
+        <div className="grid gap-4 py-5 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="url"

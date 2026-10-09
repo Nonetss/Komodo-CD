@@ -6,7 +6,7 @@ import {
   BottomNav,
   type NavItem,
   ShellControls,
-  SidebarNav,
+  TopNav,
 } from "@/features/app-shell"
 import Main from "@/layouts/main.astro"
 import { APP_SURFACES, type SurfaceId } from "@/lib/app-surfaces"
@@ -29,72 +29,58 @@ const NAV: NavItem[] = APP_SURFACES.map((s) => ({
 
 const path = Astro.url.pathname
 const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
+
+// Mismo ancho y márgenes que <main>: la barra se alinea con la página
+const container = "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-10"
 ---
 
 <Main title={`${t(`nav.${surface}`)} · Komodo CD`}>
-  <!-- Barra lateral (escritorio) -->
   <!--
-    El chrome no es `transition:persist` (como en console) porque el elemento
-    activo del menú se renderiza en SSR: se sustituye en cada navegación, pero
-    con nombre propio y sin animación. Solo la página hace el fundido.
+    Barra superior, en todos los tamaños. En escritorio lleva la navegación;
+    en móvil solo marca y controles, y la navegación va en la barra inferior.
+    No es `transition:persist` porque el elemento activo se renderiza en SSR:
+    se sustituye en cada navegación, con nombre propio y sin animación.
   -->
-  <aside
-    class="bg-sidebar fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r lg:flex"
-    transition:name="sidebar-chrome"
-  >
-    <a href="/stacks" class="flex h-16 items-center gap-2.5 px-5">
-      <img src="/logo.svg" alt="" aria-hidden="true" class="h-6 w-auto">
-      <span class="text-headline font-semibold tracking-tight">Komodo CD</span>
-    </a>
-    <div class="flex-1 overflow-y-auto px-3 py-2">
-      <SidebarNav items={NAV} path={path} />
-    </div>
-    <div class="border-t p-3">
-      <div class="flex items-center gap-2.5 px-2 py-1.5">
-        <span
-          class="bg-muted text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-full border text-xs font-medium"
-          >{initial}</span
-        >
-        <div class="min-w-0 flex-1">
-          <p class="text-meta truncate font-medium">{user?.name}</p>
-          <p class="text-muted-foreground text-meta-sm truncate">
-            {user?.email}
-          </p>
-        </div>
-      </div>
-      <div class="mt-1 flex items-center gap-0.5 px-1">
-        <ShellControls client:load lang={lang} layout="sidebar" />
-      </div>
-    </div>
-  </aside>
-
-  <!-- Barra superior (móvil) -->
   <header
-    class="bg-background/80 sticky top-0 z-30 border-b backdrop-blur lg:hidden"
-    transition:name="mobile-header"
+    class="bg-background border-rule sticky top-0 z-30 border-b-[1.5px]"
+    transition:name="top-bar"
   >
-    <div class="flex h-14 items-center gap-2 px-4">
-      <a href="/stacks" class="flex min-w-0 items-center gap-2">
+    <div class:list={[container, "flex h-14 items-stretch gap-8"]}>
+      <a href="/" class="flex min-w-0 shrink-0 items-center gap-2.5">
         <img src="/logo.svg" alt="" aria-hidden="true" class="h-5 w-auto">
-        <span class="text-headline truncate font-semibold tracking-tight"
+        <span
+          class="text-headline type-expanded truncate font-black tracking-tight uppercase"
           >Komodo CD</span
         >
       </a>
-      <div class="ml-auto flex items-center gap-0.5">
-        <ShellControls client:load lang={lang} layout="bar" />
+      <TopNav items={NAV} path={path} />
+      <div class="ml-auto flex shrink-0 items-center gap-3">
+        <span
+          class="hidden items-center gap-2.5 lg:flex"
+          title={user?.email ?? undefined}
+        >
+          <span
+            class="border-rule flex size-7 shrink-0 items-center justify-center border-[1.5px] font-mono text-xs font-medium"
+            aria-hidden="true">{initial}</span
+          >
+          <span class="text-meta hidden max-w-40 truncate font-medium xl:inline"
+            >{user?.name}</span
+          >
+        </span>
+        <div class="flex items-center gap-0.5">
+          <ShellControls client:load lang={lang} />
+        </div>
       </div>
     </div>
   </header>
 
-  <div class="lg:pl-60">
-    <main
-      class="pb-mobile-nav mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 lg:px-10 lg:pt-10 lg:pb-12"
-      transition:animate={fade({ duration: "0.2s" })}
-      transition:name="dashboard-page"
-    >
-      <slot />
-    </main>
-  </div>
+  <main
+    class:list={[container, "pb-mobile-nav pt-6 lg:pt-10 lg:pb-12"]}
+    transition:animate={fade({ duration: "0.2s" })}
+    transition:name="dashboard-page"
+  >
+    <slot />
+  </main>
 
   <BottomNav items={NAV} path={path} />
   <Toaster client:idle />

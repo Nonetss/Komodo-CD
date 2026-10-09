@@ -115,7 +115,7 @@ export function ConnectionForm({
           </>
         }
       >
-        <div className="space-y-5 p-5">
+        <div className="space-y-5 py-5">
           {replacing && (
             <p className="text-warning text-meta flex items-start gap-2">
               <AlertTriangle aria-hidden className="mt-0.5 size-3.5 shrink-0" />

@@ -9,23 +9,24 @@ const { title } = Astro.props
 const { lang } = Astro.locals
 ---
 
-<html lang={lang} class="dark">
+<html lang={lang}>
   <head>
     <meta charset="utf-8">
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     >
-    <meta name="color-scheme" content="dark light">
+    <meta name="color-scheme" content="light dark">
     <link rel="icon" type="image/svg+xml" href="/logo.svg">
-    <Font cssVariable="--font-grotesk" preload={[{ subset: "latin" }]} />
-    <Font cssVariable="--font-space-mono" preload={[{ subset: "latin" }]} />
+    <Font cssVariable="--font-archivo" preload={[{ subset: "latin" }]} />
+    <Font cssVariable="--font-jetbrains-mono" preload={[{ subset: "latin" }]} />
     <title>{title}</title>
     <ClientRouter />
     <script is:inline>
+    // Claro por defecto: solo `theme=dark` activa el tema oscuro
     function applyTheme(doc) {
       const stored = localStorage.getItem("theme")
-      doc.documentElement.classList.toggle("dark", stored !== "light")
+      doc.documentElement.classList.toggle("dark", stored === "dark")
     }
     applyTheme(document)
     document.addEventListener("astro:before-swap", (event) =>

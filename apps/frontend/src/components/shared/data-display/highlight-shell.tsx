@@ -13,17 +13,17 @@ type TokenKind =
 type Token = { kind: TokenKind; text: string }
 
 /**
- * Tonos `--syntax-*` de poca saturación: cada tipo se distingue sin gritar.
- * El marcador a sustituir va en `warning`.
+ * Tonos `--syntax-*` de poca saturación sobre el bloque oscuro: cada tipo se
+ * distingue sin gritar. El marcador a sustituir va en `syntax-placeholder`.
  */
 const TONE: Record<TokenKind, string | undefined> = {
-  command: "text-primary font-bold",
+  command: "text-code-foreground font-bold",
   flag: "text-syntax-flag",
   keyword: "text-syntax-keyword font-bold",
   url: "text-syntax-url",
   string: "text-syntax-string",
   property: "text-syntax-property",
-  punctuation: "text-muted-foreground/70",
+  punctuation: "text-code-foreground/60",
   plain: undefined,
 }
 
@@ -48,7 +48,7 @@ export function highlightShell(code: string): ReactNode[] {
       const key = `${i}-${j}`
       if (j % 2 === 1) {
         return (
-          <span key={key} className="text-warning">
+          <span key={key} className="text-syntax-placeholder">
             {part}
           </span>
         )

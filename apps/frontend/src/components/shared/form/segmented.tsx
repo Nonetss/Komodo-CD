@@ -16,8 +16,9 @@ type SegmentedProps<T extends string> = {
   onChange: (value: T) => void
   options: SegmentedOption<T>[]
   /**
-   * `pill` (por defecto): botones con borde. `tabs`: pestañas subrayadas para
-   * la barra de un bloque (p. ej. `CodeBlock`); el subrayado se apoya en su borde.
+   * `pill` (por defecto): pestañas sueltas para filtros. `tabs`: pestañas con
+   * relleno lateral para la barra de un bloque (p. ej. `CodeBlock`), donde el
+   * subrayado se apoya en su trazo.
    */
   variant?: "pill" | "tabs"
   className?: string
@@ -25,9 +26,9 @@ type SegmentedProps<T extends string> = {
 }
 
 /**
- * Selector de un valor entre pocos (SegmentedPicker de console) sobre radios
- * nativos, con flechas de teclado incluidas. La opción elegida toma el acento
- * en suave (fondo al 15 % y borde al 50 %), nunca relleno sólido.
+ * Selector de un valor entre pocos sobre radios nativos, con flechas de
+ * teclado incluidas. Etiquetas mono en mayúsculas; la opción elegida va en
+ * tinta con un subrayado en el acento, nunca con relleno.
  */
 export function Segmented<T extends string>({
   value,
@@ -43,7 +44,9 @@ export function Segmented<T extends string>({
       aria-label={props["aria-label"]}
       className={cn(
         "flex max-w-full min-w-0",
-        variant === "pill" ? "gap-1" : "self-stretch overflow-x-auto",
+        variant === "pill"
+          ? "flex-wrap gap-x-4 gap-y-1"
+          : "self-stretch overflow-x-auto",
         className
       )}
     >
@@ -54,18 +57,13 @@ export function Segmented<T extends string>({
           <label
             key={o.value}
             className={cn(
-              "has-focus-visible:ring-ring/50 flex cursor-pointer items-center justify-center gap-1.5 rounded-md px-2.5 text-xs whitespace-nowrap transition-colors has-focus-visible:ring-2",
-              variant === "pill" && "h-8 border",
-              variant === "pill" &&
-                (active
-                  ? "border-primary/50 bg-primary/15 text-primary"
-                  : "border-input text-muted-foreground hover:bg-muted/40 hover:text-foreground"),
-              variant === "tabs" &&
-                "relative h-full min-h-9 after:absolute after:inset-x-2.5 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
-              variant === "tabs" &&
-                (active
-                  ? "text-foreground after:bg-primary"
-                  : "text-muted-foreground hover:text-foreground after:bg-transparent")
+              "has-focus-visible:ring-ring text-label relative flex cursor-pointer items-center justify-center gap-1.5 font-mono font-medium tracking-widest whitespace-nowrap uppercase transition-colors has-focus-visible:ring-2",
+              "after:absolute after:bottom-0 after:h-0.5 after:transition-colors",
+              variant === "pill" && "h-9 after:inset-x-0",
+              variant === "tabs" && "h-full min-h-9 px-2.5 after:inset-x-2.5",
+              active
+                ? "text-foreground after:bg-signal"
+                : "text-muted-foreground hover:text-foreground after:bg-transparent"
             )}
           >
             <input
@@ -78,14 +76,7 @@ export function Segmented<T extends string>({
             />
             {o.label}
             {o.count !== undefined && (
-              <span
-                className={cn(
-                  "font-mono tabular-nums",
-                  active && variant === "pill"
-                    ? "opacity-70"
-                    : alert && "text-danger"
-                )}
-              >
+              <span className={cn("tabular-nums", alert && "text-signal")}>
                 {o.count}
               </span>
             )}

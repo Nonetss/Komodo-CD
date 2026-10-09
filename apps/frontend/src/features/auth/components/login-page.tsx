@@ -36,35 +36,35 @@ function BrandPanel() {
     <div className="bg-sidebar bg-dot-grid relative hidden overflow-hidden border-r lg:flex lg:flex-col lg:justify-between lg:p-12">
       <div className="relative flex items-center gap-2.5">
         <img src="/logo.svg" alt="" aria-hidden className="h-7 w-auto" />
-        <Text variant="headline" className="font-semibold">
+        <Text variant="headline" className="type-expanded font-black uppercase">
           Komodo CD
         </Text>
       </div>
 
       <div className="relative max-w-md space-y-8">
-        <p className="text-4xl leading-[1.08] font-semibold tracking-tight text-balance xl:text-5xl">
+        <p className="type-expanded text-4xl leading-[1.02] font-black tracking-[-0.035em] text-balance xl:text-5xl">
           {t("login.subtitle")}
         </p>
 
-        <div className="bg-card overflow-hidden rounded-xl border">
-          <div className="flex items-center gap-1.5 border-b px-3 py-2">
+        <div className="bg-code text-code-foreground overflow-hidden">
+          <div className="border-code-foreground/15 flex items-center gap-1.5 border-b px-3 py-2">
             <span className="bg-danger/60 size-2 rounded-full" />
             <span className="bg-warning/60 size-2 rounded-full" />
             <span className="bg-success/60 size-2 rounded-full" />
-            <Text variant="data" tone="muted" className="ml-2">
+            <Text variant="data" className="text-code-foreground/60 ml-2">
               .github/workflows/deploy.yml
             </Text>
           </div>
-          <pre className="text-muted-foreground p-4 font-mono text-xs leading-relaxed">
-            <span className="text-primary">curl</span> -X POST
+          <pre className="text-code-foreground/70 p-4 font-mono text-xs leading-relaxed">
+            <span className="text-code-foreground font-bold">curl</span> -X POST
             $KOMODO_CD_URL/api/v0/deploy \{"\n"}
             {"  "}-H{" "}
-            <span className="text-foreground">
+            <span className="text-syntax-property">
               "x-api-key: $KOMODO_API_KEY"
             </span>{" "}
             \{"\n"}
             {"  "}-d{" "}
-            <span className="text-success">
+            <span className="text-syntax-string">
               '{"{"}"stack":"web","action":"pull-redeploy"{"}"}'
             </span>
           </pre>

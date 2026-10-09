@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "sonner"
 
 /** Toaster global: se monta una vez en el layout y sigue el tema actual. */
 export function Toaster() {
-  const [theme, setTheme] = useState<"light" | "dark">("dark")
+  const [theme, setTheme] = useState<"light" | "dark">("light")
 
   useEffect(() => {
     const read = () =>
@@ -28,7 +28,7 @@ export function Toaster() {
       toastOptions={{
         classNames: {
           toast:
-            "!bg-popover !text-popover-foreground !border-border !rounded-lg !font-sans !shadow-lg",
+            "!bg-popover !text-popover-foreground !border-rule !border-[1.5px] !rounded-none !font-sans !shadow-lg",
           description: "!text-muted-foreground",
         },
       }}

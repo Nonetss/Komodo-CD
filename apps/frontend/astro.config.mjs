@@ -29,19 +29,21 @@ export default defineConfig({
   fonts: [
     {
       provider: fontsource,
-      name: "Space Grotesk",
-      cssVariable: "--font-grotesk",
-      weights: ["300 700"],
+      name: "Archivo",
+      cssVariable: "--font-archivo",
+      // Con un rango, fontsource sirve el fichero variable con los ejes
+      // `wght` y `wdth`; el ancho se pide con `font-variation-settings`
+      // (utilidades `type-expanded` en global.css)
+      weights: ["100 900"],
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
     },
     {
       provider: fontsource,
-      name: "Space Mono",
-      cssVariable: "--font-space-mono",
-      // Space Mono no es variable: solo pesos estáticos 400/700
-      weights: [400, 700],
+      name: "JetBrains Mono",
+      cssVariable: "--font-jetbrains-mono",
+      weights: ["100 800"],
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["ui-monospace", "SFMono-Regular", "monospace"],

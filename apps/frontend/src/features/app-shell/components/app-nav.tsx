@@ -3,21 +3,19 @@ import { cn } from "@/lib/utils"
 
 export type NavItem = { key: SurfaceId; href: string; label: string }
 
+// La raíz (resumen) solo está activa en `/`: como prefijo lo sería siempre
 const isActive = (path: string, href: string) =>
-  path === href || path.startsWith(`${href}/`)
+  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`)
 
-/** Navegación vertical de la barra lateral (escritorio). Se renderiza en SSR. */
-export function SidebarNav({
-  items,
-  path,
-}: {
-  items: NavItem[]
-  path: string
-}) {
+/**
+ * Navegación horizontal de la barra superior (escritorio). Se renderiza en
+ * SSR. Cada enlace ocupa toda la altura de la barra, así el subrayado del
+ * elemento activo se apoya en su trazo grueso.
+ */
+export function TopNav({ items, path }: { items: NavItem[]; path: string }) {
   return (
-    <nav className="flex flex-col gap-0.5">
+    <nav className="hidden h-full items-stretch gap-6 lg:flex">
       {items.map((item) => {
-        const Icon = getAppSurface(item.key).icon
         const active = isActive(path, item.href)
         return (
           <a
@@ -25,13 +23,12 @@ export function SidebarNav({
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors",
+              "text-label flex items-center font-mono font-medium tracking-widest whitespace-nowrap uppercase transition-colors",
               active
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                ? "text-foreground shadow-[inset_0_-2px_0_var(--color-signal)]"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
-            <Icon aria-hidden className="size-4 shrink-0" />
             {item.label}
           </a>
         )
@@ -50,13 +47,13 @@ export function SidebarNav({
 export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
   return (
     <nav
-      className="bg-background/85 fixed inset-x-0 bottom-0 z-40 border-t backdrop-blur-lg lg:hidden"
+      className="bg-background border-rule fixed inset-x-0 bottom-0 z-40 border-t-[1.5px] lg:hidden"
       style={{
         paddingBottom: "env(safe-area-inset-bottom)",
         viewTransitionName: "bottom-nav",
       }}
     >
-      <div className="mx-auto grid h-16 max-w-lg grid-cols-5">
+      <div className="mx-auto grid h-16 max-w-xl grid-cols-6">
         {items.map((item) => {
           const Icon = getAppSurface(item.key).icon
           const active = isActive(path, item.href)
@@ -66,19 +63,18 @@ export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "text-meta-sm flex flex-col items-center justify-center gap-1 font-medium transition-colors",
-                active ? "text-primary" : "text-muted-foreground"
+                "text-meta-sm relative flex min-w-0 flex-col items-center justify-center gap-1.5 font-mono font-medium tracking-[0.04em] uppercase transition-colors",
+                "after:absolute after:inset-x-2 after:top-0 after:h-0.5",
+                active
+                  ? "text-foreground after:bg-signal"
+                  : "text-muted-foreground after:bg-transparent"
               )}
             >
-              <span
-                className={cn(
-                  "flex h-7 w-12 items-center justify-center rounded-md transition-colors",
-                  active && "bg-primary/10"
-                )}
-              >
-                <Icon aria-hidden className="size-4.5" />
-              </span>
-              <span className="max-w-full truncate px-1">{item.label}</span>
+              <Icon
+                aria-hidden
+                className={cn("size-4.5", active && "text-signal")}
+              />
+              <span className="max-w-full truncate px-0.5">{item.label}</span>
             </a>
           )
         })}

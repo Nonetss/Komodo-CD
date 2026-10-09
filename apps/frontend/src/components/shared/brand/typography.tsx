@@ -6,20 +6,24 @@ import { cn } from "@/lib/utils"
 const textVariants = cva("", {
   variants: {
     role: {
-      display: "text-display font-semibold tracking-tight",
-      stat: "text-stat font-medium tabular-nums",
-      headline: "text-headline font-medium tracking-tight",
+      display:
+        "text-display type-expanded font-black tracking-[-0.035em] wrap-anywhere",
+      section:
+        "text-section type-semi-expanded font-extrabold tracking-[-0.02em]",
+      stat: "text-stat type-semi-expanded font-extrabold tabular-nums",
+      headline: "text-headline font-bold tracking-tight",
       body: "text-body",
       meta: "text-meta leading-relaxed",
       "meta-sm": "text-meta-sm",
-      label: "text-label font-medium tracking-[0.12em] uppercase",
-      status: "text-xs tracking-[0.08em] uppercase",
-      data: "font-mono text-xs tracking-tight tabular-nums",
+      label: "font-mono text-label font-medium tracking-widest uppercase",
+      status: "font-mono text-label font-medium tracking-widest uppercase",
+      data: "font-mono text-xs tabular-nums",
     },
     tone: {
       default: "",
       muted: "text-muted-foreground",
       primary: "text-primary",
+      signal: "text-signal",
       destructive: "text-destructive",
     },
   },

@@ -22,27 +22,19 @@ export function CodeBlock({
   language = "text",
   className,
 }: CodeBlockProps) {
+  // La barra va sobre el fondo de la página y el código en un bloque de
+  // tinta, oscuro en los dos temas
   return (
-    <div
-      className={cn(
-        "bg-card overflow-hidden rounded-xl border text-left",
-        className
-      )}
-    >
-      <div
-        className={cn(
-          "bg-muted/40 flex min-h-9 items-center justify-between gap-2 border-b pr-1",
-          header ? "pl-1" : "pl-3"
-        )}
-      >
+    <div className={cn("text-left", className)}>
+      <div className="border-rule flex min-h-9 items-center justify-between gap-2 border-b-[1.5px]">
         {header ?? (
-          <span className="text-muted-foreground truncate font-mono text-xs tracking-tight">
+          <span className="text-muted-foreground truncate font-mono text-xs">
             {label}
           </span>
         )}
         <CopyButton value={code} withLabel className="shrink-0" />
       </div>
-      <pre className="overflow-x-auto px-4 py-3.5 font-mono text-xs leading-6">
+      <pre className="bg-code text-code-foreground overflow-x-auto px-5 py-4 font-mono text-xs leading-6">
         <code>{language === "shell" ? highlightShell(code) : code}</code>
       </pre>
     </div>

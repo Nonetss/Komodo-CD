@@ -95,9 +95,9 @@ const DeployPageContent = () => {
           method="post"
           onSubmit={form.handleSubmit(onSubmit)}
           noValidate
-          className="bg-surface rounded-xl border"
+          className="border-rule border-t-[1.5px] border-b"
         >
-          <div className="space-y-6 p-5">
+          <div className="space-y-6 py-5">
             <FormField
               control={form.control}
               name="stack"
@@ -129,7 +129,7 @@ const DeployPageContent = () => {
             />
           </div>
 
-          <div className="flex flex-col items-stretch gap-3 border-t px-5 py-4 sm:flex-row sm:items-center">
+          <div className="flex flex-col items-stretch gap-3 border-t py-4 sm:flex-row sm:items-center">
             <div role="status" className="min-w-0 flex-1">
               {result && (
                 <p className="text-meta flex items-start gap-2">

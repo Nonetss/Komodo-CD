@@ -117,7 +117,7 @@ export function StackCombobox({
         <div
           id={listId}
           role="listbox"
-          className="bg-popover animate-in fade-in-0 zoom-in-[0.98] absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-xl border p-1 shadow-md"
+          className="bg-popover animate-in fade-in-0 zoom-in-[0.98] absolute z-20 mt-1 max-h-64 w-full overflow-y-auto border-[1.5px] border-rule p-1 shadow-md"
         >
           {matches.length === 0 ? (
             <p className="text-muted-foreground px-2 py-3 text-center text-xs">

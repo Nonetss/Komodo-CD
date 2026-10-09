@@ -33,7 +33,7 @@ export function ActionChoice({
               className={cn(
                 "has-focus-visible:ring-ring/50 flex cursor-pointer flex-col gap-1 rounded-md border px-3 py-2.5 transition-colors has-focus-visible:ring-2",
                 checked
-                  ? "border-foreground bg-muted/40"
+                  ? "border-rule bg-muted"
                   : "border-input hover:bg-muted/40"
               )}
             >

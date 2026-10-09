@@ -21,11 +21,11 @@ export function ConnectionGuide() {
       <Text as="h2" id="connection-guide" variant="label" tone="muted">
         {t("credentials.howTitle")}
       </Text>
-      <ol className="bg-surface grid grid-cols-1 gap-x-6 gap-y-4 rounded-xl border p-5 sm:grid-cols-2 lg:grid-cols-4">
+      <ol className="border-rule grid grid-cols-1 gap-x-6 gap-y-4 border-t-[1.5px] border-b py-5 sm:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((step, i) => (
           <li key={step} className="flex min-w-0 gap-3 lg:flex-col">
             <span className="flex items-center gap-3">
-              <span className="border-primary/40 bg-primary/10 text-primary flex size-7 shrink-0 items-center justify-center rounded-full border font-mono text-xs tabular-nums">
+              <span className="border-signal text-signal flex size-7 shrink-0 items-center justify-center border-[1.5px] font-mono text-xs tabular-nums">
                 {i + 1}
               </span>
               {i < STEPS.length - 1 && (

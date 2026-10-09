@@ -4,8 +4,9 @@ import { Text } from "@/components/shared/brand/typography"
 import { cn } from "@/lib/utils"
 
 /**
- * Tonos del punto de estado. El color vive solo aquí (6px) y, cuando el
- * estado pide atención, en la palabra que lo acompaña: nunca en fondos.
+ * Tonos del punto de estado. El color vive solo aquí (8px) y, cuando el
+ * estado pide atención, en la palabra que lo acompaña: nunca en fondos. Los
+ * estados neutros (parado, desconocido) son un aro hueco.
  */
 export type StatusTone =
   | "success"
@@ -21,7 +22,7 @@ const DOT: Record<StatusTone, string> = {
   warning: "bg-warning",
   danger: "bg-danger",
   primary: "bg-primary",
-  muted: "bg-muted-foreground/40",
+  muted: "ring-[1.5px] ring-inset ring-muted-foreground",
 }
 
 const INK: Record<StatusTone, string> = {
@@ -37,7 +38,7 @@ export function statusInkClass(tone: StatusTone) {
   return INK[tone]
 }
 
-/** Punto de estado de 6px; `pulse` para una acción en curso. */
+/** Punto de estado de 8px; `pulse` para una acción en curso. */
 export function StatusDot({
   tone = "muted",
   pulse = false,
@@ -51,7 +52,7 @@ export function StatusDot({
     <span
       aria-hidden
       className={cn(
-        "size-1.5 shrink-0 rounded-full",
+        "size-2 shrink-0 rounded-full",
         DOT[tone],
         pulse && "animate-pulse",
         className
@@ -84,7 +85,7 @@ export function StatusTag({
       variant="status"
       title={title}
       className={cn(
-        "inline-flex items-center gap-1.5 whitespace-nowrap",
+        "inline-flex items-center gap-2 whitespace-nowrap",
         ink && tone ? INK[tone] : "text-muted-foreground",
         className
       )}
