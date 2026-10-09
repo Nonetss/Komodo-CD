@@ -73,7 +73,7 @@ export default {
     stats: {
       running: "Running",
       stopped: "Stopped",
-      problems: "With issues",
+      problems: "Issues",
     },
     filterAll: "All",
     filterLabel: "Filter by state",

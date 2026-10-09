@@ -103,22 +103,17 @@ export function StackList({
           )}
         </div>
 
+        {/* Los cuatro en una línea en la columna estrecha: solo problemas lleva
+            contador, los demás ya salen en la cabecera */}
         <Segmented
           value={group}
           onChange={onGroup}
           aria-label={t("stacks.filterLabel")}
+          className="flex-nowrap lg:justify-between lg:gap-x-2"
           options={[
-            { value: "all", label: t("stacks.filterAll"), count: counts.all },
-            {
-              value: "running",
-              label: t("stacks.stats.running"),
-              count: counts.running,
-            },
-            {
-              value: "stopped",
-              label: t("stacks.stats.stopped"),
-              count: counts.stopped,
-            },
+            { value: "all", label: t("stacks.filterAll") },
+            { value: "running", label: t("stacks.stats.running") },
+            { value: "stopped", label: t("stacks.stats.stopped") },
             {
               value: "problems",
               label: t("stacks.stats.problems"),

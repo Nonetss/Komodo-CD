@@ -71,7 +71,7 @@ export default {
     stats: {
       running: "Running",
       stopped: "Parados",
-      problems: "Con problemas",
+      problems: "Problemas",
     },
     filterAll: "Todos",
     filterLabel: "Filtrar por estado",

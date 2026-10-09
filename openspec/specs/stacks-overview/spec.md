@@ -34,7 +34,7 @@ The dashboard SHALL provide a Stacks page at `/stacks` and `/stacks/<name>`. The
 The list pane SHALL show a header with the total and a count of running stacks. It SHALL be sorted by name and filterable:
 
 - by a text search on the name, cleared with `Escape` or a clear button;
-- by a group, each with its count: all; running (`running`, `deploying`); stopped (`stopped`, `down`, `paused`, `created`); problems (a danger state — `unhealthy`, `dead`, `removing` —, `unknown`, `project_missing` or missing files).
+- by a group, on one line, where only problems shows its count (the header already gives the running and total counts): all; running (`running`, `deploying`); stopped (`stopped`, `down`, `paused`, `created`); problems (a danger state — `unhealthy`, `dead`, `removing` —, `unknown`, `project_missing` or missing files).
 
 Each list item SHALL show:
 
