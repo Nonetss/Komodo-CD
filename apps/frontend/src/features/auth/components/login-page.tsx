@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 
 import { Text } from "@/components/shared/brand/typography"
+import { Wordmark } from "@/components/shared/brand/wordmark"
 import { LanguageSwitcherButton } from "@/components/shared/controls/language-switcher"
 import { ThemeToggle } from "@/components/shared/controls/theme-toggle"
 import { Button } from "@/components/ui/button"
@@ -34,12 +35,7 @@ function BrandPanel() {
   const { t } = useTranslation()
   return (
     <div className="bg-sidebar bg-dot-grid relative hidden overflow-hidden border-r lg:flex lg:flex-col lg:justify-between lg:p-12">
-      <div className="relative flex items-center gap-2.5">
-        <img src="/logo.svg" alt="" aria-hidden className="h-7 w-auto" />
-        <Text variant="headline" className="type-expanded font-black uppercase">
-          Komodo CD
-        </Text>
-      </div>
+      <Wordmark className="relative text-lg" />
 
       <div className="relative max-w-md space-y-8">
         <p className="type-expanded text-4xl leading-[1.02] font-black tracking-[-0.035em] text-balance xl:text-5xl">
@@ -118,12 +114,7 @@ const LoginPageContent = () => {
 
       <div className="relative flex flex-col px-5 py-6 sm:px-8">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 lg:invisible">
-            <img src="/logo.svg" alt="" aria-hidden className="h-6 w-auto" />
-            <Text variant="headline" className="font-semibold">
-              Komodo CD
-            </Text>
-          </div>
+          <Wordmark className="lg:invisible" />
           <div className="flex items-center gap-0.5">
             <LanguageSwitcherButton />
             <ThemeToggle />

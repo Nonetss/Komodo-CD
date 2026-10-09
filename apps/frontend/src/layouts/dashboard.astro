@@ -1,6 +1,7 @@
 ---
 import { fade } from "astro:transitions"
 
+import { Wordmark } from "@/components/shared/brand/wordmark"
 import { Toaster } from "@/components/shared/feedback/toaster"
 import {
   BottomNav,
@@ -23,7 +24,7 @@ interface Props {
 }
 
 const { surface, bleed = false } = Astro.props
-const { user, lang } = Astro.locals
+const { lang } = Astro.locals
 const { t } = getI18n(lang)
 
 const NAV: NavItem[] = APP_SURFACES.map((s) => ({
@@ -33,7 +34,6 @@ const NAV: NavItem[] = APP_SURFACES.map((s) => ({
 }))
 
 const path = Astro.url.pathname
-const initial = (user?.name || user?.email || "?").charAt(0).toUpperCase()
 
 // Contenido de las páginas normales: columna centrada. La barra superior va
 // a todo el ancho con los mismos márgenes laterales
@@ -53,31 +53,12 @@ const container = `mx-auto w-full max-w-6xl ${gutter}`
     transition:name="top-bar"
   >
     <div class:list={[gutter, "flex h-full items-stretch gap-8"]}>
-      <a href="/" class="flex min-w-0 shrink-0 items-center gap-2.5">
-        <img src="/logo.svg" alt="" aria-hidden="true" class="h-5 w-auto">
-        <span
-          class="text-headline type-expanded truncate font-black tracking-tight uppercase"
-          >Komodo CD</span
-        >
+      <a href="/" class="flex shrink-0 items-center">
+        <Wordmark />
       </a>
       <TopNav items={NAV} path={path} />
-      <div class="ml-auto flex shrink-0 items-center gap-3">
-        <span
-          class="hidden items-center gap-2.5 lg:flex"
-          title={user?.email ?? undefined}
-        >
-          <span
-            class="border-rule flex size-7 shrink-0 items-center justify-center border-[1.5px] font-mono text-xs font-medium"
-            aria-hidden="true"
-            >{initial}</span
-          >
-          <span class="text-meta hidden max-w-40 truncate font-medium xl:inline"
-            >{user?.name}</span
-          >
-        </span>
-        <div class="flex items-center gap-0.5">
-          <ShellControls client:load lang={lang} />
-        </div>
+      <div class="ml-auto flex shrink-0 items-center gap-0.5">
+        <ShellControls client:load lang={lang} />
       </div>
     </div>
   </header>
