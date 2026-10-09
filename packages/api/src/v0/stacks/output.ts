@@ -44,4 +44,9 @@ export const stacksOutput = {
     success: z.boolean(),
     stacks: z.array(stackItem),
   }),
+  remove: z.object({
+    success: z.boolean(),
+    stack: z.string(),
+    message: z.string(),
+  }),
 }

@@ -159,6 +159,24 @@ class KomodoService {
     }
   }
 
+  /**
+   * Borra el recurso stack en Komodo (`DeleteStack`). Si el stack está en
+   * marcha, Komodo baja antes sus contenedores.
+   */
+  async deleteStack(stackName: string) {
+    const client = this.ensureClient()
+    logger.info(`🗑️ Deleting stack: ${stackName}`)
+
+    try {
+      const result = await client.write("DeleteStack", { id: stackName })
+      logger.info(`✅ Stack deleted: ${stackName}`)
+      return result
+    } catch (err) {
+      logger.error({ err }, `❌ Failed to delete stack ${stackName}`)
+      throw err
+    }
+  }
+
   async deleteCredentials(name: string) {
     try {
       const deleted = await db

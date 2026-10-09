@@ -23,6 +23,7 @@ import {
   problemKind,
   StackStateTag,
 } from "@/entities/stack"
+import { StackDelete } from "@/features/stacks/components/stack-delete"
 import { StackProblem } from "@/features/stacks/components/stack-problem"
 import { useAppUrl } from "@/hooks/use-app-url"
 import type { DeployAction, Stack } from "@/lib/api-types"
@@ -47,7 +48,8 @@ export function BackToList() {
 
 /**
  * Ficha de un stack: cabecera con el nombre y las acciones, el problema si lo
- * hay, los commits, los servicios con su imagen y el `curl` para CI.
+ * hay, los commits, los servicios con su imagen, el `curl` para CI y el
+ * borrado en Komodo.
  */
 export function StackDetail({
   stack,
@@ -226,6 +228,8 @@ export function StackDetail({
         />
         <DeployCurlHint />
       </section>
+
+      <StackDelete name={stack.name} disabled={runningAction !== null} />
     </article>
   )
 }
