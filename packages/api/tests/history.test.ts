@@ -88,3 +88,72 @@ describe("history.list", () => {
     expect(history[99]?.stack).toBe("stack-50")
   })
 })
+
+const activity = (input?: { days?: number }) =>
+  call(appRouter.v0.history.activity, input, { context: sessionContext() })
+
+const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000)
+
+describe("history.activity", () => {
+  beforeEach(async () => {
+    await db.delete(actionHistoryTable)
+  })
+
+  test("returns the last 30 days by default, newest first", async () => {
+    await db
+      .insert(actionHistoryTable)
+      .values([
+        row({ stack: "old", createdAt: daysAgo(31) }),
+        row({ stack: "week", createdAt: daysAgo(7) }),
+        row({ stack: "today", createdAt: daysAgo(0.1) }),
+      ])
+
+    const { events, since, truncated } = await activity()
+
+    expect(events.map((e) => e.stack)).toEqual(["today", "week"])
+    expect(truncated).toBe(false)
+    expect(Date.parse(since)).toBeCloseTo(daysAgo(30).getTime(), -4)
+  })
+
+  test("narrows the window with days", async () => {
+    await db
+      .insert(actionHistoryTable)
+      .values([
+        row({ stack: "week", createdAt: daysAgo(7) }),
+        row({ stack: "today", createdAt: daysAgo(0.1) }),
+      ])
+
+    const { events } = await activity({ days: 3 })
+
+    expect(events.map((e) => e.stack)).toEqual(["today"])
+  })
+
+  test("keeps the outcome and who ran each action", async () => {
+    await db.insert(actionHistoryTable).values([
+      row({
+        action: "redeploy",
+        success: false,
+        userName: "API Key: ci",
+        userEmail: "",
+        createdAt: daysAgo(1),
+      }),
+      row({ userName: "Ana", userEmail: "ana@example.com" }),
+    ])
+
+    const { events } = await activity()
+
+    expect(events).toEqual([
+      expect.objectContaining({ action: "pull", success: true, via: "session" }),
+      expect.objectContaining({
+        action: "redeploy",
+        success: false,
+        via: "apiKey",
+      }),
+    ])
+  })
+
+  test("rejects a window outside 1 to 90 days", async () => {
+    await expect(activity({ days: 0 })).rejects.toThrow()
+    await expect(activity({ days: 91 })).rejects.toThrow()
+  })
+})

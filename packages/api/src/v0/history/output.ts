@@ -20,4 +20,20 @@ export const historyOutput = {
       })
     ),
   }),
+  activity: z.object({
+    success: z.boolean(),
+    // Inicio de la ventana pedida, en ISO
+    since: z.string(),
+    // `true` si había más eventos que `ACTIVITY_LIMIT` y se cortó la ventana
+    truncated: z.boolean(),
+    events: z.array(
+      z.object({
+        stack: z.string(),
+        action: z.string(),
+        success: z.boolean(),
+        via: z.enum(["session", "apiKey"]),
+        createdAt: z.string(),
+      })
+    ),
+  }),
 }
