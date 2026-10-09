@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react"
 import { Toaster as Sonner } from "sonner"
+// Sonner mete su CSS en el <head> una sola vez, al cargar el módulo, y el
+// ClientRouter lo quita en la primera navegación. Importado, va con la página.
+import "sonner/dist/styles.css"
 
 /** Toaster global: se monta una vez en el layout y sigue el tema actual. */
 export function Toaster() {
