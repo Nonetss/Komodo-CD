@@ -6,6 +6,7 @@ import { logger } from "@komodo-cd/logger"
 import type { z } from "zod"
 
 import { type DeployRun, deployEvents } from "#lib/deploy-events"
+import { imageScans } from "#lib/image-scans"
 import { komodoErrorMessage, komodoService, toKomodoError } from "#lib/komodo"
 import { ntfyService } from "#lib/ntfy"
 import type { deployInput } from "#v0/deploy/input"
@@ -73,6 +74,11 @@ export const deployHandler = {
       await saveHistory(user, stack, action, true, message)
       // Después del historial: quien refresque al recibirlo ya ve la fila
       deployEvents.publishFinished(run, { success: true, message })
+      // Las imágenes del stack pueden haber cambiado: se reescanean en segundo
+      // plano, sin esperar ni poder romper la respuesta del deploy.
+      imageScans.enqueueStack(stack).catch((err) => {
+        logger.error({ err }, `❌ Error encolando el escaneo de ${stack}`)
+      })
 
       return { success: true, message, stack, action }
     } catch (err) {

@@ -4,6 +4,7 @@ import { actionHistoryTable } from "@komodo-cd/db/schema"
 import { call } from "@orpc/server"
 
 import { deployEvents } from "#lib/deploy-events"
+import { imageScans } from "#lib/image-scans"
 import { komodoService } from "#lib/komodo"
 import { ntfyService } from "#lib/ntfy"
 import { appRouter } from "#router"
@@ -177,5 +178,53 @@ describe("deploy.trigger events", () => {
 
     releaseNtfy()
     await pending
+  })
+})
+
+describe("deploy.trigger image scans", () => {
+  let pull: ReturnType<typeof spyOn>
+  let redeploy: ReturnType<typeof spyOn>
+  let notify: ReturnType<typeof spyOn>
+  let enqueueStack: ReturnType<typeof spyOn>
+
+  beforeEach(async () => {
+    await db.delete(actionHistoryTable)
+    pull = spyOn(komodoService, "pullImage").mockResolvedValue(
+      undefined as never
+    )
+    redeploy = spyOn(komodoService, "redeploy").mockResolvedValue(
+      undefined as never
+    )
+    notify = spyOn(ntfyService, "notifyDeployFailure").mockResolvedValue(
+      undefined
+    )
+    enqueueStack = spyOn(imageScans, "enqueueStack").mockResolvedValue(
+      undefined
+    )
+  })
+
+  afterEach(() => {
+    pull.mockRestore()
+    redeploy.mockRestore()
+    notify.mockRestore()
+    enqueueStack.mockRestore()
+  })
+
+  test("a successful deploy queues the stack's images", async () => {
+    const result = await trigger("pull-redeploy")
+    expect(result.success).toBe(true)
+    expect(enqueueStack).toHaveBeenCalledWith("web")
+  })
+
+  test("a failed deploy queues nothing", async () => {
+    pull.mockRejectedValue(komodoFailure)
+    await expectErrorCode(trigger("pull"), "BAD_GATEWAY")
+    expect(enqueueStack).not.toHaveBeenCalled()
+  })
+
+  test("a failing enqueue does not change the response", async () => {
+    enqueueStack.mockRejectedValue(new Error("boom"))
+    const result = await trigger("redeploy")
+    expect(result).toMatchObject({ success: true, action: "redeploy" })
   })
 })
