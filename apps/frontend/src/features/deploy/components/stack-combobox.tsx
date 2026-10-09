@@ -139,7 +139,9 @@ export function StackCombobox({
                 )}
               >
                 <StackStateDot state={s.info.state} />
-                <span className="truncate font-semibold">{s.name}</span>
+                <Text variant="name" className="truncate">
+                  {s.name}
+                </Text>
                 <Text variant="status" tone="muted" className="ml-auto">
                   {t(`stacks.states.${s.info.state}`, {
                     defaultValue: s.info.state,

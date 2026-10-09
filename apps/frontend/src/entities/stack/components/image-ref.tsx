@@ -51,10 +51,7 @@ export function ImageRef({
   return (
     <span
       title={image}
-      className={cn(
-        "flex min-w-0 font-mono text-xs tracking-tight tabular-nums",
-        className
-      )}
+      className={cn("flex min-w-0 font-mono text-xs tabular-nums", className)}
     >
       {prefix && (
         <span className="text-muted-foreground/80 min-w-0 truncate">

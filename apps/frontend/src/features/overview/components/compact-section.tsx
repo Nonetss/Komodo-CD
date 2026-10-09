@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 
-import { Text } from "@/components/shared/brand/typography"
+import { Text, textVariants } from "@/components/shared/brand/typography"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { StackLink, StackStateDot } from "@/entities/stack"
 import type { Stack } from "@/lib/api-types"
@@ -49,7 +49,10 @@ export function CompactSection({
               <StackStateDot state={stack.info.state} />
               <StackLink
                 name={stack.name}
-                className="min-w-0 flex-1 truncate font-semibold"
+                className={cn(
+                  textVariants({ role: "name" }),
+                  "min-w-0 flex-1 truncate"
+                )}
               />
               <Text variant="data" tone={deploying ? "default" : "muted"}>
                 {deploying

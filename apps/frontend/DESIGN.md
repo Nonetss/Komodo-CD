@@ -41,7 +41,7 @@ typography:
     letterSpacing: "-0.03em"
   section:
     fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.125rem"
+    fontSize: "1.25rem"
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "-0.025em"
@@ -66,7 +66,7 @@ typography:
     fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.8125rem"
     fontWeight: 400
-    lineHeight: 1.45
+    lineHeight: 1.6
   caption:
     fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.75rem"
@@ -216,18 +216,19 @@ A near-monochrome editorial palette: warm paper and olive-tinted ink (hue 90–1
 
 ### Hierarchy
 - **Display** (800, 2.75rem, 0.95, -0.03em; up to 4.5rem on large screens in page heroes): the page title, one per page, balanced and allowed to wrap anywhere.
-- **Section** (600, 1.125rem, 1.3, -0.025em): section titles.
+- **Section** (600, 1.25rem, 1.3, -0.025em): section titles.
 - **Stat** (500, 1.5rem, 1.1, tabular numerals): the large figures in the count strip.
 - **Headline** (500, 1rem, 1.4, -0.025em): row names, panel titles, block headings.
 - **Body** (400, 0.875rem, 1.5): prose and the default for anything unstyled.
-- **Meta** (400, 0.8125rem, 1.45): descriptions and hints under a headline; muted, capped near `max-w-prose`.
+- **Name** (600, 0.875rem, 1.5): the name of a row or a result (a stack in a list, a suggestion); body size with weight doing the work, so it reads as the row's subject.
+- **Meta** (400, 0.8125rem, 1.6): descriptions and hints under a headline; muted, capped near `max-w-prose`.
 - **Caption** (500, 0.75rem, 1.4, sentence case, usually muted): the name of a field or of an explanatory block, such as a form label or a metadata field name.
 - **Label** (500, 0.6875rem, 1.3, 0.12em, uppercase): counters, filter tabs and table column headers. 11px is the readable floor; nothing is set smaller.
 - **Status** (500, 0.6875rem, 1.3, 0.08em, uppercase): the word that follows a status dot.
-- **Data** (JetBrains Mono, 400, 0.75rem, tabular numerals, ligatures off): commits, hashes, URLs, curl snippets, any technical value that may be copied verbatim.
+- **Data** (JetBrains Mono, 400, 0.75rem, 1.5, tabular numerals, ligatures off, never negative tracking): commits, hashes, URLs, curl snippets, any technical value that may be copied verbatim.
 
 ### Named Rules
-**The Role-Not-Size Rule.** Type is chosen by role (display, section, stat, headline, body, meta, caption, label, status, data), through the shared `Text` component, never by composing size, weight and tracking locally. A new text is one of the existing roles or the scale gets a new role.
+**The Role-Not-Size Rule.** Type is chosen by role (display, section, stat, headline, body, name, meta, caption, label, status, data), through the shared `Text` component, never by composing size, weight and tracking locally. A new text is one of the existing roles or the scale gets a new role.
 
 **The Mono-for-Facts Rule.** Anything that is a value rather than a sentence (ids, hashes, URLs, commits, snippets) is JetBrains Mono, tabular, with ligatures off. The navigation links and the bottom tab labels are also mono caps, as chrome. Prose is never mono, and neither is the name of a field or block: that is a `caption`, not a tracked uppercase `label`.
 
@@ -306,7 +307,7 @@ Blocks are square; controls are soft. Panels, lists, rows, inputs (underlined, 0
 ### Do:
 - **Do** build every block with a 1.5px ink top rule and 1px hairlines inside; let rules, not boxes, carry the structure.
 - **Do** spend Signal Orange on the main action, the current place and what needs attention; keep it to a few marks per screen, and use Signal Ink for orange text.
-- **Do** choose type through the `Text` roles (display, section, stat, headline, body, meta, caption, label, status, data) and set every value, id and snippet in JetBrains Mono.
+- **Do** choose type through the `Text` roles (display, section, stat, headline, body, name, meta, caption, label, status, data) and set every value, id and snippet in JetBrains Mono.
 - **Do** keep blocks, inputs and lists square, controls at 4px, and strokes at 1.5px (rules, field underlines) or 1px (hairlines, control outlines).
 - **Do** give state as an 8px dot plus a word; show a failure or missing Komodo connection as an explicit state card with the next step.
 - **Do** keep both themes and both languages at parity, with secondary text at 4.5:1 or better.

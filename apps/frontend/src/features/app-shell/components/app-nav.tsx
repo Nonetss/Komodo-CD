@@ -71,7 +71,7 @@ export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "text-meta-sm relative flex min-w-0 flex-col items-center justify-center gap-1.5 font-mono font-medium tracking-tight uppercase transition-colors",
+                "text-meta-sm relative flex min-w-0 flex-col items-center justify-center gap-1.5 font-mono font-medium tracking-normal uppercase transition-colors",
                 "after:absolute after:inset-x-2 after:top-0 after:h-0.5",
                 active
                   ? "text-foreground after:bg-signal"

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 
-import { Text } from "@/components/shared/brand/typography"
+import { Text, textVariants } from "@/components/shared/brand/typography"
 import { BlockLink } from "@/components/shared/layout/block-link"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { StatStrip } from "@/components/shared/layout/stat-strip"
@@ -16,6 +16,7 @@ import {
 import { ShortList } from "@/features/overview/components/short-list"
 import { StackedBar } from "@/features/overview/components/stacked-bar"
 import type { Stack } from "@/lib/api-types"
+import { cn } from "@/lib/utils"
 
 /**
  * Motivo corto de un stack con problemas: el estado cuando el problema es el
@@ -112,7 +113,10 @@ export function StacksBlock({
             <>
               <StackLink
                 name={s.name}
-                className="min-w-0 truncate font-semibold"
+                className={cn(
+                  textVariants({ role: "name" }),
+                  "min-w-0 truncate"
+                )}
               />
               <ProblemTag stack={s} />
             </>
@@ -131,7 +135,10 @@ export function StacksBlock({
               <>
                 <StackLink
                   name={s.name}
-                  className="min-w-0 truncate font-semibold"
+                  className={cn(
+                    textVariants({ role: "name" }),
+                    "min-w-0 truncate"
+                  )}
                 />
                 <Text variant="data" tone="muted" className="shrink-0">
                   {[

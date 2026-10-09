@@ -82,7 +82,7 @@ export function ConnectionSummary({
               href={credential.url}
               target="_blank"
               rel="noreferrer"
-              className="hover:text-signal-ink inline-flex max-w-full items-center gap-1.5 font-mono text-xs tracking-tight transition-colors"
+              className="hover:text-signal-ink inline-flex max-w-full items-center gap-1.5 font-mono text-xs transition-colors"
             >
               <span className="truncate">{credential.url}</span>
               <ExternalLink aria-hidden className="size-3 shrink-0" />

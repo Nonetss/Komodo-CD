@@ -243,9 +243,9 @@ function StackListItem({
         className="focus-visible:ring-ring flex h-11 min-w-0 flex-1 items-center gap-2.5 pr-4 outline-none focus-visible:ring-2 focus-visible:ring-inset sm:pr-6"
       >
         <StackStateDot state={stack.info.state} />
-        <span className="min-w-0 flex-1 truncate font-semibold">
+        <Text variant="name" className="min-w-0 flex-1 truncate">
           {stack.name}
-        </span>
+        </Text>
         {marker}
         <Text
           variant="data"

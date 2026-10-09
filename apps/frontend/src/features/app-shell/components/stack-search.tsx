@@ -116,9 +116,9 @@ function StackSearchContent() {
                   )}
                 >
                   <StackStateDot state={stack.info.state} />
-                  <span className="min-w-0 flex-1 truncate font-semibold">
+                  <Text variant="name" className="min-w-0 flex-1 truncate">
                     {stack.name}
-                  </span>
+                  </Text>
                 </div>
               ))}
             </div>

@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 
-import { Text } from "@/components/shared/brand/typography"
+import { Text, textVariants } from "@/components/shared/brand/typography"
 import { BlockLink } from "@/components/shared/layout/block-link"
 import { SectionHeader } from "@/components/shared/layout/section-header"
 import { StatStrip } from "@/components/shared/layout/stat-strip"
@@ -20,6 +20,7 @@ import {
 import type { ActivityEvent } from "@/lib/api-types"
 import { getErrorMessage } from "@/lib/orpc"
 import { relativeTime } from "@/lib/relative-time"
+import { cn } from "@/lib/utils"
 
 // Filas de los rankings de stacks y de fallos
 const TOP_SHOWN = 5
@@ -149,7 +150,10 @@ export function ActivityBlock({
                   >
                     <StackLink
                       name={e.stack}
-                      className="min-w-0 truncate font-semibold"
+                      className={cn(
+                        textVariants({ role: "name" }),
+                        "min-w-0 truncate"
+                      )}
                     />
                     <Text variant="meta-sm" tone="muted" className="flex-1">
                       {actionLabel(e.action)}
