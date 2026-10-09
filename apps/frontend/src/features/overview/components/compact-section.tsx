@@ -7,8 +7,9 @@ import type { Stack } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
 
 /**
- * 03 · En marcha y 04 · Parados: lista compacta (punto, nombre enlazado y
- * nº de servicios) para lo que no pide nada. No se pinta si está vacía.
+ * 04 · En marcha y 05 · Parados: lista compacta (punto, nombre enlazado y
+ * nº de servicios) con todos los stacks de cada estado. No se pinta si está
+ * vacía.
  */
 export function CompactSection({
   number,

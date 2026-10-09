@@ -11,6 +11,7 @@ export type NtfyConfig = NonNullable<
   Outputs["credentials"]["ntfy"]["get"]["config"]
 >
 export type HistoryItem = Outputs["history"]["list"]["history"][number]
+export type ActivityEvent = Outputs["history"]["activity"]["events"][number]
 export type ApiKey = Outputs["apiKey"]["list"]["keys"][number]
 export type ImageSummary = Outputs["security"]["list"]["images"][number]
 export type ImageDetail = Outputs["security"]["get"]

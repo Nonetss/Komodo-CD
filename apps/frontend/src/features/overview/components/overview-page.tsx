@@ -9,39 +9,63 @@ import { PageHero } from "@/components/shared/layout/page-hero"
 import { StatStrip } from "@/components/shared/layout/stat-strip"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useDeployRunner } from "@/entities/deploy-action"
-import { isRunning, type Urgency, urgency, useStacks } from "@/entities/stack"
-import { AttentionSection } from "@/features/overview/components/attention-section"
+import { useImages } from "@/entities/image-scan"
+import {
+  hasProblem,
+  hasUpdate,
+  inGroup,
+  isRunning,
+  useStacks,
+} from "@/entities/stack"
+import { ActivityBlock } from "@/features/overview/components/activity-block"
 import { CompactSection } from "@/features/overview/components/compact-section"
-import { UpdatesSection } from "@/features/overview/components/updates-section"
+import { SecurityBlock } from "@/features/overview/components/security-block"
+import { StacksBlock } from "@/features/overview/components/stacks-block"
+import {
+  ACTIVITY_DAYS,
+  useActivity,
+} from "@/features/overview/hooks/use-activity"
+import { inWindow, summarize } from "@/features/overview/model/activity"
 import type { Stack } from "@/lib/api-types"
 import { withIsland } from "@/providers/island"
 
 const EMPTY_STACKS: Stack[] = []
 
 /**
- * Resumen (`/`): los stacks agrupados por urgencia en secciones numeradas.
- * Cada stack cae en una sola (ver `urgency`) y su nombre lleva a su ficha.
+ * Resumen (`/`): las cifras de la instancia en tres bloques numerados
+ * (stacks, seguridad y despliegues de los últimos 30 días) y, debajo, los
+ * stacks en marcha y los parados.
  */
 const OverviewPageContent = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const stacksQuery = useStacks()
-  const runner = useDeployRunner()
+  const imagesQuery = useImages()
+  const activityQuery = useActivity()
   const stacks = stacksQuery.data ?? EMPTY_STACKS
 
-  const sections = useMemo(() => {
-    const bySection: Record<Urgency, Stack[]> = {
-      attention: [],
-      updates: [],
-      running: [],
-      stopped: [],
-    }
-    const sorted = [...stacks].sort((a, b) => a.name.localeCompare(b.name))
-    for (const s of sorted) bySection[urgency(s)].push(s)
-    return bySection
-  }, [stacks])
+  const sorted = useMemo(
+    () => [...stacks].sort((a, b) => a.name.localeCompare(b.name)),
+    [stacks]
+  )
+  const attention = stacks.filter(hasProblem).length
+  const updates = stacks.filter((s) => !hasProblem(s) && hasUpdate(s)).length
+  const criticalImages = imagesQuery.data?.images.filter(
+    (i) => i.counts.critical > 0
+  ).length
+  const successRate = activityQuery.data
+    ? summarize(inWindow(activityQuery.data.events, ACTIVITY_DAYS)).successRate
+    : null
+  const percent = new Intl.NumberFormat(i18n.language, {
+    style: "percent",
+    maximumFractionDigits: 0,
+  })
 
-  const runningCount = stacks.filter(isRunning).length
+  // Un solo botón refresca las tres fuentes del resumen
+  const queries = [stacksQuery, imagesQuery, activityQuery]
+  const refresh = {
+    isFetching: queries.some((q) => q.isFetching),
+    refetch: () => Promise.all(queries.map((q) => q.refetch())),
+  }
 
   const hero = (
     <PageHero
@@ -53,26 +77,31 @@ const OverviewPageContent = () => {
             items={[
               {
                 label: t("overview.counts.attention"),
-                value: sections.attention.length,
-                tone: sections.attention.length > 0 ? "signal" : "muted",
+                value: attention,
+                tone: attention > 0 ? "signal" : "muted",
               },
               {
                 label: t("overview.counts.updates"),
-                value: sections.updates.length,
+                value: updates,
+                tone: updates > 0 ? "default" : "muted",
               },
-              { label: t("overview.counts.running"), value: runningCount },
               {
-                label: t("overview.counts.total"),
-                value: stacks.length,
+                label: t("overview.counts.critical"),
+                value: criticalImages ?? "—",
+                tone: criticalImages ? "signal" : "muted",
+              },
+              {
+                label: t("overview.counts.successRate", {
+                  count: ACTIVITY_DAYS,
+                }),
+                value: successRate === null ? "—" : percent.format(successRate),
                 tone: "muted",
               },
             ]}
           />
         ) : null
       }
-      action={
-        <RefreshButton query={stacksQuery} label={t("overview.refresh")} />
-      }
+      action={<RefreshButton query={refresh} label={t("overview.refresh")} />}
     />
   )
 
@@ -105,36 +134,24 @@ const OverviewPageContent = () => {
   } else {
     content = (
       <>
-        <AttentionSection
-          stacks={sections.attention}
-          runningAction={runner.runningAction}
-          onRedeploy={(name) => runner.run(name, "redeploy")}
-        />
-        <UpdatesSection
-          stacks={sections.updates}
-          runningAction={runner.runningAction}
-          bulkAction={runner.bulkAction}
-          onRun={(name, action) => runner.run(name, action)}
-          onRunAll={() =>
-            runner.runBulk(
-              sections.updates.map((s) => s.name),
-              "pull-redeploy"
-            )
-          }
-        />
+        <div className="grid gap-x-12 gap-y-14 xl:grid-cols-2">
+          <StacksBlock stacks={sorted} />
+          <SecurityBlock />
+        </div>
+        <ActivityBlock query={activityQuery} />
         <div className="flex flex-wrap gap-x-12 gap-y-14">
           <CompactSection
-            number={3}
+            number={4}
             id="overview-running"
             title={t("overview.running.title")}
-            stacks={sections.running}
+            stacks={sorted.filter(isRunning)}
             className="flex-3 basis-lg"
           />
           <CompactSection
-            number={4}
+            number={5}
             id="overview-stopped"
             title={t("overview.stopped.title")}
-            stacks={sections.stopped}
+            stacks={sorted.filter((s) => inGroup(s, "stopped"))}
             className="flex-1 basis-64"
           />
         </div>

@@ -25,3 +25,12 @@ export const SEVERITY_INK: Record<VulnerabilitySeverity, string> = {
   LOW: "text-muted-foreground",
   UNKNOWN: "text-muted-foreground",
 }
+
+/** Relleno de cada severidad para barras y marcas, con los mismos tonos. */
+export const SEVERITY_FILL: Record<VulnerabilitySeverity, string> = {
+  CRITICAL: "bg-danger",
+  HIGH: "bg-signal",
+  MEDIUM: "bg-warning",
+  LOW: "bg-muted-foreground/50",
+  UNKNOWN: "bg-muted-foreground/50",
+}
