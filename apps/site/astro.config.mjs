@@ -3,6 +3,8 @@ import { fileURLToPath } from "node:url"
 import tailwindcss from "@tailwindcss/vite"
 import { defineConfig, fontProviders } from "astro/config"
 
+import { codeTheme } from "./src/lib/code-theme"
+
 // Web estática del proyecto, publicada en GitHub Pages bajo
 // https://nonetss.github.io/Komodo-CD/. Todos los enlaces internos pasan por
 // `href()` (src/lib/url.ts) para que el base path se aplique en un solo sitio.
@@ -43,7 +45,7 @@ export default defineConfig({
   ],
 
   markdown: {
-    shikiConfig: { theme: "github-dark-default", wrap: false },
+    shikiConfig: { theme: codeTheme, wrap: false },
   },
   vite: {
     plugins: [tailwindcss()],

@@ -2,6 +2,7 @@
 import { Code } from "astro:components"
 import CopyButton from "@/components/CopyButton.astro"
 import { INSTALL_COMMAND, type Lang, t } from "@/i18n/ui"
+import { codeTheme } from "@/lib/code-theme"
 
 interface Props {
   lang: Lang
@@ -27,7 +28,7 @@ const dict = t(lang)
     ><span class="text-terminal-accent select-none" aria-hidden="true">$ </span><Code
         code={INSTALL_COMMAND}
         lang="bash"
-        theme="github-dark-default"
+        theme={codeTheme}
         inline
         class="bg-transparent!"
       /></pre>
