@@ -88,10 +88,10 @@
 ## 7. Docs and conventions
 
 - [x] 7.1 Update `AGENTS.md` (the "Reuse first" list gains `InlineConfirm`, `SectionHeader`, `StatStrip` and `useDeployRunner`; the project map mentions the overview), and keep `openspec/config.yaml` consistent with it.
-- [ ] 7.2 Update the site's stacks screen alt texts in `apps/site/src/i18n/ui.ts` (English and Spanish together) to describe the new pages, and leave a note for the user to retake `img/stacks.png` and `img/stacks-light.png` (plus an overview screenshot if wanted) from the running app.
+- [x] 7.2 Update the site's stacks screen alt texts in `apps/site/src/i18n/ui.ts` (English and Spanish together) to describe the new pages, and leave a note for the user to retake `img/stacks.png` and `img/stacks-light.png` (plus an overview screenshot if wanted) from the running app.
 
 ## 8. Validation
 
 - [x] 8.1 Run `bun run check-types`, `bunx biome check .` and `bun run tailwind:check`, and fix what they report.
 - [x] 8.2 Run `bun run test` to confirm the API suites still pass (no API changes expected), and `openspec validate --all --strict`.
-- [ ] 8.3 Ask the user to review `/`, `/stacks`, `/stacks/<name>` and one non-redesigned page (for example `/history`) in light and dark, desktop and mobile, against the design artboards.
+- [x] 8.3 Ask the user to review `/`, `/stacks`, `/stacks/<name>` and one non-redesigned page (for example `/history`) in light and dark, desktop and mobile, against the design artboards.

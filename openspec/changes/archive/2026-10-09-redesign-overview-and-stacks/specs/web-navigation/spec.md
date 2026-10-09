@@ -78,6 +78,17 @@ The active item SHALL be the one whose path equals the current path or, for ever
 - **WHEN** a dashboard page is rendered
 - **THEN** the top bar SHALL contain exactly one island with the language, theme and log-out controls
 
+### Requirement: Fast page changes
+
+The dashboard SHALL use Astro's client router with every link prefetched on hover (or touch). On navigation, the whole page SHALL fade (0.2 s) the same way on every route, without animating the size or position of the content, also between the full-width Stacks pages and the centred ones. The top bar and the bottom bar SHALL keep their own transition names so they swap without animating.
+
+#### Scenario: Navigate between pages
+
+- **WHEN** the user hovers and then clicks the history link
+- **THEN** the page SHALL already be prefetched and the content SHALL fade in while the top bar and the bottom bar stay still
+
+## ADDED Requirements
+
 ### Requirement: Stack search in the top bar
 
 On large screens, the top bar SHALL hold a stack search field, rendered as its own island. It SHALL load `v0.stacks.list` only once the field gets focus. While the user types, it SHALL suggest up to eight stacks whose name contains the text (case-insensitive), sorted by name, each with its state dot. The arrow keys SHALL move through the suggestions, `Enter` or a click SHALL open `/stacks/<name>` and clear the field, and `Escape` SHALL clear it. When nothing matches, it SHALL say so. The field SHALL follow the ARIA combobox pattern, with focus kept in the field.
@@ -91,12 +102,3 @@ On large screens, the top bar SHALL hold a stack search field, rendered as its o
 
 - **WHEN** the user types a text that no stack name contains
 - **THEN** the search SHALL show that no stack matches
-
-### Requirement: Fast page changes
-
-The dashboard SHALL use Astro's client router with every link prefetched on hover (or touch). On navigation, the whole page SHALL fade (0.2 s) the same way on every route, without animating the size or position of the content, also between the full-width Stacks pages and the centred ones. The top bar and the bottom bar SHALL keep their own transition names so they swap without animating.
-
-#### Scenario: Navigate between pages
-
-- **WHEN** the user hovers and then clicks the history link
-- **THEN** the page SHALL already be prefetched and the content SHALL fade in while the top bar and the bottom bar stay still

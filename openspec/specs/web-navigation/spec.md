@@ -2,32 +2,53 @@
 
 ## Purpose
 
-Defines the dashboard's page map and its shell: a sidebar on desktop and a bottom tab bar on mobile driven by one registry of surfaces, near-instant page changes with prefetching and view transitions, and the 404 page.
+Defines the dashboard's page map and its shell: a top bar with the wordmark, the navigation on desktop, a stack search and the controls, a bottom tab bar on mobile, both driven by one registry of surfaces, fast page changes with prefetching and one page fade, and the 404 page.
 
 ## Requirements
-
 ### Requirement: Page map
 
-The dashboard SHALL serve these routes: `/` (redirects to `/stacks`), `/stacks`, `/deploy`, `/history`, `/credentials`, `/keys`, `/login` and a 404 page for anything else. Every route except `/login` and the 404 page SHALL use the dashboard layout and require a session (see `authentication`).
+The dashboard SHALL serve these routes:
+
+- `/`, the overview;
+- `/stacks` and `/stacks/<name>`;
+- `/deploy`, `/history`, `/credentials`, `/keys`;
+- `/login`;
+- a 404 page for anything else.
+
+Every route except `/login` and the 404 page SHALL use the dashboard layout and require a session (see `authentication`).
 
 #### Scenario: Root URL
 
 - **WHEN** a signed-in user opens `/`
-- **THEN** they SHALL be redirected to `/stacks`
+- **THEN** the overview SHALL be shown without a redirect
+
+#### Scenario: Stack URL
+
+- **WHEN** a signed-in user opens `/stacks/web`
+- **THEN** the Stacks page SHALL be shown with `web` open in the detail pane
 
 #### Scenario: Unknown URL
 
 - **WHEN** a user opens a path that matches no page
-- **THEN** the 404 page SHALL be shown with a link back to `/stacks`
+- **THEN** the 404 page SHALL be shown with a link back to `/`
 
 ### Requirement: Single surface registry
 
-`apps/frontend/src/lib/app-surfaces.ts` SHALL be the only list of navigable pages, in this order: stacks (`/stacks`), deploy (`/deploy`), history (`/history`), credentials (`/credentials`) and API keys (`/keys`), each with one icon. The sidebar, the bottom bar and each page's header SHALL read their path and icon from it, and their labels from the i18n key `nav.<id>`. Each dashboard page SHALL pass its surface id to the dashboard layout, which SHALL build the document title as `<nav.<id>> · Komodo CD` in the request's language.
+`apps/frontend/src/lib/app-surfaces.ts` SHALL be the only list of navigable pages, in this order, each with one icon:
+
+1. overview (`/`);
+2. stacks (`/stacks`);
+3. deploy (`/deploy`);
+4. history (`/history`);
+5. credentials (`/credentials`);
+6. API keys (`/keys`).
+
+The top bar and the bottom bar SHALL read their paths from it, the bottom bar also its icons, and their labels from the i18n key `nav.<id>`. Each dashboard page SHALL pass its surface id to the dashboard layout, which SHALL build the document title as `<nav.<id>> · Komodo CD` in the request's language.
 
 #### Scenario: Change an icon
 
 - **WHEN** a surface's icon is changed in the registry
-- **THEN** the sidebar, the bottom bar and that page's header SHALL all show the new icon
+- **THEN** the bottom bar SHALL show the new icon
 
 #### Scenario: Localized page title
 
@@ -36,23 +57,52 @@ The dashboard SHALL serve these routes: `/` (redirects to `/stacks`), `/stacks`,
 
 ### Requirement: Responsive shell
 
-On large screens the dashboard SHALL show a fixed sidebar with the logo (linking to `/stacks`), the navigation, the signed-in user's initial, name and email, and the language, theme and log-out controls. On smaller screens it SHALL show a sticky top bar with the logo and the same controls, and a fixed bottom tab bar with the five surfaces that respects the device's safe-area inset. The language, theme and log-out controls SHALL be rendered as a single island per position (sidebar and top bar). The active item SHALL be the one whose path equals or prefixes the current path, highlighted and marked with `aria-current="page"`. The navigation SHALL be rendered on the server.
+The dashboard SHALL show one sticky top bar on every screen size, closed by a heavy ink rule. It SHALL contain:
+
+- the `KOMODO/CD` wordmark, linking to `/` and read by screen readers as "Komodo CD";
+- on large screens, the navigation as a row of uppercase links;
+- on large screens, a stack search field (see "Stack search in the top bar");
+- the language, theme and log-out controls, rendered as a single island.
+
+On smaller screens, the top bar SHALL keep only the wordmark and the controls, and a fixed bottom tab bar SHALL show the six surfaces, respecting the device's safe-area inset.
+
+The active item SHALL be the one whose path equals the current path or, for every surface except the overview, prefixes it. It SHALL be marked by a signal underline and `aria-current="page"`. The navigation SHALL be rendered on the server.
 
 #### Scenario: Active item
 
 - **WHEN** the user is on `/history`
-- **THEN** the history item SHALL be highlighted and carry `aria-current="page"` in both the sidebar and the bottom bar
+- **THEN** the history item SHALL be underlined and carry `aria-current="page"` in both the top bar and the bottom bar
+
+#### Scenario: Stack detail keeps stacks active
+
+- **WHEN** the user is on `/stacks/web`
+- **THEN** the stacks item SHALL be active and the overview item SHALL NOT
 
 #### Scenario: Shell controls
 
 - **WHEN** a dashboard page is rendered
-- **THEN** the sidebar and the top bar SHALL each contain one island with the language, theme and log-out controls
+- **THEN** the top bar SHALL contain exactly one island with the language, theme and log-out controls
 
 ### Requirement: Fast page changes
 
-The dashboard SHALL use Astro's client router with every link prefetched on hover (or touch). On navigation, only the page content SHALL fade (0.2 s); the sidebar, the mobile header and the bottom bar SHALL keep their own transition names so they swap without animating.
+The dashboard SHALL use Astro's client router with every link prefetched on hover (or touch). On navigation, the whole page SHALL fade (0.2 s) the same way on every route, without animating the size or position of the content, also between the full-width Stacks pages and the centred ones. The top bar and the bottom bar SHALL keep their own transition names so they swap without animating.
 
 #### Scenario: Navigate between pages
 
 - **WHEN** the user hovers and then clicks the history link
-- **THEN** the page SHALL already be prefetched and the content SHALL fade in while the navigation chrome stays still
+- **THEN** the page SHALL already be prefetched and the content SHALL fade in while the top bar and the bottom bar stay still
+
+### Requirement: Stack search in the top bar
+
+On large screens, the top bar SHALL hold a stack search field, rendered as its own island. It SHALL load `v0.stacks.list` only once the field gets focus. While the user types, it SHALL suggest up to eight stacks whose name contains the text (case-insensitive), sorted by name, each with its state dot. The arrow keys SHALL move through the suggestions, `Enter` or a click SHALL open `/stacks/<name>` and clear the field, and `Escape` SHALL clear it. When nothing matches, it SHALL say so. The field SHALL follow the ARIA combobox pattern, with focus kept in the field.
+
+#### Scenario: Jump to a stack
+
+- **WHEN** the user types "git" in the top bar search and presses `Enter`
+- **THEN** the first suggestion (for example `gitea`) SHALL open at `/stacks/gitea`
+
+#### Scenario: No match
+
+- **WHEN** the user types a text that no stack name contains
+- **THEN** the search SHALL show that no stack matches
+
