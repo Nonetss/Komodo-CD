@@ -1,10 +1,19 @@
 // @ts-check
+import { fileURLToPath } from "node:url"
 import node from "@astrojs/node"
 import react from "@astrojs/react"
 import tailwindcss from "@tailwindcss/vite"
 import { defineConfig, envField, fontProviders } from "astro/config"
+import { config } from "dotenv"
 
 const isDev = process.argv.includes("dev")
+
+// El repo se configura con el `.env` de la raíz. Vite lo carga para
+// `astro:env` a través de `vite.envDir`; esta config se evalúa antes, así que
+// lo carga ella misma para el proxy de abajo. Las variables ya definidas ganan.
+const repoRoot = fileURLToPath(new URL("../..", import.meta.url))
+config({ path: `${repoRoot}/.env`, quiet: true })
+const backendUrl = process.env.BACKEND_URL || "http://localhost:3000"
 
 // Fuentes de Fontsource descargadas en el build (se cachean) y servidas desde
 // dist: autoalojadas, solo el subset latino. Astro genera el @font-face, los
@@ -70,6 +79,7 @@ export default defineConfig({
   },
 
   vite: {
+    envDir: repoRoot,
     plugins: [tailwindcss()],
     ssr: {
       // La imagen de runtime no lleva node_modules: en build se empaqueta
@@ -107,7 +117,7 @@ export default defineConfig({
       proxy: Object.fromEntries(
         ["/api/", "/rpc/", "/doc", "/scalar"].map((path) => [
           path,
-          { target: "http://localhost:3000", changeOrigin: true },
+          { target: backendUrl, changeOrigin: true },
         ])
       ),
     },

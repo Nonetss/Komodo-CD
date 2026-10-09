@@ -26,7 +26,7 @@ Necesita [Bun](https://bun.sh) 1.4 o posterior.
 
 ```bash
 bun install
-cp apps/backend/.env.example apps/backend/.env   # SQLite: DATABASE_URL=file:./dev.db
+cp .env.example .env   # APP_URL=http://localhost:4321, un secreto y la contraseña del admin
 
 bun run dev            # backend (:3000) + frontend (:4321) con turbo watch, sin la web
 bun run dev:backend    # solo el backend

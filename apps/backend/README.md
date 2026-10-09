@@ -14,8 +14,8 @@ Servidor Hono (Bun) de Komodo CD. Es una capa fina: monta Better Auth, la API oR
 Al arrancar aplica las migraciones, crea el admin inicial (`SEED_ADMIN_*`) e inicializa el cliente de Komodo.
 
 ```bash
-cp .env.example .env
+cp ../../.env.example ../../.env
 bun run dev   # o `bun run dev:backend` desde la raíz
 ```
 
-Variables: ver [`.env.example`](.env.example) y el esquema en [`packages/env/src/server.ts`](../../packages/env/src/server.ts).
+Variables: el [`.env`](../../.env.example) de la raíz y el esquema en [`packages/env/src/server.ts`](../../packages/env/src/server.ts).

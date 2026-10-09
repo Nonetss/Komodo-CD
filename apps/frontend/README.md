@@ -11,4 +11,4 @@ Dashboard de Komodo CD: **Astro 7** (SSR, adapter Node) + **React 19** + **Tailw
 bun run dev   # o `bun run dev:frontend` desde la raíz
 ```
 
-Variables: ver [`.env.example`](.env.example).
+Variables: el [`.env`](../../.env.example) de la raíz (`BACKEND_URL`, `PUBLIC_APP_URL`).

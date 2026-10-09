@@ -8,14 +8,9 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env*"],
       "outputs": ["dist/**"],
-      "env": [
-        "PUBLIC_APP_URL",
-        "BETTER_AUTH_URL",
-        "NODE_ENV",
-        "SKIP_ENV_VALIDATION"
-      ]
+      "env": ["PUBLIC_APP_URL", "NODE_ENV", "SKIP_ENV_VALIDATION"]
     },
     "check-types": {
       "dependsOn": ["^check-types"],
@@ -23,13 +18,37 @@
     },
     "dev": {
       "dependsOn": ["^build"],
-      "inputs": ["package.json", ".env*"],
+      "inputs": ["package.json", "$TURBO_ROOT$/.env*"],
+      "passThroughEnv": [
+        "DATABASE_URL",
+        "APP_URL",
+        "BETTER_AUTH_URL",
+        "BETTER_AUTH_SECRET",
+        "SEED_ADMIN_*",
+        "LOG_LEVEL",
+        "NODE_ENV",
+        "SKIP_ENV_VALIDATION",
+        "BACKEND_URL",
+        "PUBLIC_APP_URL"
+      ],
       "cache": false,
       "persistent": true,
       "interruptible": false
     },
     "start": {
       "dependsOn": ["build"],
+      "passThroughEnv": [
+        "DATABASE_URL",
+        "APP_URL",
+        "BETTER_AUTH_URL",
+        "BETTER_AUTH_SECRET",
+        "SEED_ADMIN_*",
+        "LOG_LEVEL",
+        "NODE_ENV",
+        "SKIP_ENV_VALIDATION",
+        "BACKEND_URL",
+        "PUBLIC_APP_URL"
+      ],
       "cache": false,
       "persistent": true
     },

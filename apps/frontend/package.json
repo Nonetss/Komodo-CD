@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "catalog:",
+    "dotenv": "catalog:",
     "@komodo-cd/api": "workspace:*",
     "@orpc/server": "catalog:",
     "@tailwindcss/language-server": "^0.16.0",

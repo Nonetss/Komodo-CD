@@ -2,10 +2,13 @@ import path from "node:path"
 import dotenv from "dotenv"
 import { defineConfig } from "drizzle-kit"
 
-// El .env vive en apps/backend y sus rutas `file:./…` son relativas a esa
-// carpeta (desde donde corre el backend), no a packages/db.
+// El .env es el de la raíz del repo, pero sus rutas `file:./…` son relativas
+// a apps/backend (desde donde corre el backend), no a packages/db.
 const backendDir = path.resolve(import.meta.dirname, "../../apps/backend")
-dotenv.config({ path: path.join(backendDir, ".env"), quiet: true })
+dotenv.config({
+  path: path.resolve(import.meta.dirname, "../../.env"),
+  quiet: true,
+})
 
 const url = process.env.DATABASE_URL || "file:./dev.db"
 
