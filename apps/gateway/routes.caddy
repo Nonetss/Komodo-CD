@@ -1,0 +1,36 @@
+# Enrutado del gateway. En desarrollo el proxy de Vite hace lo mismo
+# (apps/frontend/astro.config.mjs): si cambias una ruta, cámbiala en los dos.
+
+encode zstd gzip
+
+# Cabeceras de seguridad que no rompen nada de lo que hace la app. HSTS es
+# cosa del proxy que termina TLS delante, y una CSP necesitaría antes una fase
+# Report-Only (Astro y Scalar usan scripts inline), así que no van aquí.
+header {
+	# No adivinar tipos MIME: un fichero servido no puede ejecutarse como script
+	X-Content-Type-Options nosniff
+	# Nada de embeber el panel en un frame de otra web (clickjacking)
+	X-Frame-Options SAMEORIGIN
+	# Otros orígenes solo ven el origen, nunca la URL completa
+	Referrer-Policy strict-origin-when-cross-origin
+	# APIs del navegador que la app no usa
+	Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+	# No anunciar el software del servidor
+	-Server
+}
+
+# Vida del propio gateway, para el healthcheck de compose
+handle /health {
+	respond "ok" 200
+}
+
+# oRPC del dashboard, API REST pública (CI) y Better Auth, y OpenAPI + Scalar
+@backend path /rpc/* /api/* /doc /scalar*
+handle @backend {
+	reverse_proxy {$BACKEND_URL:backend:3000}
+}
+
+# Todo lo demás, al SSR de Astro
+handle {
+	reverse_proxy {$FRONTEND_URL:frontend:4321}
+}

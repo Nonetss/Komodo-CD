@@ -1,6 +1,6 @@
 ---
 title: Architecture
-description: The two containers, how a request travels through them, and what Komodo CD stores.
+description: The three containers, how a request travels through them, and what Komodo CD stores.
 order: 7
 ---
 
@@ -10,14 +10,15 @@ Komodo CD is a thin layer between people, pipelines and one Komodo instance. It 
 
 | Service | Image | Inside |
 | --- | --- | --- |
-| `frontend` | `ghcr.io/nonetss/komodo-cd-frontend` | Caddy on port `80`, the only published port, and Astro SSR (React islands) on `127.0.0.1:4321`. |
+| `gateway` | `ghcr.io/nonetss/komodo-cd-gateway` | Caddy on port `80`, the only published port. It routes every request and adds basic security headers. |
+| `frontend` | `ghcr.io/nonetss/komodo-cd-frontend` | Astro SSR (React islands) on port `4321`, reachable only inside the Compose network. |
 | `backend` | `ghcr.io/nonetss/komodo-cd-backend` | Bun + Hono on port `3000`: Better Auth, the oRPC API, its REST version and the OpenAPI reference. |
 
 The backend keeps its data in a SQLite file, `/data/db.sqlite`, on the `db_data` volume. There is no database server.
 
 ## Routing
 
-Caddy, inside the frontend container, splits the traffic:
+The gateway splits the traffic:
 
 | Request | Goes to |
 | --- | --- |

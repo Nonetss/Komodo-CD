@@ -113,7 +113,7 @@ export default defineConfig({
       ],
     },
     server: {
-      // Mismo enrutado que Caddy en producción (Caddyfile)
+      // Mismo enrutado que el gateway en producción (apps/gateway/routes.caddy)
       proxy: Object.fromEntries(
         ["/api/", "/rpc/", "/doc", "/scalar"].map((path) => [
           path,

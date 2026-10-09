@@ -50,6 +50,7 @@ The app answers on the port set in `PORT` (default `80`). On its first start the
 services:
   backend:
     image: ghcr.io/nonetss/komodo-cd-backend:latest
+    init: true
     restart: unless-stopped
     volumes:
       - db_data:/data
@@ -65,13 +66,24 @@ services:
 
   frontend:
     image: ghcr.io/nonetss/komodo-cd-frontend:latest
+    init: true
     restart: unless-stopped
     environment:
       BACKEND_URL: "http://backend:3000"
+    depends_on:
+      - backend
+    networks:
+      - komodo_net
+
+  gateway:
+    image: ghcr.io/nonetss/komodo-cd-gateway:latest
+    init: true
+    restart: unless-stopped
     ports:
       - "${PORT:-80}:80"
     depends_on:
       - backend
+      - frontend
     networks:
       - komodo_net
 
@@ -82,11 +94,11 @@ volumes:
   db_data:
 ```
 
-Only the frontend publishes a port. Its Caddy sends the API to `backend:3000` over the Compose network, so the backend never needs to be exposed.
+Only the gateway publishes a port. It sends the API to `backend:3000` and every page to `frontend:4321` over the Compose network, so neither app needs to be exposed.
 
 ## Behind HTTPS
 
-The Caddy inside the frontend image serves plain HTTP on port 80 and does not request certificates. Terminate TLS in front of it with the reverse proxy you already use, and set `APP_URL` to the `https://` URL: Better Auth uses it as the trusted origin, so signing in fails if it does not match the address in the browser.
+The gateway serves plain HTTP on port 80 and does not request certificates. Terminate TLS in front of it with the reverse proxy you already use, and set `APP_URL` to the `https://` URL: Better Auth uses it as the trusted origin, so signing in fails if it does not match the address in the browser.
 
 For example, publish Komodo CD on a local port and let a Caddy on the host handle the certificate:
 

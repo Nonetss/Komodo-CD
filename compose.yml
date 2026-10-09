@@ -1,6 +1,7 @@
 services:
   backend:
     image: ghcr.io/nonetss/komodo-cd-backend:latest
+    init: true
     restart: unless-stopped
     volumes:
       - db_data:/data
@@ -16,13 +17,24 @@ services:
 
   frontend:
     image: ghcr.io/nonetss/komodo-cd-frontend:latest
+    init: true
     restart: unless-stopped
     environment:
       BACKEND_URL: "http://backend:3000"
+    depends_on:
+      - backend
+    networks:
+      - komodo_net
+
+  gateway:
+    image: ghcr.io/nonetss/komodo-cd-gateway:latest
+    init: true
+    restart: unless-stopped
     ports:
       - "${PORT:-80}:80"
     depends_on:
       - backend
+      - frontend
     networks:
       - komodo_net
 

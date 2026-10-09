@@ -1,6 +1,6 @@
 ---
 title: Arquitectura
-description: Los dos contenedores, el recorrido de una petición por ellos y lo que guarda Komodo CD.
+description: Los tres contenedores, el recorrido de una petición por ellos y lo que guarda Komodo CD.
 order: 7
 ---
 
@@ -10,14 +10,15 @@ Komodo CD es una capa fina entre personas, pipelines y una instancia de Komodo. 
 
 | Servicio | Imagen | Dentro |
 | --- | --- | --- |
-| `frontend` | `ghcr.io/nonetss/komodo-cd-frontend` | Caddy en el puerto `80`, el único publicado, y Astro SSR (islas de React) en `127.0.0.1:4321`. |
+| `gateway` | `ghcr.io/nonetss/komodo-cd-gateway` | Caddy en el puerto `80`, el único publicado. Enruta cada petición y añade unas cabeceras de seguridad básicas. |
+| `frontend` | `ghcr.io/nonetss/komodo-cd-frontend` | Astro SSR (islas de React) en el puerto `4321`, accesible solo dentro de la red de Compose. |
 | `backend` | `ghcr.io/nonetss/komodo-cd-backend` | Bun + Hono en el puerto `3000`: Better Auth, la API oRPC, su versión REST y la referencia OpenAPI. |
 
 El backend guarda sus datos en un fichero SQLite, `/data/db.sqlite`, en el volumen `db_data`. No hay servidor de base de datos.
 
 ## Enrutado
 
-Caddy, dentro del contenedor del frontend, reparte el tráfico:
+El gateway reparte el tráfico:
 
 | Petición | Va a |
 | --- | --- |

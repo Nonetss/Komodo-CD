@@ -20,6 +20,15 @@ services:
       context: .
       dockerfile: apps/frontend/Dockerfile
 
+  gateway:
+    extends:
+      file: compose.yml
+      service: gateway
+    image: komodo-cd-gateway:local
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+
 networks:
   komodo_net:
 

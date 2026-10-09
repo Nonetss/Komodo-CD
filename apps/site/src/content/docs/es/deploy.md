@@ -50,6 +50,7 @@ La app responde en el puerto de `PORT` (por defecto `80`). En el primer arranque
 services:
   backend:
     image: ghcr.io/nonetss/komodo-cd-backend:latest
+    init: true
     restart: unless-stopped
     volumes:
       - db_data:/data
@@ -65,13 +66,24 @@ services:
 
   frontend:
     image: ghcr.io/nonetss/komodo-cd-frontend:latest
+    init: true
     restart: unless-stopped
     environment:
       BACKEND_URL: "http://backend:3000"
+    depends_on:
+      - backend
+    networks:
+      - komodo_net
+
+  gateway:
+    image: ghcr.io/nonetss/komodo-cd-gateway:latest
+    init: true
+    restart: unless-stopped
     ports:
       - "${PORT:-80}:80"
     depends_on:
       - backend
+      - frontend
     networks:
       - komodo_net
 
@@ -82,11 +94,11 @@ volumes:
   db_data:
 ```
 
-Solo el frontend publica un puerto. Su Caddy manda la API a `backend:3000` por la red de Compose, así que el backend nunca necesita exponerse.
+Solo el gateway publica un puerto. Manda la API a `backend:3000` y cada página a `frontend:4321` por la red de Compose, así que ninguna de las dos apps necesita exponerse.
 
 ## Detrás de HTTPS
 
-El Caddy de la imagen del frontend sirve HTTP plano en el puerto 80 y no pide certificados. Termina TLS delante con el proxy inverso que ya uses y pon en `APP_URL` la URL `https://`: Better Auth la usa como origen de confianza, así que el inicio de sesión falla si no coincide con la dirección del navegador.
+El gateway sirve HTTP plano en el puerto 80 y no pide certificados. Termina TLS delante con el proxy inverso que ya uses y pon en `APP_URL` la URL `https://`: Better Auth la usa como origen de confianza, así que el inicio de sesión falla si no coincide con la dirección del navegador.
 
 Por ejemplo, publica Komodo CD en un puerto local y deja que un Caddy en el host se encargue del certificado:
 

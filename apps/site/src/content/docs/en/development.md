@@ -11,7 +11,8 @@ Komodo CD is a Turborepo monorepo with Bun workspaces.
 | Path | What |
 | --- | --- |
 | `apps/backend` | Bun + Hono: a thin server for Better Auth, oRPC and OpenAPI. |
-| `apps/frontend` | Astro 7 (SSR) + React + TanStack Query, with the Caddy of the production image. |
+| `apps/frontend` | Astro 7 (SSR) + React + TanStack Query. |
+| `apps/gateway` | The production Caddy: the only published port, routing to the backend and the frontend. |
 | `apps/site` | This website: static Astro, published to GitHub Pages. |
 | `packages/api` | oRPC routers (`v0`), the Komodo client and the ntfy service. |
 | `packages/auth` | Better Auth config and the session resolver (cookie or `x-api-key`). |
@@ -33,7 +34,7 @@ bun run dev:backend    # only the backend
 bun run dev:frontend   # only the frontend
 ```
 
-In development the Vite dev server proxies `/api`, `/rpc`, `/doc` and `/scalar` to the backend, the same routing Caddy does in production.
+In development the Vite dev server proxies `/api`, `/rpc`, `/doc` and `/scalar` to the backend, the same routing the gateway does in production (`apps/gateway/routes.caddy`).
 
 ## Scripts
 

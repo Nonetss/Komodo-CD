@@ -28,20 +28,16 @@ RUN cd apps/frontend && bun run build
 
 # ── Imagen final ─────────────────────────────────────────────────────────────
 FROM oven/bun:1-slim
-COPY --from=caddy:2-alpine /usr/bin/caddy /usr/local/bin/caddy
 WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app/apps/frontend/dist ./dist
-COPY apps/frontend/Caddyfile /etc/caddy/Caddyfile
-COPY --chmod=755 apps/frontend/start.sh /start.sh
 
-# Astro SSR escucha solo en localhost; Caddy expone el 80
-ENV HOST=127.0.0.1
+# Solo el SSR de Astro: lo publica el gateway (apps/gateway), que manda aquí
+# todo lo que no es del backend por la red de compose.
+ENV HOST=0.0.0.0
 ENV PORT=4321
 
-EXPOSE 80
-# Sin root: Caddy puede abrir el :80 porque Docker fija
-# net.ipv4.ip_unprivileged_port_start=0 en los contenedores (Docker >= 20.10).
+EXPOSE 4321
 USER bun
-CMD ["/start.sh"]
+CMD ["bun", "dist/server/entry.mjs"]

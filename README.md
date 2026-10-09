@@ -24,7 +24,8 @@ Monorepo (Turborepo + Bun workspaces), plus the production deployment using imag
 |              | Path                             | Stack                                          |
 | ------------ | -------------------------------- | ---------------------------------------------- |
 | **Backend**  | [`apps/backend`](apps/backend)   | Bun + Hono (thin server: auth, oRPC, OpenAPI)  |
-| **Frontend** | [`apps/frontend`](apps/frontend) | Astro 7 (SSR) + React + TanStack Query + Caddy |
+| **Frontend** | [`apps/frontend`](apps/frontend) | Astro 7 (SSR) + React + TanStack Query         |
+| **Gateway**  | [`apps/gateway`](apps/gateway)   | Caddy: the only published port, routes to both |
 | **Site**     | [`apps/site`](apps/site)         | Astro 7 (static), published to GitHub Pages    |
 
 | Package             | Description                                                      |
@@ -124,6 +125,7 @@ The app will be available on the port configured in `PORT` (default `80`).
 services:
   backend:
     image: ghcr.io/nonetss/komodo-cd-backend:latest
+    init: true
     restart: unless-stopped
     volumes:
       - db_data:/data
@@ -139,13 +141,24 @@ services:
 
   frontend:
     image: ghcr.io/nonetss/komodo-cd-frontend:latest
+    init: true
     restart: unless-stopped
     environment:
       BACKEND_URL: "http://backend:3000"
+    depends_on:
+      - backend
+    networks:
+      - komodo_net
+
+  gateway:
+    image: ghcr.io/nonetss/komodo-cd-gateway:latest
+    init: true
+    restart: unless-stopped
     ports:
       - "${PORT:-80}:80"
     depends_on:
       - backend
+      - frontend
     networks:
       - komodo_net
 

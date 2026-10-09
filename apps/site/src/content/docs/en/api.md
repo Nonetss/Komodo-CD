@@ -19,7 +19,7 @@ A key can list stacks, deploy and read the history. The Komodo connection, the n
 
 ## Reference
 
-The backend serves an interactive OpenAPI reference, rendered by Scalar, at `/scalar`, and the OpenAPI document itself at `/doc`. Both are behind the same Caddy as the dashboard, so on a default install they are at `https://deploy.example.com/scalar` and `https://deploy.example.com/doc`.
+The backend serves an interactive OpenAPI reference, rendered by Scalar, at `/scalar`, and the OpenAPI document itself at `/doc`. Both are behind the same gateway as the dashboard, so on a default install they are at `https://deploy.example.com/scalar` and `https://deploy.example.com/doc`.
 
 ## Endpoints
 

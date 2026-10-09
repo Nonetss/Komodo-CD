@@ -1,0 +1,19 @@
+# Gateway: el único sitio que decide qué app sirve cada petición.
+#
+# :80 es la entrada pública y el único puerto que publica compose. Sirve la
+# API del backend y el frontend en un mismo origen, así que el navegador nunca
+# hace llamadas cross-origin. El cuerpo del sitio está en routes.caddy.
+#
+# Sirve HTTP plano y no pide certificados: el TLS lo termina el proxy inverso
+# que haya delante (ver la guía de despliegue).
+{
+	admin off
+	auto_https off
+	servers {
+		protocols h1 h2c
+	}
+}
+
+:80 {
+	import routes.caddy
+}

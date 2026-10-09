@@ -19,7 +19,7 @@ Una key puede listar los stacks, desplegar y leer el historial. La conexión con
 
 ## Referencia
 
-El backend sirve una referencia OpenAPI interactiva, generada con Scalar, en `/scalar`, y el documento OpenAPI en `/doc`. Los dos están detrás del mismo Caddy que el panel, así que en una instalación normal están en `https://deploy.example.com/scalar` y `https://deploy.example.com/doc`.
+El backend sirve una referencia OpenAPI interactiva, generada con Scalar, en `/scalar`, y el documento OpenAPI en `/doc`. Los dos están detrás del mismo gateway que el panel, así que en una instalación normal están en `https://deploy.example.com/scalar` y `https://deploy.example.com/doc`.
 
 ## Endpoints
 

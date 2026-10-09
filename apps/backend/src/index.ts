@@ -23,7 +23,7 @@ app.use(
   "*",
   cors({
     // Solo el propio dashboard manda cookies: en Docker y en dev va por el
-    // mismo origen (Caddy / proxy de Vite), y el CI usa curl, sin CORS.
+    // mismo origen (gateway / proxy de Vite), y el CI usa curl, sin CORS.
     origin: env.BETTER_AUTH_URL,
     credentials: true,
     allowHeaders: ["Content-Type", "Authorization", "x-api-key"],

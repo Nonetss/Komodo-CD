@@ -32,7 +32,7 @@ These are fixed in the compose file and rarely need to change:
 | Variable | Container | Value |
 | --- | --- | --- |
 | `DATABASE_URL` | backend | `file:/data/db.sqlite`, inside the `db_data` volume. |
-| `BACKEND_URL` | frontend | `http://backend:3000`, where Caddy and the server-side rendering reach the backend. |
+| `BACKEND_URL` | frontend | `http://backend:3000`, where the server-side rendering reaches the backend to check the session. |
 
 The backend also reads `LOG_LEVEL` (`fatal`, `error`, `warn`, `info`, `debug` or `trace`; default `info`). To use it, add it to the backend's `environment` in `compose.yml`.
 

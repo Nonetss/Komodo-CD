@@ -13,9 +13,19 @@ docker compose pull
 docker compose up -d
 ```
 
-The backend applies any new database migration on startup, so there is no extra step. If you pinned a version, change both image tags in `compose.yml` to the new one first. Releases and their notes are on the [releases page](https://github.com/Nonetss/Komodo-CD/releases).
+The backend applies any new database migration on startup, so there is no extra step. If you pinned a version, change the image tags in `compose.yml` to the new one first. Releases and their notes are on the [releases page](https://github.com/Nonetss/Komodo-CD/releases).
 
 Back up the database before a major version jump.
+
+### Coming from a version without the gateway
+
+Caddy used to live inside the frontend image; it is now its own `gateway` service, and the new frontend image no longer listens on port 80. Download the new `compose.yml` before pulling, otherwise the published port answers nothing:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Nonetss/Komodo-CD/main/compose.yml -o compose.yml
+docker compose pull
+docker compose up -d --remove-orphans
+```
 
 ## What to back up
 

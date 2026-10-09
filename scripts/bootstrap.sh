@@ -152,7 +152,7 @@ log "Configuration — answer the prompts."
 echo
 
 # Asked before the public URL so the URL default can follow the chosen port.
-# compose.yml publishes "${PORT:-80}:80" (Caddy inside the frontend image).
+# compose.yml publishes "${PORT:-80}:80" (the Caddy gateway).
 PORT=$(prompt "Host port to expose the app" "80")
 if ! [[ "$PORT" =~ ^[0-9]+$ ]] || (( PORT < 1 || PORT > 65535 )); then
   err "Invalid port"
@@ -240,7 +240,7 @@ cat > "$ENV_FILE_TMP" <<EOF
 # the curl snippets shown in the dashboard.
 APP_URL=$(env_quote "$APP_URL")
 
-# Port that Caddy (inside the frontend image) exposes on the host.
+# Port that the gateway (Caddy) exposes on the host.
 PORT=$PORT
 
 # ── Better Auth ──────────────────────────────────────────────────────────────

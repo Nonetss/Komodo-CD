@@ -29,6 +29,8 @@ jobs:
             dockerfile: apps/backend/Dockerfile
           - name: frontend
             dockerfile: apps/frontend/Dockerfile
+          - name: gateway
+            dockerfile: apps/gateway/Dockerfile
 
     steps:
       - uses: actions/checkout@v4
@@ -42,8 +44,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # ghcr.io/<owner>/komodo-cd-backend y ghcr.io/<owner>/komodo-cd-frontend:
-      # mismos nombres que publicaban los repos separados, así compose.yml no cambia.
+      # ghcr.io/<owner>/komodo-cd-{backend,frontend,gateway}. backend y frontend
+      # son los nombres que publicaban los repos separados.
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
