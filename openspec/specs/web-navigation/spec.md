@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Defines the dashboard's page map and its shell: a top bar with the wordmark, the navigation on desktop, a stack search and the controls, a bottom tab bar on mobile, both driven by one registry of surfaces, fast page changes with prefetching and one page fade, and the 404 page.
+Defines the dashboard's page map and its shell: a top bar with the wordmark, the navigation on desktop, a search palette and the controls, a bottom tab bar on mobile, both driven by one registry of surfaces, fast page changes with prefetching and one page fade, and the 404 page.
 
 ## Requirements
 ### Requirement: Page map
@@ -65,10 +65,10 @@ The dashboard SHALL show one sticky top bar on every screen size, closed by a he
 
 - the `KOMODO/CD` wordmark, linking to `/` and read by screen readers as "Komodo CD";
 - on large screens, the navigation as a row of uppercase links;
-- on large screens, a stack search field (see "Stack search in the top bar");
+- the search trigger: a search field on large screens, a search button on smaller ones (see "Search palette");
 - the language, theme and log-out controls, rendered as a single island.
 
-On smaller screens, the top bar SHALL keep only the wordmark and the controls, and a fixed bottom tab bar SHALL show the seven surfaces, respecting the device's safe-area inset, without horizontal scrolling at a 360 px viewport.
+On smaller screens, the top bar SHALL keep only the wordmark, the search button and the controls, and a fixed bottom tab bar SHALL show the seven surfaces, respecting the device's safe-area inset, without horizontal scrolling at a 360 px viewport.
 
 The active item SHALL be the one whose path equals the current path or, for every surface except the overview, prefixes it. It SHALL be marked by a signal underline and `aria-current="page"`. The navigation SHALL be rendered on the server.
 
@@ -100,17 +100,34 @@ The dashboard SHALL use Astro's client router with every link prefetched on hove
 - **WHEN** the user hovers and then clicks the history link
 - **THEN** the page SHALL already be prefetched and the content SHALL fade in while the top bar and the bottom bar stay still
 
-### Requirement: Stack search in the top bar
+### Requirement: Search palette
 
-On large screens, the top bar SHALL hold a stack search field, rendered as its own island. It SHALL load `v0.stacks.list` only once the field gets focus. While the user types, it SHALL suggest up to eight stacks whose name contains the text (case-insensitive), sorted by name, each with its state dot. The arrow keys SHALL move through the suggestions, `Enter` or a click SHALL open `/stacks/<name>` and clear the field, and `Escape` SHALL clear it. When nothing matches, it SHALL say so. The field SHALL follow the ARIA combobox pattern, with focus kept in the field.
+The top bar SHALL hold a search palette, rendered as its own island with its triggers: on large screens a field showing the `⌘K` (Apple platforms) or `Ctrl K` shortcut, on smaller screens a search button. A trigger click or `⌘K` / `Ctrl+K` anywhere on the page SHALL open it as a dialog; the shortcut SHALL toggle it, and `Escape`, the `esc` key cap next to the input or a click outside SHALL close it and clear the text.
+
+It SHALL list:
+
+- with an empty query, under "Recent", the last five surfaces the user visited (exact surface paths only, the current one left out), stored in `localStorage` per user, and an unreadable store SHALL count as empty;
+- under "Pages", the seven surfaces with their icon, label and page description;
+- once the user types, under "Stacks", the stacks with their state dot and service count, sorted by name. `v0.stacks.list` SHALL be loaded only while the palette is open.
+
+A result SHALL match when every word of the query is contained in its name, description or group name, ignoring case and accents. The arrow keys SHALL move through the results, wrapping around, and `Enter` or a click SHALL close the palette and open the result. The current page (or, on `/stacks/<name>`, that stack) SHALL be marked as current and choosing it SHALL only close the palette. When nothing matches, the palette SHALL say so, or that the stacks are loading while they are. On screens of at least 640 px, a footer SHALL list the keys.
 
 #### Scenario: Jump to a stack
 
-- **WHEN** the user types "git" in the top bar search and presses `Enter`
-- **THEN** the first suggestion (for example `gitea`) SHALL open at `/stacks/gitea`
+- **WHEN** the user presses `Ctrl+K`, types "git" and presses `Enter` on `gitea`
+- **THEN** the palette SHALL close and `/stacks/gitea` SHALL open
+
+#### Scenario: Words and accents
+
+- **WHEN** the user types "conexion"
+- **THEN** the connection page ("Conexión") SHALL be listed
+
+#### Scenario: Recent pages
+
+- **WHEN** the user visited `/history` and then `/keys`, and opens the palette on `/` with no text
+- **THEN** "Recent" SHALL list API Keys and then History
 
 #### Scenario: No match
 
-- **WHEN** the user types a text that no stack name contains
-- **THEN** the search SHALL show that no stack matches
-
+- **WHEN** the user types a text that no page or stack matches
+- **THEN** the palette SHALL say there are no results for that text
