@@ -14,6 +14,7 @@
   "dependencies": {
     "@astrojs/node": "11.1.6",
     "@astrojs/react": "7.0.0",
+    "@base-ui/react": "^1.8.0",
     "@better-auth/api-key": "catalog:",
     "@hookform/resolvers": "^5.9.1",
     "@orpc/client": "catalog:",
@@ -26,6 +27,7 @@
     "better-auth": "catalog:",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "i18next": "^26.4.2",
     "lucide-react": "^1.48.0",
     "react": "^19.3.0",
