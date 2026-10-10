@@ -28,4 +28,17 @@ export const stacksHandler = {
       throw toKomodoError(err)
     }
   },
+
+  pollForUpdates: async ({
+    input,
+  }: {
+    input: z.infer<typeof stacksInput.pollForUpdates>
+  }) => {
+    try {
+      await komodoService.setPollForUpdates(input.stack, input.enabled)
+      return { success: true, stack: input.stack, enabled: input.enabled }
+    } catch (err) {
+      throw toKomodoError(err)
+    }
+  },
 }

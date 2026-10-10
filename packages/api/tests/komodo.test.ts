@@ -95,3 +95,27 @@ describe("failedUpdateError", () => {
     expect(failedUpdateError(update(false)).message).toBe("sin detalles")
   })
 })
+
+describe("komodoService.setPollForUpdates", () => {
+  let write: ReturnType<typeof mock>
+  let previous: unknown
+
+  beforeEach(() => {
+    write = mock(async () => ({}))
+    previous = service.client
+    service.client = { write }
+  })
+
+  afterEach(() => {
+    service.client = previous
+  })
+
+  test("sends only poll_for_updates as the partial stack config", async () => {
+    await komodoService.setPollForUpdates("web", true)
+
+    expect(write).toHaveBeenCalledWith("UpdateStack", {
+      id: "web",
+      config: { poll_for_updates: true },
+    })
+  })
+})

@@ -203,6 +203,31 @@ class KomodoService {
     }
   }
 
+  /**
+   * Activa o desactiva `poll_for_updates` del stack (`UpdateStack` con la
+   * config parcial): con él activo, el Global Auto Update de Komodo comprueba
+   * si hay imágenes nuevas.
+   */
+  async setPollForUpdates(stackName: string, enabled: boolean) {
+    const client = this.ensureClient()
+    logger.info(`🔁 Setting poll for updates to ${enabled}: ${stackName}`)
+
+    try {
+      const result = await client.write("UpdateStack", {
+        id: stackName,
+        config: { poll_for_updates: enabled },
+      })
+      logger.info(`✅ Poll for updates set to ${enabled}: ${stackName}`)
+      return result
+    } catch (err) {
+      logger.error(
+        { err },
+        `❌ Failed to set poll for updates on stack ${stackName}`
+      )
+      throw err
+    }
+  }
+
   async deleteCredentials(name: string) {
     try {
       const deleted = await db

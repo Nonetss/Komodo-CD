@@ -61,3 +61,57 @@ describe("stacks.remove", () => {
     expect(err.status).toBe(503)
   })
 })
+
+const pollForUpdates = (context = sessionContext()) =>
+  call(
+    appRouter.v0.stacks.pollForUpdates,
+    { stack: "web", enabled: true },
+    { context }
+  )
+
+describe("stacks.pollForUpdates", () => {
+  let setPollForUpdates: ReturnType<typeof spyOn>
+
+  beforeEach(() => {
+    setPollForUpdates = spyOn(
+      komodoService,
+      "setPollForUpdates"
+    ).mockResolvedValue(undefined as never)
+  })
+
+  afterEach(() => {
+    setPollForUpdates.mockRestore()
+  })
+
+  test("a signed-in session turns on poll for updates in Komodo", async () => {
+    const result = await pollForUpdates()
+
+    expect(result).toEqual({ success: true, stack: "web", enabled: true })
+    expect(setPollForUpdates).toHaveBeenCalledWith("web", true)
+  })
+
+  test("rejects an API key with 403 without touching Komodo", async () => {
+    await expectErrorCode(pollForUpdates(apiKeyContext()), "FORBIDDEN")
+    expect(setPollForUpdates).not.toHaveBeenCalled()
+  })
+
+  test("rejects an anonymous request with 401", async () => {
+    await expectErrorCode(pollForUpdates(anonymousContext()), "UNAUTHORIZED")
+    expect(setPollForUpdates).not.toHaveBeenCalled()
+  })
+
+  test("a Komodo failure answers 502 with its message", async () => {
+    setPollForUpdates.mockRejectedValue(komodoFailure)
+
+    const err = await expectErrorCode(pollForUpdates(), "BAD_GATEWAY")
+    expect(err.status).toBe(502)
+    expect(err.message).toBe("stack not found")
+  })
+
+  test("answers 503 when no Komodo connection is configured", async () => {
+    setPollForUpdates.mockRestore()
+
+    const err = await expectErrorCode(pollForUpdates(), "SERVICE_UNAVAILABLE")
+    expect(err.status).toBe(503)
+  })
+})

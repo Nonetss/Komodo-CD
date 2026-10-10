@@ -28,4 +28,20 @@ export const stacksRouter = {
     .input(stacksInput.remove)
     .output(stacksOutput.remove)
     .handler(({ input }) => stacksHandler.remove({ input })),
+
+  pollForUpdates: sessionProcedure
+    .route({
+      method: "PUT",
+      path: "/v0/stacks/{stack}/poll-for-updates",
+      summary: "Activar o desactivar Poll for Updates en un stack",
+      description:
+        "Cambia `poll_for_updates` en la config del stack (`UpdateStack`): " +
+        "con él activo, el Global Auto Update de Komodo comprueba si hay " +
+        "imágenes nuevas. Requiere una sesión iniciada: una API key no puede " +
+        "cambiar la config de un stack.",
+      tags: ["Stacks"],
+    })
+    .input(stacksInput.pollForUpdates)
+    .output(stacksOutput.pollForUpdates)
+    .handler(({ input }) => stacksHandler.pollForUpdates({ input })),
 }

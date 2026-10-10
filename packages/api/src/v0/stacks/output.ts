@@ -49,4 +49,9 @@ export const stacksOutput = {
     stack: z.string(),
     message: z.string(),
   }),
+  pollForUpdates: z.object({
+    success: z.boolean(),
+    stack: z.string(),
+    enabled: z.boolean(),
+  }),
 }
