@@ -118,25 +118,29 @@ export function DailyChart({ buckets }: { buckets: DayBucket[] }) {
         </Text>
       </div>
 
-      <table className="sr-only">
-        <caption>{t("overview.activity.chart")}</caption>
-        <thead>
-          <tr>
-            <th scope="col">{t("overview.activity.dayColumn")}</th>
-            <th scope="col">{t("overview.activity.legendSuccess")}</th>
-            <th scope="col">{t("overview.activity.legendFailed")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {buckets.map((b) => (
-            <tr key={b.date.getTime()}>
-              <th scope="row">{day.format(b.date)}</th>
-              <td>{b.success}</td>
-              <td>{b.failed}</td>
+      {/* El sr-only va en un div: en la propia tabla no recorta el caption,
+          que se pinta fuera de su caja y asomaba sobre el título */}
+      <div className="sr-only">
+        <table>
+          <caption>{t("overview.activity.chart")}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{t("overview.activity.dayColumn")}</th>
+              <th scope="col">{t("overview.activity.legendSuccess")}</th>
+              <th scope="col">{t("overview.activity.legendFailed")}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {buckets.map((b) => (
+              <tr key={b.date.getTime()}>
+                <th scope="row">{day.format(b.date)}</th>
+                <td>{b.success}</td>
+                <td>{b.failed}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   )
 }
