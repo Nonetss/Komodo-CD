@@ -12,7 +12,7 @@ import {
   severityKey,
   useImages,
 } from "@/entities/image-scan"
-import { ImageRef } from "@/entities/stack"
+import { ImageRef, stackHref } from "@/entities/stack"
 import { BlockRowsSkeleton } from "@/features/overview/components/overview-skeletons"
 import { ShortList } from "@/features/overview/components/short-list"
 import { StackedBar } from "@/features/overview/components/stacked-bar"
@@ -31,6 +31,24 @@ const mostExposed = (images: ImageSummary[]) =>
         b.counts.high - a.counts.high ||
         a.image.localeCompare(b.image)
     )
+
+/**
+ * Nombre de una imagen expuesta como enlace a la ficha de su stack (el
+ * primero si la comparten varios), con el mismo trato que `StackLink`.
+ */
+function ExposedImageLink({ image }: { image: ImageSummary }) {
+  const ref = <ImageRef image={image.image} nameOnly className="text-sm" />
+  const stack = image.stacks[0]
+  if (!stack) return ref
+  return (
+    <a
+      href={stackHref(stack)}
+      className="hover:text-signal-ink min-w-0 underline-offset-4 hover:underline"
+    >
+      {ref}
+    </a>
+  )
+}
 
 /**
  * 02 · Seguridad: las CVEs por severidad (sumadas imagen a imagen), cuántas
@@ -112,7 +130,7 @@ export function SecurityBlock({ className }: { className?: string }) {
           columns={2}
           renderItem={(image) => (
             <>
-              <ImageRef image={image.image} nameOnly className="text-sm" />
+              <ExposedImageLink image={image} />
               <span
                 className="flex shrink-0 gap-2"
                 title={`${t("security.severity.critical")}: ${image.counts.critical} · ${t("security.severity.high")}: ${image.counts.high}`}
