@@ -5,7 +5,7 @@ import {
   BottomNav,
   type NavItem,
   ShellControls,
-  StackSearch,
+  SurfaceSearch,
   TopNav,
 } from "@/features/app-shell"
 import Main from "@/layouts/main.astro"
@@ -33,6 +33,8 @@ const NAV: NavItem[] = APP_SURFACES.map((s) => ({
 }))
 
 const path = Astro.url.pathname
+// El middleware solo deja pasar a las páginas del panel con sesión
+const userId = Astro.locals.user?.id ?? ""
 
 // Contenido de las páginas normales: columna centrada. La barra superior va
 // a todo el ancho con los mismos márgenes laterales
@@ -56,13 +58,9 @@ const container = `mx-auto w-full max-w-6xl ${gutter}`
         <Wordmark />
       </a>
       <TopNav items={NAV} path={path} />
-      <div class="ml-auto flex shrink-0 items-center gap-6">
-        <div class="hidden lg:block">
-          <StackSearch client:load lang={lang} />
-        </div>
-        <div class="flex items-center gap-0.5">
-          <ShellControls client:load lang={lang} />
-        </div>
+      <div class="ml-auto flex shrink-0 items-center gap-0.5">
+        <SurfaceSearch client:load lang={lang} path={path} userId={userId} />
+        <ShellControls client:load lang={lang} />
       </div>
     </div>
   </header>
