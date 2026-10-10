@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Describes how the monorepo is worked on locally: Bun workspaces orchestrated by Turborepo, a Docker dev stack that runs the apps from source with hot reload behind the production gateway (or the same natively with turbo), and the shared tooling (TypeScript config, Biome, Tailwind checks) every change goes through.
+Describes how the monorepo is worked on locally: Bun workspaces orchestrated by Turborepo, a Docker dev stack that runs the apps from source, reloading edits, behind the production gateway (or the same natively with turbo), and the shared tooling (TypeScript config, Biome, Tailwind checks) every change goes through.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ The repository SHALL be a Bun workspace (`apps/*`, `packages/*`) with shared dep
 
 ### Requirement: Docker dev stack
 
-`bun run dev` SHALL run `compose.dev.yml` (`docker compose up --build --watch`, project `komodo-cd-dev`) with four services: `backend` (`apps/backend/Dockerfile.dev`, `bun run --hot`, with the `trivy` CLI and `TRIVY_SERVER_URL=http://trivy:4954`), `frontend` (`apps/frontend/Dockerfile.dev`, `astro dev` on `0.0.0.0:4321`, `BACKEND_URL=http://backend:3000`), `gateway` (the production gateway image and `routes.caddy`) and `trivy` (the same pinned `aquasec/trivy` image and `trivy server` command as production, its cache on the `trivy_cache` volume). As in production, only the gateway SHALL publish a port, mapping `http://localhost:4321` to its `:80`; the backend, the frontend and `trivy` SHALL be reachable only on the stack's network. Both app containers SHALL read the root `.env` (optional), and the backend's SQLite SHALL live at `file:/data/dev.db` on the `backend_data` volume. Edits SHALL reach the containers through `docker compose watch` (no bind mounts): source folders are synced, changes to `astro.config.mjs`, `Caddyfile` or `routes.caddy` sync and restart their service, and changes to `bun.lock` or a `package.json` rebuild the image. `bun run dev:down` SHALL remove the stack's containers. Every Dockerfile, including the `Dockerfile.dev` ones, SHALL copy the `package.json` of every workspace before installing, or `--frozen-lockfile` fails.
+`bun run dev` SHALL run `compose.dev.yml` (`docker compose up --build --watch`, project `komodo-cd-dev`) with four services: `backend` (`apps/backend/Dockerfile.dev`, `bun run --hot`, with the `trivy` CLI and `TRIVY_SERVER_URL=http://trivy:4954`), `frontend` (`apps/frontend/Dockerfile.dev`, `astro dev` on `0.0.0.0:4321`, `BACKEND_URL=http://backend:3000`), `gateway` (the production gateway image and `routes.caddy`) and `trivy` (the same pinned `aquasec/trivy` image and `trivy server` command as production, its cache on the `trivy_cache` volume). As in production, only the gateway SHALL publish a port, mapping `http://localhost:4321` to its `:80`; the backend, the frontend and `trivy` SHALL be reachable only on the stack's network. Both app containers SHALL read the root `.env` (optional), and the backend's SQLite SHALL live at `file:/data/dev.db` on the `backend_data` volume. Edits SHALL reach the containers through `docker compose watch` (no bind mounts): source folders are synced (the backend's sync and restart the service, because the sync replaces each file and Bun stops watching a file whose inode changes), changes to `astro.config.mjs`, `Caddyfile` or `routes.caddy` sync and restart their service, and changes to `bun.lock` or a `package.json` rebuild the image. `bun run dev:down` SHALL remove the stack's containers. Every Dockerfile, including the `Dockerfile.dev` ones, SHALL copy the `package.json` of every workspace before installing, or `--frozen-lockfile` fails.
 
 #### Scenario: Start developing
 
@@ -27,7 +27,7 @@ The repository SHALL be a Bun workspace (`apps/*`, `packages/*`) with shared dep
 #### Scenario: Edit a procedure
 
 - **WHEN** a developer edits a file under `packages/api/src/` while `bun run dev` runs
-- **THEN** the edit SHALL be synced into the backend container and the backend SHALL hot-reload it without restarting the process
+- **THEN** the edit SHALL be synced into the backend container and the backend SHALL restart and serve it
 
 #### Scenario: New dependency
 
