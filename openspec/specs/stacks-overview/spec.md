@@ -130,6 +130,7 @@ While at least one stack is selected, the Stacks page SHALL show a bulk action b
 - the number of selected stacks, and how many of them the current filters hide when any;
 - one button per action (`pull`, `redeploy`, `pull-redeploy`);
 - a delete button;
+- a button that turns on Poll for Updates (see "Turn on Poll for Updates on the selected stacks");
 - a button that clears the selection.
 
 Clicking an action SHALL first ask for an inline confirmation naming the action and the number of stacks; cancelling SHALL do nothing. On confirmation, the page SHALL call `v0.deploy.trigger` once per selected stack with that action, at most three calls at a time. While its call runs, each stack SHALL show its running indicator and, when it is the open stack, the spinner and disabled buttons exactly as for a single action.
@@ -181,6 +182,22 @@ The bulk bar's delete button SHALL first ask for an inline confirmation naming t
 
 - **WHEN** the open stack is `web`, it is selected with `api`, and both are deleted
 - **THEN** the page SHALL navigate to `/stacks`
+
+### Requirement: Turn on Poll for Updates on the selected stacks
+
+The system SHALL expose `v0.stacks.pollForUpdates` as a `sessionProcedure` (`PUT /api/v0/stacks/{stack}/poll-for-updates`, tag `Stacks`) taking `{ stack, enabled }`, which calls Komodo's `UpdateStack` with the stack name and the partial config `{ poll_for_updates: enabled }` and returns `{ success, stack, enabled }`. With it on, Komodo's Global Auto Update checks the stack's images for updates. Komodo errors SHALL become `502` and a missing connection `503` (`toKomodoError`).
+
+The bulk bar's Poll for Updates button, an icon with its explanation as tooltip, SHALL first ask for an inline confirmation naming the number of stacks; cancelling SHALL do nothing. On confirmation, the page SHALL call `v0.stacks.pollForUpdates` with `enabled: true` once per selected stack, at most three calls at a time, while the bulk actions stay disabled. When every call has settled, it SHALL show one summary toast (success, or an error naming the stacks that failed); updated stacks SHALL leave the selection and failed ones SHALL stay selected.
+
+#### Scenario: Turn on polling for every stack
+
+- **WHEN** the user selects all the stacks, clicks the Poll for Updates button and confirms
+- **THEN** the page SHALL call `v0.stacks.pollForUpdates` with `{ stack, enabled: true }` for each stack, show one success toast and clear the selection
+
+#### Scenario: CI cannot change a stack's config
+
+- **WHEN** a request authenticated with `x-api-key` calls `PUT /api/v0/stacks/web/poll-for-updates`
+- **THEN** the system SHALL answer `403` without calling Komodo
 
 ### Requirement: Empty and error states
 

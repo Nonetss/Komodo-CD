@@ -15,7 +15,7 @@ Cada endpoint necesita una de estas dos cosas:
 
 Sin ninguna de las dos la respuesta es `401`. Una key actúa en nombre del usuario que la creó y queda en el historial como `API Key: <nombre>`.
 
-Una key puede listar los stacks, desplegar, seguir los deploys en vivo, leer el historial y consultar o pedir escaneos de imágenes. Borrar un stack, la conexión con Komodo, los ajustes de ntfy y las propias API keys necesitan una sesión iniciada: con una key responden `403`, así que una key del CI filtrada no puede cambiarlos.
+Una key puede listar los stacks, desplegar, seguir los deploys en vivo, leer el historial y consultar o pedir escaneos de imágenes. Borrar un stack o cambiar su config, la conexión con Komodo, los ajustes de ntfy y las propias API keys necesitan una sesión iniciada: con una key responden `403`, así que una key del CI filtrada no puede cambiarlos.
 
 ## Referencia
 
@@ -27,6 +27,7 @@ El backend sirve una referencia OpenAPI interactiva, generada con Scalar, en `/s
 | --- | --- | --- |
 | `GET` | `/api/v0/stacks` | Lista los stacks de la instancia de Komodo, con su estado, servicios e imágenes. |
 | `DELETE` | `/api/v0/stacks/{stack}` | Borra el stack en Komodo; si está en marcha, Komodo baja antes sus contenedores. Solo con sesión. |
+| `PUT` | `/api/v0/stacks/{stack}/poll-for-updates` | Activa o desactiva Poll for Updates (`{ "enabled": true }`), para que el Global Auto Update de Komodo compruebe las imágenes del stack. Solo con sesión. |
 | `POST` | `/api/v0/deploy` | Ejecuta `pull`, `redeploy` o `pull-redeploy` sobre un stack. Ver [Desplegar desde CI](../ci/). |
 | `GET` | `/api/v0/deploy/events` | Stream en vivo (SSE) de los deploys según empiezan y terminan. Ver [Seguir los deploys en vivo](#seguir-los-deploys-en-vivo). |
 | `GET` | `/api/v0/history` | Las últimas 100 acciones, de la más reciente a la más antigua. |
