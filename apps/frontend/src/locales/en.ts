@@ -95,6 +95,17 @@ export default {
       deleted_other: "{{count}} stacks deleted from Komodo",
       deleteFailed_one: "Couldn't delete {{count}} of {{total}} stacks",
       deleteFailed_other: "Couldn't delete {{count}} of {{total}} stacks",
+      poll: "Turn on Poll for Updates",
+      pollHint:
+        "Turns on Poll for Updates: Komodo's Global Auto Update will check for new images.",
+      confirmPoll_one: "Turn on Poll for Updates on {{count}} stack?",
+      confirmPoll_other: "Turn on Poll for Updates on {{count}} stacks?",
+      polling_one: "Poll for Updates turned on for {{count}} stack",
+      polling_other: "Poll for Updates turned on for {{count}} stacks",
+      pollFailed_one:
+        "Couldn't turn on Poll for Updates on {{count}} of {{total}} stacks",
+      pollFailed_other:
+        "Couldn't turn on Poll for Updates on {{count}} of {{total}} stacks",
     },
     stats: {
       running: "Running",
@@ -134,6 +145,7 @@ export default {
     deleteLabel: "Delete {{name}} from Komodo",
     deleted: "{{name}} deleted from Komodo",
     errorDelete: "Couldn't delete the stack",
+    errorPoll: "Couldn't turn on Poll for Updates",
     count: {
       running: "running",
       total: "total",

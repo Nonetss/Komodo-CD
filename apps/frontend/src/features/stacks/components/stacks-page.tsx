@@ -19,6 +19,7 @@ import {
 } from "@/features/stacks/components/stack-list"
 import { StacksBulkBar } from "@/features/stacks/components/stacks-bulk-bar"
 import { useStacksBulkDelete } from "@/features/stacks/hooks/use-stacks-bulk-delete"
+import { useStacksBulkPoll } from "@/features/stacks/hooks/use-stacks-bulk-poll"
 import type { DeployAction, Stack } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
 import { withIsland } from "@/providers/island"
@@ -36,6 +37,7 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
   const stacksQuery = useStacks()
   const runner = useDeployRunner()
   const bulkDelete = useStacksBulkDelete(openName)
+  const bulkPoll = useStacksBulkPoll()
   const stacks = stacksQuery.data ?? EMPTY_STACKS
 
   const [search, setSearch] = useState("")
@@ -106,9 +108,16 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
     setSelected((prev) => new Set([...prev].filter((n) => !deleted.has(n))))
   }
 
+  const runBulkPoll = async () => {
+    const enabled = new Set(await bulkPoll.run([...selected]))
+    // Los que fallan siguen seleccionados para poder reintentarlos
+    setSelected((prev) => new Set([...prev].filter((n) => !enabled.has(n))))
+  }
+
   const bulkDisabled =
     runner.bulkAction !== null ||
     bulkDelete.deleting ||
+    bulkPoll.enabling ||
     [...selected].some((n) => runner.runningAction(n) !== null)
 
   const clearFilters = () => {
@@ -242,9 +251,11 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
           hidden={hiddenSelected}
           runningAction={runner.bulkAction}
           deleting={bulkDelete.deleting}
+          enablingPoll={bulkPoll.enabling}
           disabled={bulkDisabled}
           onRun={runBulk}
           onDelete={runBulkDelete}
+          onEnablePoll={runBulkPoll}
           onClear={() => setSelected(new Set())}
         />
       )}
