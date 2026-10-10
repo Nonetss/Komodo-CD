@@ -182,6 +182,7 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
         icon={Layers}
         title={t("stacks.pickOne")}
         description={t("stacks.pickOneDescription")}
+        className="w-full"
       />
     )
   }
@@ -224,7 +225,12 @@ const StacksPageContent = ({ stack: openName }: { stack: string | null }) => {
         aria-label={t("stacks.detailLabel")}
         className={cn(
           "min-w-0 px-4 pt-6 pb-16 sm:px-6 lg:block lg:px-12 lg:pt-10",
-          openName ? "block" : "hidden"
+          openName ? "block" : "hidden",
+          // Sin stack abierto, la invitación a elegir uno va en el centro del
+          // panel, que ocupa el alto de la columna de la lista
+          !openName &&
+            stacksQuery.isSuccess &&
+            "lg:flex lg:h-[calc(100dvh-3.5rem)] lg:items-center lg:py-0"
         )}
       >
         {detail}
