@@ -1,12 +1,9 @@
 import { textVariants } from "@/components/shared/brand/typography"
+import { isActivePath } from "@/features/app-shell/model/active-path"
 import { getAppSurface, type SurfaceId } from "@/lib/app-surfaces"
 import { cn } from "@/lib/utils"
 
 export type NavItem = { key: SurfaceId; href: string; label: string }
-
-// La raíz (resumen) solo está activa en `/`: como prefijo lo sería siempre
-const isActive = (path: string, href: string) =>
-  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`)
 
 /**
  * Navegación horizontal de la barra superior (escritorio). Se renderiza en
@@ -17,7 +14,7 @@ export function TopNav({ items, path }: { items: NavItem[]; path: string }) {
   return (
     <nav className="hidden h-full items-stretch gap-6 lg:flex">
       {items.map((item) => {
-        const active = isActive(path, item.href)
+        const active = isActivePath(path, item.href)
         return (
           <a
             key={item.key}
@@ -64,7 +61,7 @@ export function BottomNav({ items, path }: { items: NavItem[]; path: string }) {
       >
         {items.map((item) => {
           const Icon = getAppSurface(item.key).icon
-          const active = isActive(path, item.href)
+          const active = isActivePath(path, item.href)
           return (
             <a
               key={item.key}
