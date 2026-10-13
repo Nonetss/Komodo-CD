@@ -40,6 +40,9 @@ export function failedUpdateError(update: Types.Update): Error {
   return new Error(failed ? `${failed.stage}: ${detail}` : detail)
 }
 
+// Operaciones de Komodo que cambian los contenedores de un stack
+const STACK_DEPLOY_OPERATIONS: string[] = ["DeployStack", "DeployStackService"]
+
 type KomodoCredentials = {
   name: string
   url: string
@@ -181,6 +184,38 @@ class KomodoService {
       return (await client.read("ListStacks", params)) as Types.StackListItem[]
     } catch (err) {
       logger.error({ err }, "❌ Failed to list stacks")
+      throw err
+    }
+  }
+
+  /**
+   * Deploys de stacks que Komodo terminó bien, más recientes primero: la
+   * primera página de `ListUpdates` (las 100 últimas). Incluye los que hace
+   * Komodo por su cuenta (Global Auto Update, su UI, procedures). La query
+   * filtra en Komodo y se vuelve a filtrar aquí por si alguna versión ignora
+   * parte de ella.
+   */
+  async listRecentStackDeploys() {
+    const client = this.ensureClient()
+    try {
+      const { updates } = await client.read("ListUpdates", {
+        query: {
+          "target.type": "Stack",
+          operation: { $in: STACK_DEPLOY_OPERATIONS },
+        },
+        page: 0,
+      })
+      return updates
+        .filter(
+          (u) =>
+            u.target.type === "Stack" &&
+            STACK_DEPLOY_OPERATIONS.includes(u.operation) &&
+            u.status === "Complete" &&
+            u.success
+        )
+        .map((u) => ({ stackId: u.target.id, startedAt: new Date(u.start_ts) }))
+    } catch (err) {
+      logger.error({ err }, "❌ Failed to list stack deploys")
       throw err
     }
   }

@@ -8,6 +8,7 @@ import { failedUpdateError, komodoService } from "#lib/komodo"
 import { appRouter } from "#router"
 import { apiKeyContext } from "#tests/fixtures/context"
 import { expectErrorCode } from "#tests/fixtures/errors"
+import { komodoUpdate } from "#tests/fixtures/updates"
 
 const update = (
   success: boolean,
@@ -117,5 +118,53 @@ describe("komodoService.setPollForUpdates", () => {
       id: "web",
       config: { poll_for_updates: true },
     })
+  })
+})
+
+describe("komodoService.listRecentStackDeploys", () => {
+  let read: ReturnType<typeof mock>
+  let previous: unknown
+
+  beforeEach(() => {
+    read = mock(async () => ({ updates: [] }))
+    previous = service.client
+    service.client = { read }
+  })
+
+  afterEach(() => {
+    service.client = previous
+  })
+
+  test("asks Komodo for the first page of stack deploys", async () => {
+    await komodoService.listRecentStackDeploys()
+
+    expect(read).toHaveBeenCalledWith("ListUpdates", {
+      query: {
+        "target.type": "Stack",
+        operation: { $in: ["DeployStack", "DeployStackService"] },
+      },
+      page: 0,
+    })
+  })
+
+  test("keeps only complete, successful stack deploys", async () => {
+    const at = new Date("2026-10-13T10:00:00.000Z")
+    read.mockResolvedValue({
+      updates: [
+        komodoUpdate("web", at),
+        komodoUpdate("api", at, { operation: "DeployStackService" }),
+        komodoUpdate("failed", at, { success: false }),
+        komodoUpdate("running", at, { status: "InProgress" }),
+        komodoUpdate("pulled", at, { operation: "PullStack" }),
+        komodoUpdate("server", at, {
+          target: { type: "Server", id: "id-server" },
+        }),
+      ],
+    })
+
+    expect(await komodoService.listRecentStackDeploys()).toEqual([
+      { stackId: "id-web", startedAt: at },
+      { stackId: "id-api", startedAt: at },
+    ])
   })
 })
