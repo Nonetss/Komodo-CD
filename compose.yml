@@ -13,6 +13,7 @@ services:
       SEED_ADMIN_NAME: "${SEED_ADMIN_NAME:-Admin}"
       SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD is required}"
       TRIVY_SERVER_URL: "${TRIVY_SERVER_URL:-http://trivy:4954}"
+      TRIVY_RESCAN_INTERVAL_HOURS: "${TRIVY_RESCAN_INTERVAL_HOURS:-24}"
     healthcheck:
       test: ["CMD", "bun", "-e", "fetch('http://localhost:3000/health-check').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 10s

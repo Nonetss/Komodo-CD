@@ -39,6 +39,10 @@ export const env = createEnv({
     // http://trivy:4954 (el servicio `trivy` de compose). Sin él, el escaneo
     // queda desactivado.
     TRIVY_SERVER_URL: z.url().optional(),
+    // Horas que puede tener el último escaneo de una imagen antes de que el
+    // reescaneo periódico la vuelva a encolar. 0 desactiva solo ese
+    // reescaneo; los deploys hechos dentro de Komodo se siguen vigilando.
+    TRIVY_RESCAN_INTERVAL_HOURS: z.coerce.number().min(0).default(24),
   },
   runtimeEnv: {
     ...process.env,
