@@ -126,6 +126,77 @@ describe("ImageScanQueue", () => {
     await queue.idle()
   })
 
+  test("enqueueDeployed queues images requested before their deploy", async () => {
+    const deploy = new Date("2026-10-13T10:00:00.500Z")
+    await db.insert(imageScanTable).values([
+      {
+        image: "before:1",
+        status: "done",
+        requestedAt: new Date("2026-10-13T09:59:59Z"),
+      },
+      {
+        image: "same-second:1",
+        status: "done",
+        requestedAt: new Date("2026-10-13T10:00:00Z"),
+      },
+      {
+        image: "after:1",
+        status: "failed",
+        requestedAt: new Date("2026-10-13T10:05:00Z"),
+      },
+    ])
+    const queued = await queue.enqueueDeployed(
+      new Map(
+        ["before:1", "same-second:1", "after:1", "new:1"].map((i) => [
+          i,
+          deploy,
+        ])
+      )
+    )
+    expect(queued.sort()).toEqual(["before:1", "new:1"])
+    await queue.idle()
+  })
+
+  test("enqueueStale queues old done and failed images only", async () => {
+    const now = Date.now()
+    const hoursAgo = (h: number) => new Date(now - h * 3_600_000)
+    await db.insert(imageScanTable).values([
+      { image: "old-done:1", status: "done", attemptedAt: hoursAgo(25) },
+      { image: "old-failed:1", status: "failed", attemptedAt: hoursAgo(30) },
+      { image: "recent:1", status: "done", attemptedAt: hoursAgo(1) },
+      // Sin intento: cuenta la hora a la que se pidió
+      { image: "never-tried:1", status: "failed", requestedAt: hoursAgo(48) },
+      { image: "queued:1", status: "queued", requestedAt: hoursAgo(48) },
+      { image: "scanning:1", status: "scanning", requestedAt: hoursAgo(48) },
+      { image: "unused:1", status: "done", attemptedAt: hoursAgo(48) },
+    ])
+    const queued = await queue.enqueueStale(
+      [
+        "old-done:1",
+        "old-failed:1",
+        "recent:1",
+        "never-tried:1",
+        "queued:1",
+        "scanning:1",
+        "new:1",
+      ],
+      hoursAgo(24)
+    )
+    expect(queued.sort()).toEqual([
+      "never-tried:1",
+      "old-done:1",
+      "old-failed:1",
+    ])
+    await queue.idle()
+  })
+
+  test("a closed queue queues nothing", async () => {
+    queue.close()
+    expect(await queue.enqueue(["alpine:3.19"])).toEqual([])
+    expect(await row("alpine:3.19")).toBeUndefined()
+    expect(run).not.toHaveBeenCalled()
+  })
+
   test("nothing is queued while Trivy is disabled", async () => {
     enabled.mockReturnValue(false)
     expect(await queue.enqueue(["alpine:3.19"])).toEqual([])

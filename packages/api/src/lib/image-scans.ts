@@ -45,6 +45,8 @@ export class ImageScanQueue {
   private readonly queued = new Set<string>()
   private readonly running = new Map<string, AbortController>()
   private idleWaiters: (() => void)[] = []
+  // Cerrada al apagar: no se encola nada más
+  private closed = false
 
   /** En cola o escaneándose ahora mismo en este proceso. */
   isTracked(image: string) {
@@ -56,7 +58,7 @@ export class ImageScanQueue {
    * Marca su fila como `queued` sin borrar el resultado anterior.
    */
   async enqueue(images: string[]) {
-    if (!trivyService.isEnabled()) return []
+    if (this.closed || !trivyService.isEnabled()) return []
     const fresh = [...new Set(images)].filter((i) => i && !this.isTracked(i))
     if (fresh.length === 0) return []
     // Antes de esperar a la base de datos, para que dos llamadas seguidas no
@@ -108,6 +110,57 @@ export class ImageScanQueue {
   }
 
   /**
+   * Encola las imágenes desplegadas después de su último escaneo pedido: sin
+   * fila, o con `requestedAt` anterior al deploy. La columna guarda segundos,
+   * así que el deploy se trunca al segundo antes de comparar.
+   */
+  async enqueueDeployed(deployedAt: Map<string, Date>) {
+    if (!trivyService.isEnabled() || deployedAt.size === 0) return []
+    const images = [...deployedAt.keys()]
+    const rows = await db
+      .select({
+        image: imageScanTable.image,
+        requestedAt: imageScanTable.requestedAt,
+      })
+      .from(imageScanTable)
+      .where(inArray(imageScanTable.image, images))
+    const requested = new Map(rows.map((r) => [r.image, r.requestedAt]))
+    const deployed = images.filter((image) => {
+      const at = requested.get(image)
+      if (!at) return true
+      const deploy = (deployedAt.get(image) as Date).getTime()
+      return at.getTime() < Math.floor(deploy / 1000) * 1000
+    })
+    return this.enqueue(deployed)
+  }
+
+  /**
+   * Encola las imágenes `done` o `failed` cuyo último intento (o su petición,
+   * si no llegó a intentarse) es anterior a `olderThan`. Se mira el intento y
+   * no el último escaneo bueno para no reintentar sin parar las que fallan.
+   */
+  async enqueueStale(images: string[], olderThan: Date) {
+    if (!trivyService.isEnabled() || images.length === 0) return []
+    const rows = await db
+      .select({
+        image: imageScanTable.image,
+        status: imageScanTable.status,
+        attemptedAt: imageScanTable.attemptedAt,
+        requestedAt: imageScanTable.requestedAt,
+      })
+      .from(imageScanTable)
+      .where(inArray(imageScanTable.image, images))
+    const stale = rows
+      .filter((r) => r.status === "done" || r.status === "failed")
+      .filter((r) => {
+        const last = r.attemptedAt ?? r.requestedAt
+        return !last || last < olderThan
+      })
+      .map((r) => r.image)
+    return this.enqueue(stale)
+  }
+
+  /**
    * Encola las imágenes de un stack (tras un deploy). No espera a Komodo de
    * cara a quien llama y nunca lanza: un fallo aquí solo se registra.
    */
@@ -131,10 +184,12 @@ export class ImageScanQueue {
   }
 
   /**
-   * Corta los escaneos en curso y vacía la cola (al apagar). Sus filas se
-   * quedan `queued`/`scanning` y `enqueueMissing` las recoge al volver.
+   * Corta los escaneos en curso, vacía la cola y no deja encolar más (al
+   * apagar). Sus filas se quedan `queued`/`scanning` y `enqueueMissing` las
+   * recoge al volver.
    */
   close() {
+    this.closed = true
     this.pending.length = 0
     this.queued.clear()
     for (const controller of this.running.values()) controller.abort()
