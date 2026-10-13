@@ -1,6 +1,7 @@
 import { deployEvents } from "@komodo-cd/api/lib/deploy-events"
 import { imageScans } from "@komodo-cd/api/lib/image-scans"
 import { komodoService } from "@komodo-cd/api/lib/komodo"
+import { scanScheduler } from "@komodo-cd/api/lib/scan-scheduler"
 import { auth } from "@komodo-cd/auth"
 import { closeDb } from "@komodo-cd/db"
 import { seed } from "@komodo-cd/db/seed"
@@ -116,6 +117,9 @@ async function shutdown(signal: NodeJS.Signals) {
   // Antes que nada se cierran los streams de deploys: son conexiones que no
   // terminan solas y harían esperar al drenado de HTTP hasta su timeout.
   await step("events", () => deployEvents.close())
+  // La pasada de escaneos automáticos se para antes que la cola, para que no
+  // encole nada nuevo mientras se cierra.
+  await step("scheduler", () => scanScheduler.stop())
   // Los escaneos de Trivy pueden durar minutos: se cortan (sus filas quedan a
   // medias y se vuelven a encolar al listar) en lugar de esperar.
   await step("scans", () => imageScans.close())
@@ -138,6 +142,10 @@ if (!globalThis.__backendBootstrapped) {
     logger.error({ err }, "bootstrap failed")
     process.exit(1)
   }
+
+  // Escaneos automáticos (imágenes nuevas, deploys hechos dentro de Komodo y
+  // reescaneo periódico); sin TRIVY_SERVER_URL no arranca.
+  scanScheduler.start()
 
   for (const signal of ["SIGINT", "SIGTERM"] as const) {
     process.on(signal, () => void shutdown(signal))
