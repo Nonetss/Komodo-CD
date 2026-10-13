@@ -8,7 +8,7 @@ Packages Komodo CD as three images (backend, frontend, gateway) published to GHC
 
 ### Requirement: Compose stack
 
-`compose.yml` SHALL run the services `backend`, `frontend` and `gateway` from `ghcr.io/nonetss/komodo-cd-{backend,frontend,gateway}:latest`, and `trivy` from `aquasec/trivy` pinned to the same version the backend image ships, all on one private network, each with `init: true` and `restart: unless-stopped`. Only `gateway` SHALL publish a port (`${PORT:-80}:80`). The backend SHALL get `DATABASE_URL=file:/data/db.sqlite` on the `db_data` volume, `BETTER_AUTH_URL` from `APP_URL`, the seed admin variables and `TRIVY_SERVER_URL` (default `http://trivy:4954`); compose SHALL refuse to start without `APP_URL`, `BETTER_AUTH_SECRET` and `SEED_ADMIN_PASSWORD`. The frontend SHALL reach the backend at `http://backend:3000`. The `trivy` service SHALL run `trivy server` on `0.0.0.0:4954` with its vulnerability database cached on the `trivy_cache` volume.
+`compose.yml` SHALL run the services `backend`, `frontend` and `gateway` from `ghcr.io/nonetss/komodo-cd-{backend,frontend,gateway}:latest`, and `trivy` from `aquasec/trivy` pinned to the same version the backend image ships, all on one private network, each with `init: true` and `restart: unless-stopped`. Only `gateway` SHALL publish a port (`${PORT:-80}:80`). The backend SHALL get `DATABASE_URL=file:/data/db.sqlite` on the `db_data` volume, `BETTER_AUTH_URL` from `APP_URL`, the seed admin variables, `TRIVY_SERVER_URL` (default `http://trivy:4954`) and `TRIVY_RESCAN_INTERVAL_HOURS` (default `24`); compose SHALL refuse to start without `APP_URL`, `BETTER_AUTH_SECRET` and `SEED_ADMIN_PASSWORD`. The frontend SHALL reach the backend at `http://backend:3000`. The `trivy` service SHALL run `trivy server` on `0.0.0.0:4954` with its vulnerability database cached on the `trivy_cache` volume.
 
 #### Scenario: Missing secret
 
@@ -24,6 +24,12 @@ Packages Komodo CD as three images (backend, frontend, gateway) published to GHC
 
 - **WHEN** the `trivy` container is recreated
 - **THEN** it SHALL reuse the vulnerability database from the `trivy_cache` volume instead of downloading it again
+
+#### Scenario: Rescan interval from .env
+
+- **WHEN** `.env` sets `TRIVY_RESCAN_INTERVAL_HOURS=6` and the stack starts
+- **THEN** the backend SHALL receive `TRIVY_RESCAN_INTERVAL_HOURS=6`, and `24` when `.env` does not set it
+
 ### Requirement: Health-ordered startup
 
 The backend SHALL be healthy when `GET /health-check` succeeds, the frontend when `GET /login` succeeds, the gateway when its `/health` answers, and `trivy` when its `/healthz` answers. The frontend SHALL start only once the backend is healthy, and the gateway only once both are healthy. The backend SHALL NOT wait for `trivy`: scanning is optional and fails per scan while the server is not ready.
