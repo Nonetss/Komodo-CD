@@ -55,9 +55,13 @@ Cada acción, haya ido bien o no, se escribe en el historial con el usuario, el 
 
 Las imágenes que se escanean son las que Komodo da para los servicios de los stacks. El backend mantiene una cola pequeña (dos escaneos a la vez, nunca la misma imagen dos veces) y para cada una ejecuta `trivy image` en modo cliente contra el servidor `trivy`, leyendo la imagen directamente de su registry. Una imagen se encola:
 
-- la primera vez que aparece, o cuando un reinicio cortó su escaneo: la página **Seguridad** (o `GET /api/v0/security/images`) la encola al listar las imágenes;
+- la primera vez que aparece, o cuando un reinicio cortó su escaneo: la página **Seguridad** (o `GET /api/v0/security/images`) la encola al listar las imágenes, y también la pasada en segundo plano que se describe abajo;
 - después de cada deploy correcto, las imágenes de ese stack;
+- después de un deploy hecho dentro de Komodo (Global Auto Update, la UI de Komodo, un procedure): la pasada en segundo plano lee los últimos Updates de Komodo y encola las imágenes de cada stack desplegado después de la última vez que se pidieron;
+- cuando su último intento de escaneo es más antiguo que `TRIVY_RESCAN_INTERVAL_HOURS` (24 por defecto), para que los CVE nuevos aparezcan en imágenes que no han cambiado;
 - a petición, desde la página o con `POST /api/v0/security/scan`.
+
+La pasada en segundo plano corre unos 30 segundos después de arrancar el backend y luego cada cinco minutos. No guarda estado propio: compara lo que dice Komodo con las horas guardadas de cada imagen, así que un reinicio no pierde nada. Si no llega a Komodo, lo vuelve a intentar en la siguiente.
 
 Solo se guarda el último resultado de cada imagen. Un reescaneo que falla conserva el resultado anterior y marca el fallo.
 

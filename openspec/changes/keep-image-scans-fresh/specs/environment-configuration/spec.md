@@ -1,0 +1,46 @@
+## MODIFIED Requirements
+
+### Requirement: Validated server environment
+
+`packages/env/src/server.ts` SHALL validate the server environment at import time with these rules:
+
+- `DATABASE_URL`: required, a SQLite/libsql URL (`file:`, `libsql:`, `http(s):`, `ws(s):`), rejecting Postgres URLs;
+- `BETTER_AUTH_URL`: required URL, falling back to `APP_URL` when unset;
+- `BETTER_AUTH_SECRET`: required, at least 32 characters;
+- `NODE_ENV`: `development`, `production` or `test`, default `development`;
+- `LOG_LEVEL`: `fatal`, `error`, `warn`, `info`, `debug` or `trace`, default `info`;
+- `SEED_ADMIN_EMAIL` (optional email), `SEED_ADMIN_NAME` (default `Admin`), `SEED_ADMIN_PASSWORD` (optional, at least 8 characters);
+- `TRIVY_SERVER_URL`: optional URL of the Trivy server; image scanning is disabled when unset;
+- `TRIVY_RESCAN_INTERVAL_HOURS`: optional non-negative number, default `24`; how old a scan attempt can be before the periodic rescan queues the image again, `0` turning the periodic rescan off.
+
+Empty strings SHALL count as unset. Validation SHALL be skippable only with `SKIP_ENV_VALIDATION`.
+
+#### Scenario: Postgres URL
+
+- **WHEN** the backend starts with `DATABASE_URL=postgres://…`
+- **THEN** validation SHALL fail with a message saying a SQLite/libsql URL is required
+
+#### Scenario: Compose passes APP_URL
+
+- **WHEN** only `APP_URL` is set
+- **THEN** `BETTER_AUTH_URL` SHALL take its value
+
+#### Scenario: No Trivy server
+
+- **WHEN** the backend starts with `TRIVY_SERVER_URL` unset or empty
+- **THEN** validation SHALL pass and image scanning SHALL be disabled
+
+#### Scenario: Invalid Trivy URL
+
+- **WHEN** the backend starts with `TRIVY_SERVER_URL=trivy:4954`
+- **THEN** validation SHALL fail because it is not a URL
+
+#### Scenario: Default rescan interval
+
+- **WHEN** the backend starts with `TRIVY_RESCAN_INTERVAL_HOURS` unset or empty
+- **THEN** validation SHALL pass with an interval of `24` hours
+
+#### Scenario: Invalid rescan interval
+
+- **WHEN** the backend starts with `TRIVY_RESCAN_INTERVAL_HOURS=-1` or `TRIVY_RESCAN_INTERVAL_HOURS=daily`
+- **THEN** validation SHALL fail because it is not a non-negative number

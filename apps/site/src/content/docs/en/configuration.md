@@ -17,6 +17,7 @@ Komodo CD is configured with a `.env` file next to `compose.yml`. Docker Compose
 | `SEED_ADMIN_EMAIL` | No | Email of the admin. Default `admin@example.com`. |
 | `SEED_ADMIN_NAME` | No | Name of the admin. Default `Admin`. |
 | `TRIVY_SERVER_URL` | No | Trivy server the backend scans images with. Default `http://trivy:4954`, the `trivy` service of `compose.yml`. Set it only to use another server. |
+| `TRIVY_RESCAN_INTERVAL_HOURS` | No | Hours before the backend scans an image again on its own, so new CVEs show up without a redeploy. Default `24`. `0` turns off this periodic rescan; deploys made inside Komodo still trigger scans. |
 
 ## The admin account
 

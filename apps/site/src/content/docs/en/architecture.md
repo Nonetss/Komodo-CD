@@ -55,9 +55,13 @@ Every action, successful or not, is written to the history with the user, the st
 
 The images to scan are the ones Komodo reports for the stacks' services. The backend keeps a small queue (two scans at a time, never the same image twice) and runs `trivy image` in client mode against the `trivy` server for each one, reading the image straight from its registry. An image is queued:
 
-- the first time it shows up, or when its scan was interrupted by a restart: the **Security** page (or `GET /api/v0/security/images`) queues it when it lists the images;
+- the first time it shows up, or when its scan was interrupted by a restart: the **Security** page (or `GET /api/v0/security/images`) queues it when it lists the images, and so does the background sweep described below;
 - after every successful deploy, for the images of that stack;
+- after a deploy made inside Komodo (Global Auto Update, Komodo's UI, a procedure): the background sweep reads Komodo's latest Updates and queues the images of every stack deployed since they were last requested;
+- when its last scan attempt is older than `TRIVY_RESCAN_INTERVAL_HOURS` (24 by default), so new CVEs show up on images that have not changed;
 - on demand, from the page or `POST /api/v0/security/scan`.
+
+The background sweep runs about 30 seconds after the backend starts and then every five minutes. It keeps no state of its own: it compares what Komodo reports with the times stored for each image, so a restart loses nothing. When Komodo cannot be reached, it tries again on the next run.
 
 Only the latest result per image is kept. A rescan that fails keeps the previous result and marks the failure.
 

@@ -21,8 +21,10 @@ same actions from CI with an API key.
 - **Security**: every image used by a stack scanned with
   [Trivy](https://trivy.dev): vulnerabilities by severity, which ones have a
   fix, and which stacks use each image. Images are scanned when they first
-  show up, after every deploy and on demand; private registries are tried and
-  reported as "no access" when the scan cannot pull them
+  show up, after every deploy (including the ones Komodo makes on its own, such
+  as auto updates), every 24 hours to catch new CVEs, and on demand; private
+  registries are tried and reported as "no access" when the scan cannot pull
+  them
 - **Failure alerts**: optional [ntfy](https://ntfy.sh) notifications
   (ntfy.sh or self-hosted, with an optional access token) whenever a deploy
   fails
@@ -156,6 +158,7 @@ services:
       SEED_ADMIN_NAME: "${SEED_ADMIN_NAME:-Admin}"
       SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD is required}"
       TRIVY_SERVER_URL: "${TRIVY_SERVER_URL:-http://trivy:4954}"
+      TRIVY_RESCAN_INTERVAL_HOURS: "${TRIVY_RESCAN_INTERVAL_HOURS:-24}"
     healthcheck:
       test: ["CMD", "bun", "-e", "fetch('http://localhost:3000/health-check').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 10s
@@ -244,6 +247,7 @@ volumes:
 | `SEED_ADMIN_EMAIL`    | —        | Admin email. Default `admin@example.com`                |
 | `SEED_ADMIN_NAME`     | —        | Admin name. Default `Admin`                             |
 | `TRIVY_SERVER_URL`    | —        | Trivy server for image scanning. Default the `trivy` service (`http://trivy:4954`) |
+| `TRIVY_RESCAN_INTERVAL_HOURS` | — | Hours before an image is scanned again on its own, to catch new CVEs. Default `24`; `0` turns off this periodic rescan only |
 
 The `trivy` service downloads its vulnerability database from the Internet on
 first start (and keeps it updated), and the backend pulls the images to scan
@@ -322,7 +326,8 @@ scanned are queued by that same call), `GET /api/v0/security/image?image=<ref>`
 returns the vulnerabilities of one image, and `POST /api/v0/security/scan`
 queues a rescan (`{"images": [...]}`, or every image with an empty body).
 Every successful deploy already queues a scan of that stack's images, in the
-background. To fail a job while the stack's images have critical
+background; so does a deploy made inside Komodo (auto update, Komodo's UI, a
+procedure), picked up within about five minutes. To fail a job while the stack's images have critical
 vulnerabilities, wait until none is `queued` or `scanning`, then check:
 
 ```bash
