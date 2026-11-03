@@ -43,6 +43,10 @@ export const env = createEnv({
     // reescaneo periódico la vuelva a encolar. 0 desactiva solo ese
     // reescaneo; los deploys hechos dentro de Komodo se siguen vigilando.
     TRIVY_RESCAN_INTERVAL_HOURS: z.coerce.number().min(0).default(24),
+    // PAT classic con read:packages para escanear imágenes privadas de
+    // ghcr.io. El código no lo lee: el proceso de Trivy lo hereda del entorno
+    // y solo lo envía a ghcr.io.
+    GITHUB_TOKEN: z.string().optional(),
   },
   runtimeEnv: {
     ...process.env,

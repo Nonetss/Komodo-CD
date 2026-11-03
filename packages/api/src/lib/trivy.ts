@@ -174,7 +174,8 @@ class TrivyService {
   /**
    * Escanea `image` con el cliente de Trivy contra el servidor y devuelve el
    * informe JSON tal cual. La imagen se lee del registry (`remote`), sin
-   * Docker, y el cliente no escribe caché en disco. Lanza `TrivyScanError`.
+   * Docker, y el cliente no escribe caché en disco. Hereda `GITHUB_TOKEN` del
+   * entorno para las imágenes privadas de ghcr.io. Lanza `TrivyScanError`.
    */
   async run(image: string, { signal }: { signal?: AbortSignal } = {}) {
     const server = env.TRIVY_SERVER_URL
