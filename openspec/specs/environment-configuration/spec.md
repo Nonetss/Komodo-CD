@@ -26,7 +26,8 @@ The repository SHALL have a single env file, the root `.env`, with `.env.example
 - `LOG_LEVEL`: `fatal`, `error`, `warn`, `info`, `debug` or `trace`, default `info`;
 - `SEED_ADMIN_EMAIL` (optional email), `SEED_ADMIN_NAME` (default `Admin`), `SEED_ADMIN_PASSWORD` (optional, at least 8 characters);
 - `TRIVY_SERVER_URL`: optional URL of the Trivy server; image scanning is disabled when unset;
-- `TRIVY_RESCAN_INTERVAL_HOURS`: optional non-negative number, default `24`; how old a scan attempt can be before the periodic rescan queues the image again, `0` turning the periodic rescan off.
+- `TRIVY_RESCAN_INTERVAL_HOURS`: optional non-negative number, default `24`; how old a scan attempt can be before the periodic rescan queues the image again, `0` turning the periodic rescan off;
+- `GITHUB_TOKEN`: optional GitHub token that the `trivy` process inherits to read private images on `ghcr.io`.
 
 Empty strings SHALL count as unset. Validation SHALL be skippable only with `SKIP_ENV_VALIDATION`.
 

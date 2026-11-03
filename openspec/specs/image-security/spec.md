@@ -7,7 +7,12 @@ Scanning the images of the Komodo stacks with Trivy: a Trivy client in the backe
 ## Requirements
 ### Requirement: Trivy client against a Trivy server
 
-The backend SHALL scan images with the `trivy` CLI in client mode against the server at `TRIVY_SERVER_URL`, reading each image from its registry (`--image-src remote`), scanning vulnerabilities only (`--scanners vuln`), with JSON output, an in-memory client cache and a 10-minute Trivy timeout; the backend SHALL kill a scan that is still running after 11 minutes. Scanning SHALL be enabled only when `TRIVY_SERVER_URL` is set. A failed scan SHALL be classified from Trivy's error output as `unauthorized` (the registry denied access), `not-found` (the image or tag does not exist), `unavailable` (the Trivy server or binary cannot be reached) or `other`, keeping the last non-empty error line (at most 500 characters) as its message.
+The backend SHALL scan images with the `trivy` CLI in client mode against the server at `TRIVY_SERVER_URL`, reading each image from its registry (`--image-src remote`), scanning vulnerabilities only (`--scanners vuln`), with JSON output, an in-memory client cache and a 10-minute Trivy timeout; the backend SHALL kill a scan that is still running after 11 minutes. Scanning SHALL be enabled only when `TRIVY_SERVER_URL` is set. A failed scan SHALL be classified from Trivy's error output as `unauthorized` (the registry denied access), `not-found` (the image or tag does not exist), `unavailable` (the Trivy server or binary cannot be reached) or `other`, keeping the last non-empty error line (at most 500 characters) as its message. When `GITHUB_TOKEN` is set, the `trivy` process SHALL inherit it from the backend's environment, so private images on `ghcr.io` can be read; the token SHALL NOT be passed on the command line, nor as `TRIVY_USERNAME`/`TRIVY_PASSWORD`, which Trivy would try against every registry.
+
+#### Scenario: Private GHCR image with a token
+
+- **WHEN** `GITHUB_TOKEN` is set and a stack uses both `ghcr.io/acme/private:1.0` and `nginx:1.27`
+- **THEN** Trivy SHALL authenticate to `ghcr.io` with the token, and SHALL NOT send it to the registry of `nginx:1.27`
 
 #### Scenario: Private image without access
 

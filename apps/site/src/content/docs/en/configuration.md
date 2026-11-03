@@ -18,6 +18,7 @@ Komodo CD is configured with a `.env` file next to `compose.yml`. Docker Compose
 | `SEED_ADMIN_NAME` | No | Name of the admin. Default `Admin`. |
 | `TRIVY_SERVER_URL` | No | Trivy server the backend scans images with. Default `http://trivy:4954`, the `trivy` service of `compose.yml`. Set it only to use another server. |
 | `TRIVY_RESCAN_INTERVAL_HOURS` | No | Hours before the backend scans an image again on its own, so new CVEs show up without a redeploy. Default `24`. `0` turns off this periodic rescan; deploys made inside Komodo still trigger scans. |
+| `GITHUB_TOKEN` | No | Classic personal access token with the `read:packages` scope, to scan private images on `ghcr.io`. It is only sent to `ghcr.io`. |
 
 ## The admin account
 
@@ -40,7 +41,9 @@ These are fixed in the compose file and rarely need to change:
 
 The `trivy` service in `compose.yml` runs a Trivy server pinned to the same version as the client inside the backend image. On first start it downloads its vulnerability database from the Internet into the `trivy_cache` volume, and keeps it updated. The backend, in turn, pulls each image to scan straight from its registry, so both need outbound access. Until the database is ready, scans fail and can be retried from the **Security** page.
 
-Images from private registries are tried as well; when the backend cannot pull one, the scan is shown as "no registry access" and the other images carry on.
+To scan private images on `ghcr.io`, set `GITHUB_TOKEN`. GitHub Packages only accepts a classic personal access token, and `read:packages` is the scope it needs. That scope reads every package the account can reach, so use a dedicated account where possible. Images that already failed are retried at the next periodic rescan, or right away from the **Security** page.
+
+Images from other private registries are tried without credentials; when the backend cannot pull an image, the scan is shown as "no registry access" and the other images carry on.
 
 The backend also reads `LOG_LEVEL` (`fatal`, `error`, `warn`, `info`, `debug` or `trace`; default `info`). To use it, add it to the backend's `environment` in `compose.yml`.
 

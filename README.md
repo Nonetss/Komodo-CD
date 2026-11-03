@@ -23,8 +23,8 @@ same actions from CI with an API key.
   fix, and which stacks use each image. Images are scanned when they first
   show up, after every deploy (including the ones Komodo makes on its own, such
   as auto updates), every 24 hours to catch new CVEs, and on demand; private
-  registries are tried and reported as "no access" when the scan cannot pull
-  them
+  images on ghcr.io are scanned with `GITHUB_TOKEN`, and any image the scan
+  cannot pull is reported as "no access"
 - **Failure alerts**: optional [ntfy](https://ntfy.sh) notifications
   (ntfy.sh or self-hosted, with an optional access token) whenever a deploy
   fails
@@ -159,6 +159,7 @@ services:
       SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD is required}"
       TRIVY_SERVER_URL: "${TRIVY_SERVER_URL:-http://trivy:4954}"
       TRIVY_RESCAN_INTERVAL_HOURS: "${TRIVY_RESCAN_INTERVAL_HOURS:-24}"
+      GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
     healthcheck:
       test: ["CMD", "bun", "-e", "fetch('http://localhost:3000/health-check').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 10s
@@ -248,6 +249,7 @@ volumes:
 | `SEED_ADMIN_NAME`     | —        | Admin name. Default `Admin`                             |
 | `TRIVY_SERVER_URL`    | —        | Trivy server for image scanning. Default the `trivy` service (`http://trivy:4954`) |
 | `TRIVY_RESCAN_INTERVAL_HOURS` | — | Hours before an image is scanned again on its own, to catch new CVEs. Default `24`; `0` turns off this periodic rescan only |
+| `GITHUB_TOKEN`        | —        | Classic personal access token with `read:packages`, to scan private images on `ghcr.io`. Only sent to `ghcr.io` |
 
 The `trivy` service downloads its vulnerability database from the Internet on
 first start (and keeps it updated), and the backend pulls the images to scan
