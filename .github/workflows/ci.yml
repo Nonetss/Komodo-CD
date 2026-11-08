@@ -90,37 +90,42 @@ jobs:
           api-key: test-key
           stack: we"b$(echo injected)
 
-      - name: Komodo error fails the step
-        id: broken
-        continue-on-error: true
-        uses: ./
-        with:
-          url: http://127.0.0.1:8765
-          api-key: test-key
-          stack: broken
-          action: redeploy
-
-      - name: Unknown action fails the step
-        id: invalid
-        continue-on-error: true
-        uses: ./
-        with:
-          url: http://127.0.0.1:8765
-          api-key: test-key
-          stack: web
-          action: restart
-
-      - name: Check outcomes
+      - name: Check the successful deploy
         env:
           OK_STATUS: ${{ steps.ok.outputs.status }}
           OK_MESSAGE: ${{ steps.ok.outputs.message }}
-          BROKEN: ${{ steps.broken.outcome }}
-          BROKEN_STATUS: ${{ steps.broken.outputs.status }}
-          INVALID: ${{ steps.invalid.outcome }}
-          INVALID_STATUS: ${{ steps.invalid.outputs.status }}
         run: |
           set -x
           [ "$OK_STATUS" = 200 ]
           [ "$OK_MESSAGE" = 'pull-redeploy we"b$(echo injected)' ]
-          [ "$BROKEN" = failure ] && [ "$BROKEN_STATUS" = 502 ]
-          [ "$INVALID" = failure ] && [ -z "$INVALID_STATUS" ]
+
+      # Los casos de error ejecutan el mismo script de action.yml, pero con los
+      # comandos de workflow desactivados: si no, sus ::error:: esperados salen
+      # como anotaciones rojas en un run que ha ido bien.
+      - name: Failures fail the step
+        run: |
+          yq -r '.runs.steps[0].run' action.yml > "$RUNNER_TEMP/deploy.sh"
+          token="kcd-$RANDOM$RANDOM"
+          echo "::stop-commands::$token"
+
+          # expect_fail <texto esperado> <stack> <action>
+          expect_fail() {
+            local out code=0
+            : > "$RUNNER_TEMP/out"
+            out=$(GITHUB_OUTPUT="$RUNNER_TEMP/out" GITHUB_STEP_SUMMARY= \
+              KCD_URL=http://127.0.0.1:8765 KCD_API_KEY=test-key \
+              KCD_STACK="$2" KCD_ACTION="$3" \
+              bash "$RUNNER_TEMP/deploy.sh" 2>&1) || code=$?
+            echo "$out"
+            [ "$code" -ne 0 ] || { echo "expected a failure"; return 1; }
+            grep -qF "$1" <<<"$out" || { echo "expected: $1"; return 1; }
+          }
+
+          # Error de Komodo: falla con el código y el mensaje
+          expect_fail "HTTP 502: Komodo: stack not found" broken redeploy
+          grep -qx 502 "$RUNNER_TEMP/out"
+          # Acción desconocida: falla sin llamar a Komodo CD
+          expect_fail "Unknown action 'restart'" web restart
+          if grep -q '^status' "$RUNNER_TEMP/out"; then exit 1; fi
+
+          echo "::$token::"
