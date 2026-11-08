@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 
 import { highlightShell } from "@/components/shared/data-display/highlight-shell"
+import { highlightYaml } from "@/components/shared/data-display/highlight-yaml"
 import { CopyButton } from "@/components/shared/form/copy-button"
 import { cn } from "@/lib/utils"
 
@@ -11,23 +12,39 @@ type CodeBlockProps = {
    * Sin ella no hay barra y el botón de copiar va dentro del bloque
    */
   label?: ReactNode
-  /** `shell` resalta comando, flags, URLs, cadenas y el cuerpo JSON */
-  language?: "shell" | "text"
+  /**
+   * Controles al inicio de la barra superior (p. ej. un `Segmented` para
+   * elegir el formato). Como `label`, hacen que haya barra
+   */
+  tabs?: ReactNode
+  /**
+   * `shell` resalta comando, flags, URLs, cadenas y el cuerpo JSON; `yaml`,
+   * claves, valores y expresiones `${{ … }}`
+   */
+  language?: "shell" | "yaml" | "text"
   className?: string
+}
+
+const HIGHLIGHT: Partial<
+  Record<NonNullable<CodeBlockProps["language"]>, (code: string) => ReactNode>
+> = {
+  shell: highlightShell,
+  yaml: highlightYaml,
 }
 
 export function CodeBlock({
   code,
   label,
+  tabs,
   language = "text",
   className,
 }: CodeBlockProps) {
   const body = (
     <pre className="bg-code text-code-foreground overflow-x-auto px-5 py-4 font-mono text-xs leading-6">
-      <code>{language === "shell" ? highlightShell(code) : code}</code>
+      <code>{HIGHLIGHT[language]?.(code) ?? code}</code>
     </pre>
   )
-  if (!label) {
+  if (!label && !tabs) {
     return (
       <div className={cn("relative text-left", className)}>
         {body}
@@ -45,9 +62,14 @@ export function CodeBlock({
   return (
     <div className={cn("text-left", className)}>
       <div className="border-rule flex min-h-9 items-center justify-between gap-2 rule-b">
-        <span className="text-muted-foreground truncate font-mono text-xs">
-          {label}
-        </span>
+        <div className="flex min-w-0 items-center gap-4">
+          {tabs}
+          {label ? (
+            <span className="text-muted-foreground truncate font-mono text-xs">
+              {label}
+            </span>
+          ) : null}
+        </div>
         <CopyButton value={code} withLabel className="shrink-0" />
       </div>
       {body}
