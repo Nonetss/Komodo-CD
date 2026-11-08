@@ -42,7 +42,7 @@ The full key SHALL only appear in the create response; listings SHALL expose onl
 
 ### Requirement: API Keys page
 
-The dashboard SHALL provide an API Keys page at `/keys` listing the user's keys with their name, `start` followed by a mask, and creation date, and a key count in the header. A "new key" button SHALL open an inline form asking for a name (focused on open, `Escape` cancels); empty names SHALL NOT be submitted. After creating a key, the page SHALL show the full key once, in a panel with a copy button, a warning that it will not be shown again, and the deploy `curl` snippet with that key filled in, until dismissed. Deleting a key SHALL require a second click within 3 seconds and SHALL remove the row optimistically, restoring it if the call fails. The page SHALL show skeletons while loading, an empty state with a create button and an error state with retry.
+The dashboard SHALL provide an API Keys page at `/keys` listing the user's keys with their name, `start` followed by a mask, and creation date, and a key count in the header. A "new key" button SHALL open an inline form asking for a name (focused on open, `Escape` cancels); empty names SHALL NOT be submitted. After creating a key, the page SHALL show the full key once, in a panel with a copy button, a warning that it will not be shown again, and the deploy CI snippet (see "CI snippet" in `deployment`), whose `curl` format has that key filled in, until dismissed. Deleting a key SHALL require a second click within 3 seconds and SHALL remove the row optimistically, restoring it if the call fails. The page SHALL show skeletons while loading, an empty state with a create button and an error state with retry.
 
 #### Scenario: Copy a new key
 

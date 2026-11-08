@@ -80,7 +80,7 @@ The detail pane SHALL show the stack named in the URL:
 - for a stack backed by a git repository, the deployed commit and the latest commit, the latter marked when it differs (Komodo gives no commits for other stacks, so they are omitted);
 - a table with every service: its name, its image reference (registry dimmed, name, tag or a shortened digest; the full reference in the tooltip) and whether a newer image is available;
 - a security section with the stack's images as on the Security page: their vulnerability counts per severity, how many are fixable, the scan state, a rescan button when scanning is enabled, and each image expandable in place into its CVEs. Other stacks that share an image are linked from its row; the open stack is not repeated. The section links to `/security` and is omitted when the stack declares no image;
-- the CI `curl` snippet with a selector for the action.
+- the CI snippet (see "CI snippet" in `deployment`), as `curl` or as a GitHub Action step, with a selector for the action.
 
 When the name in the URL matches no stack of `v0.stacks.list`, the detail pane SHALL show a not-found state with a link to `/stacks`.
 
