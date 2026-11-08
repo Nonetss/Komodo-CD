@@ -39,11 +39,11 @@ The request returns once Komodo has accepted the action; the deploy itself runs 
 
 A missing or invalid key answers `401`. If Komodo rejects the action (an unknown stack, a key without permission, Komodo unreachable), the answer is `502` with Komodo's message in `message` (`503` if Komodo CD has no Komodo connection yet), and the failure is recorded in the history like any other action. `--fail-with-body` makes curl exit with an error on those, so the CI step fails too.
 
-The page of each stack in **Stacks** and the **Deploy** page show this same command with the stack and action filled in, ready to copy.
+The page of each stack in **Stacks** and the **Deploy** page show this same command with the stack and action filled in, ready to copy, and under the **GitHub Action** tab the matching step for the action below.
 
 ## GitHub Actions
 
-A workflow that builds and pushes an image to GHCR and then redeploys the stack that runs it:
+The repository ships a GitHub Action, `Nonetss/Komodo-CD@v2`, that sends this same request: you give it four inputs instead of writing the `curl`. A workflow that builds and pushes an image to GHCR and then redeploys the stack that runs it:
 
 ```yaml
 name: Build, Publish and Deploy
@@ -78,11 +78,12 @@ jobs:
           tags: ghcr.io/${{ github.repository }}:latest
 
       - name: Pull + Redeploy stack
-        run: |
-          curl --fail-with-body -X POST ${{ secrets.KOMODO_CD_URL }}/api/v0/deploy \
-            -H "x-api-key: ${{ secrets.KOMODO_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{"stack":"${{ vars.STACK_NAME }}","action":"pull-redeploy"}'
+        uses: Nonetss/Komodo-CD@v2
+        with:
+          url: ${{ secrets.KOMODO_CD_URL }}
+          api-key: ${{ secrets.KOMODO_API_KEY }}
+          stack: ${{ vars.STACK_NAME }}
+          action: pull-redeploy
 ```
 
 It expects these repository secrets and variables:
@@ -92,6 +93,19 @@ It expects these repository secrets and variables:
 | `KOMODO_CD_URL` | Secret | The public URL of Komodo CD, for example `https://deploy.example.com`. |
 | `KOMODO_API_KEY` | Secret | The API key created above. |
 | `STACK_NAME` | Variable | The stack name in Komodo. |
+
+### The action's inputs and outputs
+
+| Input | Required | Value |
+| --- | --- | --- |
+| `url` | Yes | The public URL of Komodo CD. |
+| `api-key` | Yes | The API key. Pass it as a secret. |
+| `stack` | Yes | The stack name in Komodo. |
+| `action` | No | `pull`, `redeploy` or `pull-redeploy` (the default). |
+
+The step waits until Komodo has finished, like the request, and fails on any answer that is not `2xx` (or when Komodo CD cannot be reached), with Komodo CD's message as the error. It exposes two outputs: `status`, the HTTP code, and `message`, the answer's message. The API key never shows up in the log.
+
+`@v2` follows the latest 2.x release. To freeze it, pin an exact tag (`@v2.3.0`) or a commit SHA.
 
 ## Fail on vulnerabilities
 
@@ -117,7 +131,7 @@ A scan that could not pull the image (a private registry, for example) ends as `
 
 ## Gitea Actions
 
-Gitea Actions runs the same workflow syntax: put the file in `.gitea/workflows/` and define the same secrets and variables in the repository settings. The deploy step does not change.
+Gitea Actions runs the same workflow syntax: put the file in `.gitea/workflows/` and define the same secrets and variables in the repository settings. The deploy step does not change: Gitea runs the action from GitHub too, since it only needs `bash` and `curl` on the runner.
 
 ## Without a CI
 

@@ -305,11 +305,12 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Pull + Redeploy stack
-        run: |
-          curl -X POST ${{ secrets.KOMODO_CD_URL }}/api/v0/deploy \
-            -H "x-api-key: ${{ secrets.KOMODO_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{"stack":"${{ vars.STACK_NAME }}","action":"pull-redeploy"}'
+        uses: Nonetss/Komodo-CD@v2
+        with:
+          url: ${{ secrets.KOMODO_CD_URL }}
+          api-key: ${{ secrets.KOMODO_API_KEY }}
+          stack: ${{ vars.STACK_NAME }}
+          action: pull-redeploy
 ```
 
 **Required repository secrets and variables:**
@@ -319,6 +320,29 @@ jobs:
 | `KOMODO_CD_URL`  | Secret   | URL of your Komodo CD instance (example: `https://komodo-cd.example.com`) |
 | `KOMODO_API_KEY` | Secret   | API key generated from the dashboard                                      |
 | `STACK_NAME`     | Variable | Stack name in Komodo                                                      |
+
+**Action inputs and outputs** (`Nonetss/Komodo-CD@v2`, defined in
+[`action.yml`](action.yml)):
+
+| Input     | Required | Description                                                 |
+| --------- | -------- | ----------------------------------------------------------- |
+| `url`     | Yes      | Public URL of Komodo CD                                     |
+| `api-key` | Yes      | API key created in the dashboard (pass it as a secret)      |
+| `stack`   | Yes      | Stack name in Komodo                                        |
+| `action`  | No       | `pull`, `redeploy` or `pull-redeploy` (default)             |
+
+The step waits until Komodo has finished and fails on any non-2xx answer with
+Komodo CD's message. Its outputs are `status` (HTTP code) and `message`. `@v2`
+follows the latest 2.x release; pin an exact tag (`@v2.3.0`) or a commit SHA
+to freeze it. It is a composite action that only needs `bash` and `curl`, so
+it also works in Gitea Actions. Any other CI can send the request directly:
+
+```bash
+curl --fail-with-body -X POST "$KOMODO_CD_URL/api/v0/deploy" \
+  -H "x-api-key: $KOMODO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"stack":"my-stack","action":"pull-redeploy"}'
+```
 
 ### Vulnerability results from CI
 
