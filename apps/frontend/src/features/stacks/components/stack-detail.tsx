@@ -3,7 +3,6 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Text, textVariants } from "@/components/shared/brand/typography"
-import { CodeBlock } from "@/components/shared/data-display/code-block"
 import { ColumnHeader } from "@/components/shared/data-display/column-header"
 import { Segmented } from "@/components/shared/form/segmented"
 import { SectionHeader } from "@/components/shared/layout/section-header"
@@ -12,9 +11,8 @@ import { Button } from "@/components/ui/button"
 import {
   ACTION_I18N,
   ACTION_ICON,
-  buildDeployCurl,
   DEPLOY_ACTIONS,
-  DeployCurlHint,
+  DeploySnippet,
 } from "@/entities/deploy-action"
 import {
   commitChanged,
@@ -26,7 +24,6 @@ import {
 import { StackDelete } from "@/features/stacks/components/stack-delete"
 import { StackProblem } from "@/features/stacks/components/stack-problem"
 import { StackSecurity } from "@/features/stacks/components/stack-security"
-import { useAppUrl } from "@/hooks/use-app-url"
 import type { DeployAction, Stack } from "@/lib/api-types"
 import { cn } from "@/lib/utils"
 
@@ -62,7 +59,6 @@ export function StackDetail({
   onAction: (action: DeployAction) => void
 }) {
   const { t } = useTranslation()
-  const appUrl = useAppUrl()
   const [curlAction, setCurlAction] = useState<DeployAction>("pull-redeploy")
   const { info } = stack
   const pending = hasUpdate(stack)
@@ -180,11 +176,7 @@ export function StackDetail({
             />
           }
         />
-        <CodeBlock
-          language="shell"
-          code={buildDeployCurl(appUrl, stack.name, curlAction)}
-        />
-        <DeployCurlHint />
+        <DeploySnippet stack={stack.name} action={curlAction} />
       </section>
 
       <section aria-labelledby="stack-services" className="flex flex-col">

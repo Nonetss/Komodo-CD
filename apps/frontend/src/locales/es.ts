@@ -134,8 +134,6 @@ export default {
     securityTitle: "Seguridad",
     securityAll: "Ver todas",
     ciTitle: "Llamar desde CI",
-    ciHint:
-      "Sustituye <code>{{placeholder}}</code> por una key de <keys>API Keys</keys>.",
     updateAvailable: "Update disponible",
     updateTag: "update",
     deployed: "Desplegado",
@@ -269,6 +267,15 @@ export default {
       "La misma acción, lista para pegar en un workflow de GitHub o Gitea Actions.",
     lastResult: "Último resultado",
     exampleStack: "mi-stack",
+    snippetFormat: "Formato",
+    formatCurl: "curl",
+    formatAction: "GitHub Action",
+    curlHint:
+      "Sustituye <code>{{placeholder}}</code> por una key de <keys>API Keys</keys>.",
+    actionHint:
+      "Guarda una key de <keys>API Keys</keys> en el secreto <code>{{secret}}</code> del repositorio.",
+    actionKeyHint:
+      "Guarda esta key en el secreto <code>{{secret}}</code> del repositorio: el paso la lee de ahí.",
     actions: {
       pull: {
         label: "Pull",

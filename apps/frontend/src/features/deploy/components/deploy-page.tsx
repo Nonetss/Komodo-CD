@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next"
 import { z } from "zod"
 
 import { Text } from "@/components/shared/brand/typography"
-import { CodeBlock } from "@/components/shared/data-display/code-block"
 import { StatusDot } from "@/components/shared/data-display/status-dot"
 import { PageHero } from "@/components/shared/layout/page-hero"
 import { Button } from "@/components/ui/button"
@@ -20,15 +19,13 @@ import {
 } from "@/components/ui/form"
 import {
   ACTION_I18N,
-  buildDeployCurl,
   DEPLOY_ACTIONS,
-  DeployCurlHint,
+  DeploySnippet,
   useDeployTrigger,
 } from "@/entities/deploy-action"
 import { useStacks } from "@/entities/stack"
 import { ActionChoice } from "@/features/deploy/components/action-choice"
 import { StackCombobox } from "@/features/deploy/components/stack-combobox"
-import { useAppUrl } from "@/hooks/use-app-url"
 import { useHydrated } from "@/hooks/use-hydrated"
 import type { DeployAction } from "@/lib/api-types"
 import { getErrorMessage } from "@/lib/orpc"
@@ -45,7 +42,6 @@ const DeployPageContent = () => {
   const stacksQuery = useStacks()
   const deployTrigger = useDeployTrigger()
   const stacks = stacksQuery.data ?? []
-  const appUrl = useAppUrl()
   const hydrated = useHydrated()
   const [result, setResult] = useState<Result | null>(null)
 
@@ -170,16 +166,10 @@ const DeployPageContent = () => {
             {t("deploy.ciDescription")}
           </Text>
         </div>
-        <CodeBlock
-          language="shell"
-          label={`POST /api/v0/deploy · ${action}`}
-          code={buildDeployCurl(
-            appUrl,
-            stack.trim() || t("deploy.exampleStack"),
-            action
-          )}
+        <DeploySnippet
+          stack={stack.trim() || t("deploy.exampleStack")}
+          action={action}
         />
-        <DeployCurlHint />
       </section>
     </div>
   )
