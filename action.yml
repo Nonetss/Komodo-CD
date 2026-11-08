@@ -1,0 +1,129 @@
+name: Komodo CD Deploy
+description: Pull and/or redeploy a Komodo stack through Komodo CD.
+author: Nonetss
+
+branding:
+  icon: upload-cloud
+  color: orange
+
+inputs:
+  url:
+    description: Public URL of Komodo CD, for example https://deploy.example.com.
+    required: true
+  api-key:
+    description: API key created in Komodo CD (API Keys page). Pass it as a secret.
+    required: true
+  stack:
+    description: Name of the stack in Komodo.
+    required: true
+  action:
+    description: pull, redeploy or pull-redeploy.
+    required: false
+    default: pull-redeploy
+
+outputs:
+  status:
+    description: HTTP status code returned by Komodo CD.
+    value: ${{ steps.deploy.outputs.status }}
+  message:
+    description: Message returned by Komodo CD.
+    value: ${{ steps.deploy.outputs.message }}
+
+runs:
+  using: composite
+  steps:
+    - id: deploy
+      shell: bash
+      # Los inputs llegan solo por env: expandirlos con ${{ }} dentro de run
+      # los pegaría en el script antes de que bash lo lea (inyección).
+      env:
+        KCD_URL: ${{ inputs.url }}
+        KCD_API_KEY: ${{ inputs.api-key }}
+        KCD_STACK: ${{ inputs.stack }}
+        KCD_ACTION: ${{ inputs.action }}
+      run: |
+        set -euo pipefail
+
+        # Las anotaciones ::error:: cortan en el salto de línea y leen % como
+        # escape, así que se codifican.
+        annotate() {
+          local s=$2
+          s=${s//'%'/'%25'}
+          s=${s//$'\r'/'%0D'}
+          s=${s//$'\n'/'%0A'}
+          echo "::$1 title=Komodo CD::$s"
+        }
+        fail() { annotate error "$1"; exit 1; }
+
+        # Valor multilínea para $GITHUB_OUTPUT, con un delimitador aleatorio
+        set_output() {
+          [ -n "${GITHUB_OUTPUT:-}" ] || return 0
+          local delim="KCD_$RANDOM$RANDOM$RANDOM"
+          printf '%s<<%s\n%s\n%s\n' "$1" "$delim" "$2" "$delim" >>"$GITHUB_OUTPUT"
+        }
+
+        [ -n "$KCD_API_KEY" ] && echo "::add-mask::$KCD_API_KEY"
+
+        [ -n "$KCD_URL" ] || fail "The 'url' input is required."
+        [ -n "$KCD_API_KEY" ] || fail "The 'api-key' input is required."
+        [ -n "$KCD_STACK" ] || fail "The 'stack' input is required."
+        [[ $KCD_URL =~ ^https?:// ]] \
+          || fail "The 'url' input must start with http:// or https://."
+        [[ $KCD_STACK =~ [[:cntrl:]] ]] \
+          && fail "The 'stack' input contains control characters."
+        [[ $KCD_API_KEY =~ [[:cntrl:]] ]] \
+          && fail "The 'api-key' input contains control characters."
+        case "$KCD_ACTION" in
+          pull | redeploy | pull-redeploy) ;;
+          *) fail "Unknown action '$KCD_ACTION': use pull, redeploy or pull-redeploy." ;;
+        esac
+
+        url=$KCD_URL
+        while [[ $url == */ ]]; do url=${url%/}; done
+
+        # Cadena JSON: sin caracteres de control basta con escapar \ y "
+        stack=${KCD_STACK//\\/\\\\}
+        stack=${stack//\"/\\\"}
+        payload=$(printf '{"stack":"%s","action":"%s"}' "$stack" "$KCD_ACTION")
+
+        tmp=$(mktemp -d)
+        trap 'rm -rf "$tmp"' EXIT
+        # La key va en un fichero de cabeceras para no salir en la línea de
+        # comandos de curl.
+        printf 'x-api-key: %s\nContent-Type: application/json\n' "$KCD_API_KEY" \
+          >"$tmp/headers"
+
+        echo "Running $KCD_ACTION on stack '$KCD_STACK' at $url"
+
+        # Sin timeout: Komodo CD contesta cuando Komodo ha terminado, y el
+        # timeout-minutes del job ya lo acota.
+        if ! status=$(curl -sS -X POST "$url/api/v0/deploy" \
+          -H "@$tmp/headers" --data-binary "$payload" \
+          -o "$tmp/body" -w '%{http_code}'); then
+          set_output status ""
+          fail "Could not reach Komodo CD at $url."
+        fi
+
+        body=$(cat "$tmp/body" 2>/dev/null || true)
+        message=""
+        if command -v jq >/dev/null 2>&1; then
+          message=$(printf '%s' "$body" | jq -r '.message // empty' 2>/dev/null || true)
+        else
+          message=$(printf '%s' "$body" \
+            | sed -n 's/.*"message"[[:space:]]*:[[:space:]]*"\(\([^"\\]\|\\.\)*\)".*/\1/p' \
+            | head -n 1 | sed 's/\\"/"/g; s/\\\\/\\/g')
+        fi
+        [ -n "$message" ] || message=$body
+
+        set_output status "$status"
+        set_output message "$message"
+
+        if [[ $status =~ ^2[0-9][0-9]$ ]]; then
+          echo "$message"
+          if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+            printf '**Komodo CD** · `%s` on `%s`: %s\n' \
+              "$KCD_ACTION" "$KCD_STACK" "$message" >>"$GITHUB_STEP_SUMMARY"
+          fi
+        else
+          fail "HTTP $status: ${message:-empty response}"
+        fi
