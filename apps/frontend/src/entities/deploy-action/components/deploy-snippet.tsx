@@ -25,7 +25,8 @@ type DeploySnippetProps = {
 }
 
 /**
- * La acción lista para CI, como `curl` o como paso de la GitHub Action, con
+ * La acción lista para CI, como paso de la GitHub Action (por defecto) o como
+ * `curl`, con
  * la pista de qué sustituir debajo. El paso nunca lleva la key en claro: la
  * lee de un secreto del repositorio.
  */
@@ -37,7 +38,7 @@ export function DeploySnippet({
 }: DeploySnippetProps) {
   const { t } = useTranslation()
   const appUrl = useAppUrl()
-  const [format, setFormat] = useState<SnippetFormat>("curl")
+  const [format, setFormat] = useState<SnippetFormat>(SNIPPET_FORMATS[0])
   const label: Record<SnippetFormat, string> = {
     curl: t("deploy.formatCurl"),
     action: t("deploy.formatAction"),

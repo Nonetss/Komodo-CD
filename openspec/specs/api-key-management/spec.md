@@ -47,7 +47,7 @@ The dashboard SHALL provide an API Keys page at `/keys` listing the user's keys 
 #### Scenario: Copy a new key
 
 - **WHEN** the user creates a key named `gitea`
-- **THEN** the page SHALL show the full key with a copy button and a `curl` command that already contains it
+- **THEN** the page SHALL show the full key with a copy button and the CI snippet, whose `curl` format already contains it
 
 #### Scenario: Failed delete
 

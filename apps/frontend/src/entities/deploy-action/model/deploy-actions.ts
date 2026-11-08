@@ -48,8 +48,8 @@ export const DEPLOY_ACTION_REF = "Nonetss/Komodo-CD@v2"
 /** Secreto del repositorio del que el paso de ejemplo lee la key */
 export const DEPLOY_ACTION_SECRET = "KOMODO_API_KEY"
 
-/** Formatos del snippet de CI */
-export const SNIPPET_FORMATS = ["curl", "action"] as const
+/** Formatos del snippet de CI; el primero es el de por defecto */
+export const SNIPPET_FORMATS = ["action", "curl"] as const
 export type SnippetFormat = (typeof SNIPPET_FORMATS)[number]
 
 /**
