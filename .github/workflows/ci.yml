@@ -43,3 +43,84 @@ jobs:
       # Las migraciones generadas coinciden con el schema
       - name: Migrations
         run: bun run db:check
+
+  # La action de deploy (action.yml) contra un Komodo CD simulado: 200, 502 y
+  # validación de inputs.
+  deploy-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Start mock Komodo CD
+        run: |
+          cat > "$RUNNER_TEMP/mock.py" <<'PY'
+          import json
+          from http.server import BaseHTTPRequestHandler, HTTPServer
+
+          class Handler(BaseHTTPRequestHandler):
+              def do_POST(self):
+                  raw = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+                  if self.path != "/api/v0/deploy":
+                      return self.reply(404, {"message": "Not found"})
+                  if self.headers.get("x-api-key") != "test-key":
+                      return self.reply(401, {"message": "Unauthorized"})
+                  body = json.loads(raw)
+                  if body["stack"] == "broken":
+                      return self.reply(502, {"message": "Komodo: stack not found"})
+                  self.reply(200, {"success": True, "message": f"{body['action']} {body['stack']}", **body})
+
+              def reply(self, code, data):
+                  out = json.dumps(data).encode()
+                  self.send_response(code)
+                  self.send_header("Content-Type", "application/json")
+                  self.send_header("Content-Length", str(len(out)))
+                  self.end_headers()
+                  self.wfile.write(out)
+
+          HTTPServer(("127.0.0.1", 8765), Handler).serve_forever()
+          PY
+          python3 "$RUNNER_TEMP/mock.py" &
+          sleep 1
+
+      - name: Deploy succeeds
+        id: ok
+        uses: ./
+        with:
+          url: http://127.0.0.1:8765/
+          api-key: test-key
+          stack: we"b$(echo injected)
+
+      - name: Komodo error fails the step
+        id: broken
+        continue-on-error: true
+        uses: ./
+        with:
+          url: http://127.0.0.1:8765
+          api-key: test-key
+          stack: broken
+          action: redeploy
+
+      - name: Unknown action fails the step
+        id: invalid
+        continue-on-error: true
+        uses: ./
+        with:
+          url: http://127.0.0.1:8765
+          api-key: test-key
+          stack: web
+          action: restart
+
+      - name: Check outcomes
+        env:
+          OK_STATUS: ${{ steps.ok.outputs.status }}
+          OK_MESSAGE: ${{ steps.ok.outputs.message }}
+          BROKEN: ${{ steps.broken.outcome }}
+          BROKEN_STATUS: ${{ steps.broken.outputs.status }}
+          INVALID: ${{ steps.invalid.outcome }}
+          INVALID_STATUS: ${{ steps.invalid.outputs.status }}
+        run: |
+          set -x
+          [ "$OK_STATUS" = 200 ]
+          [ "$OK_MESSAGE" = 'pull-redeploy we"b$(echo injected)' ]
+          [ "$BROKEN" = failure ] && [ "$BROKEN_STATUS" = 502 ]
+          [ "$INVALID" = failure ] && [ -z "$INVALID_STATUS" ]

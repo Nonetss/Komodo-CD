@@ -1,0 +1,32 @@
+name: Action major tag
+
+# Cada release vX.Y.Z mueve el tag vX a su commit, para que
+# `uses: Nonetss/Komodo-CD@vX` siga la última X.*.* (action.yml en la raíz).
+# Un tag empujado con GITHUB_TOKEN no dispara otros workflows, y vX tampoco
+# casa con el filtro v*.*.* de docker-build.yml.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  move-major-tag:
+    # Las pre-releases (v3.0.0-rc.1) no mueven el tag mayor
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Move major tag
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          # checkout deja HEAD en el commit del tag (también si es anotado)
+          major="${TAG%%.*}"
+          sha=$(git rev-parse HEAD)
+          git tag -f "$major" "$sha"
+          git push -f origin "refs/tags/$major"
+          echo "$major -> $TAG ($sha)"
